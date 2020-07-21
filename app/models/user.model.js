@@ -87,6 +87,23 @@ User.findById = (userId, result) => {
   });
 };
 
+User.findByUsername = (username, result) => {
+  sql.query(`SELECT users.id, users.name, users.lastname, users.username, users.bio, users.email, users.picture, users.first_access AS firstAccess, availability_statuses.id AS availabilityId, availability_statuses.title_ptbr AS availabilityTitle, availability_statuses.color AS availabilityColor, countries.name AS country, regions.name AS region, cities.name AS city, users.payment_plan AS plan FROM users LEFT JOIN availability_statuses ON users.availability = availability_statuses.id LEFT JOIN countries ON users.id_country_fk = countries.id LEFT JOIN regions ON users.id_region_fk = regions.id LEFT JOIN cities ON users.id_city_fk = cities.id WHERE users.username = '${username}' AND users.status = 1 LIMIT 1`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      console.log("found user: ", res[0]);
+      result(null, res[0]);
+      return;
+    }
+    // not found User with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+
 User.findUserByKeyword = (keyword, result) => {
   sql.query(`SELECT id, name, lastname, username, email, picture FROM users WHERE users.name LIKE '%${keyword}%' ORDER BY users.name ASC`, (err, res) => {
     if (err) {

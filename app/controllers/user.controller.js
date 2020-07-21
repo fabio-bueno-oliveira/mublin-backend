@@ -154,6 +154,23 @@ exports.findOne = (req, res) => {
   });
 };
 
+// Find a single user with a username
+exports.findOneByUsername = (req, res) => {
+  User.findByUsername(req.params.username, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No user found with username ${req.params.username}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving user with username " + req.params.username
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Find all users from a keyword
 exports.findManyKeyword = (req, res) => {
   User.findUserByKeyword(req.params.keyword, (err, data) => {

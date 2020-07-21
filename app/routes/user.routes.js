@@ -19,8 +19,11 @@ module.exports = app => {
   app.get("/secure/users", checkToken, users.findAll);
 
   // Retrieve a single User with userId
-  app.get("/user/:userId", users.findOne);
-  app.get("/secure/user/:userId", checkToken, users.findOne);
+  // app.get("/user/:userId", users.findOne);
+  // app.get("/secure/user/:userId", checkToken, users.findOne);
+
+  // Retrieve a single User with username
+  app.get("/user/:username", checkToken, users.findOneByUsername);
 
   // Retrieve Users with keyword
   app.get("/users/search/:keyword", users.findManyKeyword);
