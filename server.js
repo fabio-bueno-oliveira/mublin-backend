@@ -6,8 +6,14 @@ const app = express();
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
 
+var corsOptions = {
+  // origin: 'http://localhost:3000',
+  origin: 'https://fabiobueno.me',
+  optionsSuccessStatus: 200
+}
+
 // use cors for requests
-app.use(cors());
+app.use(cors(corsOptions));
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
