@@ -6,20 +6,19 @@ const app = express();
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
 
-var corsOptions = {
-  // origin: 'http://localhost:3000',
-  origin: 'https://fabiobueno.me',
-  optionsSuccessStatus: 200
-}
+// var corsOptions = {
+//   rigin: 'http://localhost:3000',
+//   optionsSuccessStatus: 200
+// }
 
 // use cors for requests
-app.use(cors(corsOptions));
+app.use(cors());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://mublin.com');
+  res.header('Access-Control-Allow-Origin', 'https://fabiobueno.me');
   res.header(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept',
