@@ -272,3 +272,20 @@ exports.events = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Check if username is available
+exports.checkUsername = (req, res) => {
+  User.CheckUsernameAvailability(req.params.username, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Username ${req.params.username} is available.`
+        });
+      } else {
+        res.status(500).send({
+          message: `Error retrieving username ${req.params.username}`
+        });
+      }
+    } else res.send(data);
+  });
+};

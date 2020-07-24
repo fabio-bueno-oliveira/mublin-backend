@@ -48,6 +48,9 @@ module.exports = app => {
   // User events
   app.get("/user/:userId/events", checkToken, users.events);
 
+  // Check if username is available
+  app.get("/check/username/:username", users.checkUsername)
+
   // Update a User with userId
   // app.put("/users/:projectId", users.update);
 

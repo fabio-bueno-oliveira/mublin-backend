@@ -248,4 +248,21 @@ User.eventsByUserId = (usuId, result) => {
   });
 };
 
+User.CheckUsernameAvailability = (username, result) => {
+  sql.query(`SELECT users.id, users.username FROM users WHERE users.username = '${username}' LIMIT 1`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      console.log("found user: ", res[0]);
+      result(null, res[0]);
+      return;
+    }
+    // not found User with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+
 module.exports = User;
