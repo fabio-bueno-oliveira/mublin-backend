@@ -249,7 +249,8 @@ User.eventsByUserId = (usuId, result) => {
 };
 
 User.CheckUsernameAvailability = (username, result) => {
-  sql.query(`SELECT users.id, users.username FROM users WHERE users.username = '${username}' LIMIT 1`, (err, res) => {
+  let errorMsg = {message: "Username "+username+" is not available."}
+  sql.query(`SELECT users.username AS username FROM users WHERE users.username = '${username}' LIMIT 1 UNION SELECT projects.username AS username FROM projects WHERE projects.username = '${username}' LIMIT 1`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -257,7 +258,7 @@ User.CheckUsernameAvailability = (username, result) => {
     }
     if (res.length) {
       console.log("found user: ", res[0]);
-      result(null, res[0]);
+      result(null, errorMsg);
       return;
     }
     // not found User with the id
