@@ -289,3 +289,20 @@ exports.checkUsername = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Check if email is available
+exports.checkEmail = (req, res) => {
+  User.CheckEmailAvailability(req.params.email, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Email ${req.params.email} allowed.`
+        });
+      } else {
+        res.status(500).send({
+          message: `Error retrieving email ${req.params.email}`
+        });
+      }
+    } else res.send(data);
+  });
+};

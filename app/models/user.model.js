@@ -261,7 +261,25 @@ User.CheckUsernameAvailability = (username, result) => {
       result(null, errorMsg);
       return;
     }
-    // not found User with the id
+    // not found User with the username
+    result({ kind: "not_found" }, null);
+  });
+};
+
+User.CheckEmailAvailability = (email, result) => {
+  let errorMsg = {message: "Email "+email+" is already registered."}
+  sql.query(`SELECT users.email FROM users WHERE users.email = '${email}' LIMIT 1`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      console.log("found user: ", res[0]);
+      result(null, errorMsg);
+      return;
+    }
+    // not found User with the email
     result({ kind: "not_found" }, null);
   });
 };

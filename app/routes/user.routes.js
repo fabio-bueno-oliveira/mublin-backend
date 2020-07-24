@@ -51,6 +51,9 @@ module.exports = app => {
   // Check if username is available
   app.get("/check/username/:username", users.checkUsername)
 
+  // Check if email is available
+  app.get("/check/email/:email", users.checkEmail)
+
   // Update a User with userId
   // app.put("/users/:projectId", users.update);
 
