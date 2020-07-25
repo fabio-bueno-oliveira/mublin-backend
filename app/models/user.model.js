@@ -249,7 +249,7 @@ User.eventsByUserId = (usuId, result) => {
 };
 
 User.CheckUsernameAvailability = (username, result) => {
-  let errorMsg = {message: "Username "+username+" is not available."}
+  let errorMsg = {message: "Username "+username+" is not available.", available: false}
   sql.query(`SELECT users.username AS username FROM users WHERE users.username = '${username}' LIMIT 1 UNION SELECT projects.username AS username FROM projects WHERE projects.username = '${username}' LIMIT 1`, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -267,7 +267,7 @@ User.CheckUsernameAvailability = (username, result) => {
 };
 
 User.CheckEmailAvailability = (email, result) => {
-  let errorMsg = {message: "Email "+email+" is already registered."}
+  let errorMsg = {message: "Email "+email+" already registered", available: false}
   sql.query(`SELECT users.email FROM users WHERE users.email = '${email}' LIMIT 1`, (err, res) => {
     if (err) {
       console.log("error: ", err);

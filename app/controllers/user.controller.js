@@ -278,8 +278,9 @@ exports.checkUsername = (req, res) => {
   User.CheckUsernameAvailability(req.params.username, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Username ${req.params.username} is available.`
+        res.status(200).send({
+          message: `Username ${req.params.username} is available.`,
+          available: true
         });
       } else {
         res.status(500).send({
@@ -295,8 +296,9 @@ exports.checkEmail = (req, res) => {
   User.CheckEmailAvailability(req.params.email, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Email ${req.params.email} allowed.`
+        res.status(200).send({
+          message: `Email ${req.params.email} allowed.`,
+          available: true
         });
       } else {
         res.status(500).send({
