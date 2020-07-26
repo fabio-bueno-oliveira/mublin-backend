@@ -1,7 +1,13 @@
 const User = require("../models/user.model.js");
+const { hashSync, genSaltSync, compareSync } = require("bcrypt");
 const md5 = require("md5");
 const { sign } = require("jsonwebtoken");
 const jwt = require("jsonwebtoken");
+
+var today = new Date();
+var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+var dateTime = date+' '+time;
 
 // Create and Save a new Project
 exports.create = (req, res) => {
@@ -12,11 +18,18 @@ exports.create = (req, res) => {
     });
   }
 
+  var salt = genSaltSync(10);
+
   // Create a User
-  const project = new User({
-    email: req.body.email,
+  const user = new User({
+    created: dateTime,
+    modified: dateTime,
     name: req.body.name,
-    active: req.body.active
+    lastname: req.body.lastname,
+    email: req.body.email,
+    username: req.body.username,
+    password: hashSync(req.body.password, salt),
+    random_key: md5(today+req.body.username)
   });
 
   // Save User in the database
@@ -42,7 +55,9 @@ exports.loginUser = (req, res) => {
         message: 'Invalid email or passwords'
       });
     }
-    if (md5(body.password) === results.password) {
+
+    const result = compareSync(body.password, results.password);
+    if (result) {
       results.password = undefined;
       const jsontoken = sign({ result: results }, "mb2020HIT", {
         expiresIn: "3h" 
@@ -303,6 +318,26 @@ exports.checkEmail = (req, res) => {
       } else {
         res.status(500).send({
           message: `Error retrieving email ${req.params.email}`
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// Activate user based on email and hash
+exports.activate = (req, res) => {
+  const body = req.body;
+  User.activateByHash(body.email, body.hash, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found user with hash and email ${body.email}.`,
+          activated: false
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving user with email " + body.email,
+          activated: false
         });
       }
     } else res.send(data);

@@ -1,10 +1,64 @@
 const sql = require("./db.js");
+var nodemailer = require('nodemailer');
 
 // constructor
 const User = function(user) {
-  this.email = user.email;
+  this.created = user.created;
+  this.modified = user.modified;
   this.name = user.name;
-  this.active = user.active;
+  this.lastname = user.lastname;
+  this.email = user.email;
+  this.username = user.username;
+  this.password = user.password;
+  this.random_key = user.random_key;
+};
+
+User.create = (newUser, result) => {
+  sql.query("INSERT INTO users SET ?", newUser, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    console.log("created customer: ", { id: res.insertId, ...newUser });
+    result(null, { id: res.insertId, ...newUser });
+
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'youremail@gmail.com',
+        pass: 'yourpassword'
+      }
+    });
+
+    var transporter = nodemailer.createTransport({
+      pool: true,
+      host: process.env.SMTP_SERVICE_HOST,
+      port: process.env.SMTP_SERVICE_PORT,
+      secure: process.env.SMTP_SERVICE_SECURE,
+      auth: {
+        user: process.env.SMTP_USER_NAME,
+        pass: process.env.SMTP_USER_PASSWORD
+      }
+    });
+
+    var mailOptions = {
+      from: process.env.SMTP_USER_NAME,
+      to: 'fabiobueno@outlook.com',
+      subject: 'Sending Email using Node.js',
+      html: '<h1>Welcome</h1><p>That was easy!</p>'
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+
+  });
 };
 
 User.loginUserByEmail = (email, result) => {
@@ -282,6 +336,29 @@ User.CheckEmailAvailability = (email, result) => {
     // not found User with the email
     result({ kind: "not_found" }, null);
   });
+};
+
+User.activateByHash = (email, hash, result) => {
+  sql.query(
+    "UPDATE users SET active = 1 WHERE email = ? AND random_key = ?",
+    [email, hash],
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found Customer with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+
+      console.log(`successfully activated user: ${email}`);
+      result(null, { email: email, activated: true });
+    }
+  );
 };
 
 module.exports = User;

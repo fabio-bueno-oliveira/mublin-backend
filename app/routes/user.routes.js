@@ -3,7 +3,7 @@ module.exports = app => {
   const { checkToken } = require("../auth/token_validation");
 
   // Create a new User
-  // app.post("/users", users.create);
+  app.post("/user/create", users.create);
 
   // Login user
   app.post("/login", users.loginUser)
@@ -53,6 +53,9 @@ module.exports = app => {
 
   // Check if email is available
   app.get("/check/email/:email", users.checkEmail)
+
+  // Activate account
+  app.put("/activate", users.activate)
 
   // Update a User with userId
   // app.put("/users/:projectId", users.update);
