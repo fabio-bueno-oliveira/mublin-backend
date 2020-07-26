@@ -22,15 +22,8 @@ User.create = (newUser, result) => {
     }
 
     console.log("created customer: ", { id: res.insertId, ...newUser });
-    result(null, { id: res.insertId, ...newUser });
-
-    var transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'youremail@gmail.com',
-        pass: 'yourpassword'
-      }
-    });
+    // result(null, { id: res.insertId, ...newUser });
+    result(null, { id: res.insertId, username: newUser.username, name: newUser.name, lastname: newUser.lastname, email: newUser.email });
 
     var transporter = nodemailer.createTransport({
       pool: true,
@@ -340,7 +333,7 @@ User.CheckEmailAvailability = (email, result) => {
 
 User.activateByHash = (email, hash, result) => {
   sql.query(
-    "UPDATE users SET active = 1 WHERE email = ? AND random_key = ?",
+    "UPDATE users SET status = 1 WHERE email = ? AND random_key = ?",
     [email, hash],
     (err, res) => {
       if (err) {
