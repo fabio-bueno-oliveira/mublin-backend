@@ -71,6 +71,7 @@ exports.loginUser = (req, res) => {
       return res.json({
         success: 1,
         id: results.id,
+        firstAccess: results.first_access,
         message: "login successfully",
         token: jsontoken
       });

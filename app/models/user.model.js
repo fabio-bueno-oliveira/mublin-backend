@@ -31,7 +31,7 @@ User.create = (newUser, result) => {
       status: 1
     }
     const jsontoken = sign({ result: results }, process.env.JWT_SECRET, {
-        expiresIn: "3h" 
+        expiresIn: "3h"
     });
     result(null, { id: res.insertId, username: newUser.username, name: newUser.name, lastname: newUser.lastname, email: newUser.email, token: jsontoken });
 
@@ -65,7 +65,7 @@ User.create = (newUser, result) => {
 };
 
 User.loginUserByEmail = (email, result) => {
-  sql.query(`SELECT id, email, username, password, status FROM users WHERE email = '${email}'`, (err, res) => {
+  sql.query(`SELECT id, email, username, password, status, first_access FROM users WHERE email = '${email}'`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
