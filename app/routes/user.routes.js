@@ -57,6 +57,9 @@ module.exports = app => {
   // Activate account
   app.put("/activate", users.activate)
 
+  // Update user picture with userId
+  app.put("/user/:userId/picture", checkToken, users.updatePicture);
+
   // Update a User with userId
   // app.put("/users/:projectId", users.update);
 

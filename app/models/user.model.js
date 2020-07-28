@@ -364,4 +364,24 @@ User.activateByHash = (email, hash, result) => {
   );
 };
 
+User.updatePictureById = (id, picture, result) => {
+  sql.query(`UPDATE users SET picture = '${picture}' WHERE id = ${id}`, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found Customer with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+
+      console.log("updated user: ", { id: id, picture: picture });
+      result(null, { id: id, picture: picture });
+    }
+  );
+};
+
 module.exports = User;
