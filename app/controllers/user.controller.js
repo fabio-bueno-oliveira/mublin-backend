@@ -9,7 +9,7 @@ var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 var dateTime = date+' '+time;
 
-// Create and Save a new Project
+// Create new User
 exports.create = (req, res) => {
   // Validate request
   if (!req.body) {
@@ -18,6 +18,7 @@ exports.create = (req, res) => {
     });
   }
 
+  // Generate bcrypt salt
   var salt = genSaltSync(10);
 
   // Create a User
@@ -50,6 +51,11 @@ exports.loginUser = (req, res) => {
     if (err) {
       console.log(err);
     }
+    if (results.status === 0) {
+      return res.status(401).send({
+        message: 'Usuário inativo.'
+      });
+    }
     if (!results) {
       return res.status(401).send({
         message: 'Invalid email or passwords'
@@ -59,7 +65,7 @@ exports.loginUser = (req, res) => {
     const result = compareSync(body.password, results.password);
     if (result) {
       results.password = undefined;
-      const jsontoken = sign({ result: results }, "mb2020HIT", {
+      const jsontoken = sign({ result: results }, process.env.JWT_SECRET, {
         expiresIn: "3h" 
       });
       return res.json({
@@ -70,7 +76,7 @@ exports.loginUser = (req, res) => {
       });
     } else {
       return res.status(401).send({
-        message: 'Invalid email or passwords'
+        message: 'Email ou senha inválidos'
       });
       // return res.json({
       //   success: 0,
@@ -83,7 +89,7 @@ exports.loginUser = (req, res) => {
 // Check if current session token is valid
 exports.checkSession = (req, res) => {
   const token = req.get("authorization").slice(7);
-  jwt.verify(token, "mb2020HIT", (err, decoded) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       // return res.json({
       //   success: 0,
@@ -113,7 +119,7 @@ exports.checkSession = (req, res) => {
 // Retrieve logged user info from the database
 exports.getInfo = (req, res) => {
   const token = req.get("authorization").slice(7);
-  jwt.verify(token, "mb2020HIT", (err, decoded) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       // return res.json({
       //   success: 0,

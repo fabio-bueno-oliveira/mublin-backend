@@ -1,4 +1,5 @@
 const sql = require("./db.js");
+const { sign } = require("jsonwebtoken");
 var nodemailer = require('nodemailer');
 
 // constructor
@@ -23,7 +24,16 @@ User.create = (newUser, result) => {
 
     console.log("created customer: ", { id: res.insertId, ...newUser });
     // result(null, { id: res.insertId, ...newUser });
-    result(null, { id: res.insertId, username: newUser.username, name: newUser.name, lastname: newUser.lastname, email: newUser.email });
+    var results = {
+      id: res.insertId,
+      email: newUser.email,
+      username: newUser.username,
+      status: 1
+    }
+    const jsontoken = sign({ result: results }, process.env.JWT_SECRET, {
+        expiresIn: "3h" 
+    });
+    result(null, { id: res.insertId, username: newUser.username, name: newUser.name, lastname: newUser.lastname, email: newUser.email, token: jsontoken });
 
     var transporter = nodemailer.createTransport({
       pool: true,
@@ -55,14 +65,14 @@ User.create = (newUser, result) => {
 };
 
 User.loginUserByEmail = (email, result) => {
-  sql.query(`SELECT id, email, username, password FROM users WHERE email = '${email}'`, (err, res) => {
+  sql.query(`SELECT id, email, username, password, status FROM users WHERE email = '${email}'`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }
     if (res.length) {
-      console.log("found user: ", res[0]);
+      // console.log("found user: ", res[0]);
       result(null, res[0]);
       return;
     }
