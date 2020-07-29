@@ -11,7 +11,7 @@ const Location = function(city) {
 // find cities by keyword
 Location.findAllCitiesByKeyword = (keyword, result) => {
   sql.query(`
-    SELECT cities.id, cities.region_id, cities.country_id, cities.latitude, cities.longitude, cities.name FROM cities WHERE cities.name LIKE '%${keyword}%' ORDER BY name ASC LIMIT 50 `, (err, res) => {
+    SELECT cities.id AS value, cities.name AS text FROM cities WHERE cities.name LIKE '%${keyword}%' AND cities.country_id = 27 ORDER BY name ASC LIMIT 50`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
