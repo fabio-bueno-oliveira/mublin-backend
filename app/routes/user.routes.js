@@ -60,6 +60,9 @@ module.exports = app => {
   // Update user picture with userId
   app.put("/user/:userId/picture", checkToken, users.updatePicture);
 
+  // Update Step 2 fields (gender,bio,id_country_fk,id_region_fk,id_city_fk)
+  app.put("/user/step2", checkToken, users.updateStep2);
+
   // Update a User with userId
   // app.put("/users/:projectId", users.update);
 

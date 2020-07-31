@@ -1,6 +1,7 @@
 const sql = require("./db.js");
 const { sign } = require("jsonwebtoken");
 var nodemailer = require('nodemailer');
+const jwt = require("jsonwebtoken");
 
 // constructor
 const User = function(user) {
@@ -382,6 +383,32 @@ User.updatePictureById = (id, picture, result) => {
       result(null, { id: id, picture: picture });
     }
   );
+};
+
+User.updateStep2ById = (loggedID, id, gender, bio, id_country_fk, id_region_fk, id_city_fk, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == id) {
+    sql.query(`UPDATE users SET gender = '${gender}', bio = '${bio}', id_country_fk = '${id_country_fk}', id_region_fk = '${id_region_fk}', id_city_fk = '${id_city_fk}' WHERE id = ${id}`, (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+          return;
+        }
+
+        if (res.affectedRows == 0) {
+          // not found user with the id
+          result({ kind: "not_found" }, null);
+          return;
+        }
+
+        console.log("updated user: ", { id: id });
+        result(null, { id: id });
+      }
+    );
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
 };
 
 module.exports = User;
