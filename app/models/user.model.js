@@ -100,7 +100,7 @@ User.checkUserByToken = (loggedEmail, result) => {
 };
 
 User.getUserInfo = (email, loggedEmail, result) => {
-    sql.query(`SELECT id, name, lastname, username, email, picture, payment_plan, first_access FROM users WHERE email = '${loggedEmail}' LIMIT 1`, (err, res) => {
+    sql.query(`SELECT id, name, lastname, username, bio, gender, id_country_fk AS country, id_region_fk AS region, id_city_fk AS city, email, picture, payment_plan, first_access FROM users WHERE email = '${loggedEmail}' LIMIT 1`, (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(err, null);
