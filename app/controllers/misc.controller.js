@@ -28,3 +28,15 @@ exports.musicGenres = (req, res) => {
     else res.send(data);
   });
 };
+
+// Retrieve all roles from database
+exports.roles = (req, res) => {
+  Misc.getRoles((err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving roles."
+      });
+    else res.send(data);
+  });
+};
