@@ -411,4 +411,30 @@ User.updateStep2ById = (loggedID, id, gender, bio, id_country_fk, id_region_fk, 
   }
 };
 
+User.addUsersMusicGenre = (loggedID, userId, musicGenreId, musicGenreMain, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == userId) {
+    sql.query(`INSERT INTO users_genres (id_user_fk, id_genre_fk, main_genre) VALUES (${userId}, ${musicGenreId}, ${musicGenreMain})`, (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+          return;
+        }
+
+        if (res.affectedRows == 0) {
+          // not found user with the id
+          result({ kind: "not_found" }, null);
+          return;
+        }
+
+        console.log("added music genre to user: ", { userId: userId, musicGenreId: musicGenreId });
+        result(null, { userId: userId, musicGenreId: musicGenreId });
+      }
+    );
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
+};
+
 module.exports = User;
