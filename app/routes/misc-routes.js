@@ -4,4 +4,7 @@ module.exports = app => {
   // Retrieve cities by keyword
   app.get("/imagekit", misc.imagekit);
 
+  // Retrieve all music genres
+  app.get("/music/genres", misc.musicGenres);
+
 };

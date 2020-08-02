@@ -1,3 +1,5 @@
+const Misc = require("../models/misc.model.js");
+
 // Imagekit auth
 exports.imagekit = (req, res) => {
 
@@ -13,4 +15,16 @@ exports.imagekit = (req, res) => {
   var authenticationParameters = imagekit.getAuthenticationParameters();
   console.log(authenticationParameters);
   res.send(authenticationParameters)
+};
+
+// Retrieve all music genres from database
+exports.musicGenres = (req, res) => {
+  Misc.getMusicGenres((err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving music genres."
+      });
+    else res.send(data);
+  });
 };
