@@ -100,7 +100,7 @@ User.checkUserByToken = (loggedEmail, result) => {
 };
 
 User.getUserInfo = (email, loggedEmail, result) => {
-    sql.query(`SELECT id, name, lastname, username, bio, gender, id_country_fk AS country, id_region_fk AS region, id_city_fk AS city, email, picture, payment_plan, first_access FROM users WHERE email = '${loggedEmail}' LIMIT 1`, (err, res) => {
+    sql.query(`SELECT users.id, users.name, users.lastname, users.username, users.bio, users.gender, users.id_country_fk AS country, users.id_region_fk AS region, users.id_city_fk AS city, users.email, users.picture, users.payment_plan, users.first_access FROM users WHERE users.email = '${loggedEmail}' LIMIT 1`, (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(err, null);
@@ -114,6 +114,23 @@ User.getUserInfo = (email, loggedEmail, result) => {
       // not found User with the email in the token
       result({ kind: "not_found" }, null);
     });
+};
+
+User.getUserInfoGenres = (userId, result) => {
+  sql.query(`SELECT users_genres.id_genre_fk AS idGenre, genres.name, users_genres.main_genre AS mainGenre FROM users_genres LEFT JOIN genres ON users_genres.id_genre_fk = genres.id WHERE users_genres.id_user_fk = '${userId}' ORDER BY mainGenre`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      console.log("found user´s genres: ", res[0]);
+      result(null, res[0]);
+      return;
+    }
+    // not found User with the email in the token
+    result({ kind: "not_found" }, null);
+  });
 };
 
 User.getAll = result => {

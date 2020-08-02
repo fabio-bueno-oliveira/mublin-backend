@@ -147,6 +147,18 @@ exports.getInfo = (req, res) => {
   });
 };
 
+// Retrieve user´s genres info from database
+exports.getInfoGenres = (req, res) => {
+  User.getUserInfoGenres(req.params.userId, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving user´s genres info."
+      });
+    else res.send(data);
+  });
+};
+
 // Retrieve all Users from the database
 exports.findAll = (req, res) => {
   User.getAll((err, data) => {

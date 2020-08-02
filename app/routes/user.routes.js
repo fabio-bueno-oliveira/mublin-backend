@@ -6,13 +6,14 @@ module.exports = app => {
   app.post("/user/create", users.create);
 
   // Login user
-  app.post("/login", users.loginUser)
+  app.post("/login", users.loginUser);
 
   // Check active session
-  app.get("/session", users.checkSession)
+  app.get("/session", users.checkSession);
 
   // Fetch logged user info
   app.get("/userInfo", checkToken, users.getInfo);
+  app.get("/userInfo/:userId/genres", checkToken, users.getInfoGenres);
 
   // Retrieve all User
   app.get("/users", users.findAll);
