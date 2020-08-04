@@ -64,8 +64,11 @@ module.exports = app => {
   // Update Step 2 fields (gender,bio,id_country_fk,id_region_fk,id_city_fk)
   app.put("/user/step2", checkToken, users.updateStep2);
 
-  // Update user´s artistic music genres (start > step 3)
+  // Add user´s artistic music genre (start > step 3)
   app.post("/user/add/musicGenre", checkToken, users.addUsersMusicGenre);
+
+  // Delete user´s artistic music genre (start > step 3)
+  app.delete("/user/delete/musicGenre", checkToken, users.deleteUsersMusicGenre);
 
   // Update a User with userId
   // app.put("/users/:projectId", users.update);

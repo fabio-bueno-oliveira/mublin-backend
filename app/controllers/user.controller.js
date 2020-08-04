@@ -411,7 +411,7 @@ exports.updateStep2 = (req, res) => {
   });
 };
 
-// Update User´s Music Genres (Start > Step 3)
+// Update User´s Music Genre
 exports.addUsersMusicGenre = (req, res) => {
   // Validate Request
   if (!req.body) {
@@ -429,6 +429,30 @@ exports.addUsersMusicGenre = (req, res) => {
         } else {
           res.status(500).send({
             message: "Error updating user with id " + req.body.userId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
+// Delete User´s Music Genre
+exports.deleteUsersMusicGenre = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.deleteUsersMusicGenre(req.headers.authorization, req.body.userId, req.body.userGenreId, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found user enre with id ${req.body.userGenreId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating user genre with id " + req.body.userGenreId
           });
         }
     } else res.send(data);

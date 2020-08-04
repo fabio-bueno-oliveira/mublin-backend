@@ -454,4 +454,29 @@ User.addUsersMusicGenre = (loggedID, userId, musicGenreId, musicGenreMain, resul
   }
 };
 
+User.deleteUsersMusicGenre = (loggedID, userId, userGenreId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == userId) {
+    sql.query(`DELETE FROM users_genres WHERE id = ${userGenreId}`, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found user genre with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+
+      console.log("deleted user genre with id: ", userGenreId);
+      result(null, res);
+    });
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
+};
+
 module.exports = User;
