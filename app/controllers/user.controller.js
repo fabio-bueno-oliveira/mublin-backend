@@ -153,6 +153,7 @@ exports.getInfoGenres = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(200).send({
+          id: '', idGenre:'', name: '', mainGenre: '',
           message: `Not found genres for user with id ${req.params.userId}.`
         });
       } else {
