@@ -117,7 +117,7 @@ User.getUserInfo = (email, loggedEmail, result) => {
 };
 
 User.getUserInfoGenres = (userId, result) => {
-  sql.query(`SELECT users_genres.id_genre_fk AS idGenre, genres.name, users_genres.main_genre AS mainGenre FROM users_genres LEFT JOIN genres ON users_genres.id_genre_fk = genres.id WHERE users_genres.id_user_fk = '${userId}' ORDER BY mainGenre`, (err, res) => {
+  sql.query(`SELECT users_genres.id, users_genres.id_genre_fk AS idGenre, genres.name, users_genres.main_genre AS mainGenre FROM users_genres LEFT JOIN genres ON users_genres.id_genre_fk = genres.id WHERE users_genres.id_user_fk = '${userId}' ORDER BY mainGenre`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
