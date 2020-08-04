@@ -125,7 +125,7 @@ User.getUserInfoGenres = (userId, result) => {
     }
     if (res.length) {
       console.log("found user´s genres: ", res[0]);
-      result(null, res[0]);
+      result(null, res);
       return;
     }
     // not found User with the email in the token
