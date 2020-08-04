@@ -124,7 +124,7 @@ User.getUserInfoGenres = (userId, result) => {
       return;
     }
     if (res.length) {
-      console.log("found user´s genres: ", res[0]);
+      console.log("found user´s genres: ", res);
       result(null, res);
       return;
     }
