@@ -152,7 +152,7 @@ exports.getInfoGenres = (req, res) => {
   User.getUserInfoGenres(req.params.userId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
-        res.status(401).send(
+        res.status(404).send(
           [{id: '', idGenre:'', name: '', mainGenre: ''}]
           //message: `Not found genres for user with id ${req.params.userId}.`
         );
