@@ -171,7 +171,7 @@ exports.getInfoRoles = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(200).send(
-          [{id: '', idRole:'', name: '', description, mainActivity: ''}]
+          [{id: '', idRole:'', name: '', description: '', mainActivity: ''}]
           //message: `Not found roles for user with id ${req.params.userId}.`
         );
       } else {
@@ -472,7 +472,7 @@ exports.deleteUsersMusicGenre = (req, res) => {
     if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
-            message: `Not found user enre with id ${req.body.userGenreId}.`
+            message: `Not found user genre with id ${req.body.userGenreId}.`
           });
         } else {
           res.status(500).send({
