@@ -117,7 +117,24 @@ User.getUserInfo = (email, loggedEmail, result) => {
 };
 
 User.getUserInfoGenres = (userId, result) => {
-  sql.query(`SELECT users_genres.id, users_genres.id_genre_fk AS idGenre, genres.name, users_genres.main_genre AS mainGenre FROM users_genres LEFT JOIN genres ON users_genres.id_genre_fk = genres.id WHERE users_genres.id_user_fk = '${userId}' ORDER BY mainGenre`, (err, res) => {
+  sql.query(`SELECT users_genres.id, users_genres.id_genre_fk AS idGenre, genres.name, users_genres.main_genre AS mainGenre FROM users_genres LEFT JOIN genres ON users_genres.id_genre_fk = genres.id WHERE users_genres.id_user_fk = '${userId}' ORDER BY mainGenre DESC`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      console.log("found user´s genres: ", res);
+      result(null, res);
+      return;
+    }
+    // not found User with the email in the token
+    result({ kind: "not_found" }, null);
+  });
+};
+
+User.getUserInfoRoles = (userId, result) => {
+  sql.query(`SELECT users_roles.id, users_roles.id_role_fk AS idRole, roles.name_ptbr AS name, roles.description_ptbr AS description, users_roles.main_activity AS mainActivity FROM users_roles LEFT JOIN roles ON users_roles.id_role_fk = roles.id WHERE users_roles.id_user_fk = '${userId}' ORDER BY mainActivity DESC`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);

@@ -14,6 +14,7 @@ module.exports = app => {
   // Fetch logged user info
   app.get("/userInfo", checkToken, users.getInfo);
   app.get("/userInfo/:userId/genres", checkToken, users.getInfoGenres);
+  app.get("/userInfo/:userId/roles", checkToken, users.getInfoRoles);
 
   // Retrieve all User
   app.get("/users", users.findAll);

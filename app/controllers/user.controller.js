@@ -165,6 +165,24 @@ exports.getInfoGenres = (req, res) => {
   });
 };
 
+// Retrieve user´s roles info from database
+exports.getInfoRoles = (req, res) => {
+  User.getUserInfoRoles(req.params.userId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(200).send(
+          [{id: '', idRole:'', name: '', description, mainActivity: ''}]
+          //message: `Not found roles for user with id ${req.params.userId}.`
+        );
+      } else {
+        res.status(500).send({
+          message: "Error retrieving roles from user id " + req.params.userId
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Retrieve all Users from the database
 exports.findAll = (req, res) => {
   User.getAll((err, data) => {
