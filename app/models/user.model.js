@@ -459,18 +459,67 @@ User.deleteUsersMusicGenre = (loggedID, userId, userGenreId, result) => {
   if (x.result.id == userId) {
     sql.query(`DELETE FROM users_genres WHERE id = ${userGenreId}`, (err, res) => {
       if (err) {
+        //console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        // not found user genre with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      //console.log("deleted user genre with id: ", userGenreId);
+      result(null, res);
+    });
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
+};
+
+User.addUsersRole = (loggedID, userId, roleId, roleMain, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == userId) {
+    sql.query(`INSERT INTO users_roles (id_user_fk, id_role_fk, main_activity) VALUES (${userId}, ${roleId}, ${roleMain})`, (err, res) => {
+        if (err) {
+          //console.log("error: ", err);
+          result(null, err);
+          return;
+        }
+
+        if (res.affectedRows == 0) {
+          // not found user with the id
+          result({ kind: "not_found" }, null);
+          return;
+        }
+
+        //console.log("added role to user: ", { userId: userId, roleId: roleId });
+        result(null, { userId: userId, roleId: roleId, roleMain: roleMain  });
+      }
+    );
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
+};
+
+User.deleteUsersRole = (loggedID, userId, userRoleId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == userId) {
+    sql.query(`DELETE FROM users_roles WHERE id = ${userRoleId}`, (err, res) => {
+      if (err) {
         console.log("error: ", err);
         result(null, err);
         return;
       }
 
       if (res.affectedRows == 0) {
-        // not found user genre with the id
+        // not found user role with the id
         result({ kind: "not_found" }, null);
         return;
       }
 
-      console.log("deleted user genre with id: ", userGenreId);
+      console.log("deleted user role with id: ", userRoleId);
       result(null, res);
     });
   } else {

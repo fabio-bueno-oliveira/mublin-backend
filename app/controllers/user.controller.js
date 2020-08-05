@@ -464,3 +464,51 @@ exports.deleteUsersMusicGenre = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Add User Role
+exports.addUsersRole = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.addUsersRole(req.headers.authorization, req.body.userId, req.body.roleId, req.body.roleMain, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found user with id ${req.body.userId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating user with id " + req.body.userId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
+// Delete User´s Role
+exports.deleteUsersRole = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.deleteUsersRole(req.headers.authorization, req.body.userId, req.body.userRoleId, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found user enre with id ${req.body.userRoleId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating user role with id " + req.body.userRoleId
+          });
+        }
+    } else res.send(data);
+  });
+};
