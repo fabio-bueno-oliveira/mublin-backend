@@ -44,6 +44,23 @@ exports.findByKeyword = (req, res) => {
   });
 };
 
+// Find projects by keyword (adapted for Semantic UI search)
+exports.findProjectByKeyword = (req, res) => {
+  Project.findProjectByKeyword(req.params.keyword, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No projects found with keyword ${req.params.keyword}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving projects with keyword " + req.params.keyword
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Retrieve all Projects from the database.
 exports.findAll = (req, res) => {
   Project.getAll((err, data) => {

@@ -26,6 +26,25 @@ Project.findProjectsByKeyword = (keyword, result) => {
   });
 };
 
+// find projects by keyword
+Project.findProjectByKeyword = (keyword, result) => {
+  sql.query(`
+    SELECT projects.id AS price, projects.name AS title, CONCAT(genres.name,' - ',cities.name,'/',regions.name,' (@',projects.username,')') AS description, CONCAT('https://ik.imagekit.io/mublin/projects/',projects.id,'/',projects.picture) AS image FROM projects LEFT JOIN cities ON projects.id_city_fk = cities.id LEFT JOIN regions ON projects.id_region_fk = regions.id LEFT JOIN genres ON projects.id_genre_1_fk = genres.id WHERE public = 1 HAVING projects.name LIKE '%${keyword}%' ORDER BY projects.name ASC`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      console.log("result: ", res);
+      result(null, res);
+      return;
+    }
+    // not found user with the keyword
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Project.getAll = result => {
   sql.query("SELECT * FROM projects", (err, res) => {
     if (err) {

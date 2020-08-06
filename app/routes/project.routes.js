@@ -15,6 +15,10 @@ module.exports = app => {
   // Retrieve Users and Projects with keyword
   app.get("/search/projects/:keyword", projects.findByKeyword);
   app.get("/secure/search/projects/:keyword", checkToken, projects.findByKeyword);
+  app.get("/search/project/:keyword", checkToken, projects.findProjectByKeyword);
+
+  // Retrieve Users and Projects with keyword
+  app.get("/search/projects/:keyword", projects.findByKeyword);
 
   // Retrieve all Projects
   app.get("/projects", projects.findAll);
