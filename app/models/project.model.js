@@ -29,7 +29,7 @@ Project.findProjectsByKeyword = (keyword, result) => {
 // find projects by keyword
 Project.findProjectByKeyword = (keyword, result) => {
   sql.query(`
-    SELECT projects.id AS price, projects.name AS title, CONCAT(genres.name,' - ',cities.name,'/',regions.name,' (@',projects.username,')') AS description, CONCAT('https://ik.imagekit.io/mublin/projects/',projects.id,'/',projects.picture) AS image, projects.foundation_year FROM projects LEFT JOIN cities ON projects.id_city_fk = cities.id LEFT JOIN regions ON projects.id_region_fk = regions.id LEFT JOIN genres ON projects.id_genre_1_fk = genres.id WHERE public = 1 HAVING projects.name LIKE '%${keyword}%' ORDER BY projects.name ASC`, (err, res) => {
+    SELECT projects.id AS price, projects.name AS title, CONCAT(genres.name,' - ',cities.name,'/',regions.name,' (@',projects.username,')') AS description, CONCAT('https://ik.imagekit.io/mublin/projects/',projects.id,'/',projects.picture) AS image, projects.foundation_year, projects.end_year FROM projects LEFT JOIN cities ON projects.id_city_fk = cities.id LEFT JOIN regions ON projects.id_region_fk = regions.id LEFT JOIN genres ON projects.id_genre_1_fk = genres.id WHERE public = 1 HAVING projects.name LIKE '%${keyword}%' ORDER BY projects.name ASC`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -76,7 +76,7 @@ Project.findById = (projectId, result) => {
 
 Project.findByUsername = (projectUsername, result) => {
   sql.query(`
-  SELECT projects.id, projects.name, projects.old_name AS oldName, projects.username, projects.picture, projects.created, projects.foundation_year AS foundationYear, projects.end_date AS endDate, projects.bio, projects.purpose, projects.spotify_uri AS spotifyUri, projects.type AS typeId, projects_types.name_ptbr AS typeName, genre1.name AS genre1, genre2.name AS genre2, genre3.name AS genre3, countries.name AS country, regions.name AS region, cities.name AS city, label_show AS labelShow, label_text AS labelText, label_color AS labelColor, public 
+  SELECT projects.id, projects.name, projects.old_name AS oldName, projects.username, projects.picture, projects.created, projects.foundation_year AS foundationYear, projects.end_year AS endDate, projects.bio, projects.purpose, projects.spotify_uri AS spotifyUri, projects.type AS typeId, projects_types.name_ptbr AS typeName, genre1.name AS genre1, genre2.name AS genre2, genre3.name AS genre3, countries.name AS country, regions.name AS region, cities.name AS city, label_show AS labelShow, label_text AS labelText, label_color AS labelColor, public 
   FROM projects 
   LEFT JOIN projects_types ON projects.type = projects_types.id 
   LEFT JOIN genres AS genre1 ON projects.id_genre_1_fk = genre1.id 
