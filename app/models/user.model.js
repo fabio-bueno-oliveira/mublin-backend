@@ -545,4 +545,55 @@ User.deleteUsersRole = (loggedID, userId, userRoleId, result) => {
   }
 };
 
+User.addUsersProject = (loggedID, userId, projectId, status, main_role_fk, joined_in, left_in, active, leader, confirmed, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == userId) {
+    sql.query(`INSERT INTO users_projects (id_user_fk, id_project_fk, active, status, main_role_fk, joined_in, left_in, leader, confirmed) VALUES (${userId}, ${projectId}, ${active}, ${status}, ${main_role_fk}, ${joined_in}, ${left_in}, ${leader}, ${confirmed})`, (err, res) => {
+        if (err) {
+          //console.log("error: ", err);
+          result(null, err);
+          return;
+        }
+
+        if (res.affectedRows == 0) {
+          // not found user with the id
+          result({ kind: "not_found" }, null);
+          return;
+        }
+
+        //console.log("added project to user: ", { userId: userId, roleId: roleId });
+        result(null, { userId: userId, projectId: projectId });
+      }
+    );
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
+};
+
+User.deleteUsersProject = (loggedID, userId, userProjectParticipationId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == userId) {
+    sql.query(`DELETE FROM users_projects WHERE id = ${userProjectParticipationId}`, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found user role with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+
+      console.log("deleted user´s project participation with id: ", userProjectParticipationId);
+      result(null, res);
+    });
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
+};
+
 module.exports = User;

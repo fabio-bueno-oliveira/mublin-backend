@@ -77,6 +77,12 @@ module.exports = app => {
   // Delete logged user´s artistic role (start > step 3)
   app.delete("/user/delete/role", checkToken, users.deleteUsersRole);
 
+  // Add logged user´s participation on a project
+  app.post("/user/add/project", checkToken, users.addUsersProject);
+
+  // Delete logged user´s participation on a project
+  app.delete("/user/delete/project", checkToken, users.deleteUsersProject);
+
   // Update a User with userId
   // app.put("/users/:projectId", users.update);
 

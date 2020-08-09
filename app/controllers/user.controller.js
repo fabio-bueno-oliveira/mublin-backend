@@ -530,3 +530,51 @@ exports.deleteUsersRole = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Add User´s Participation on Project
+exports.addUsersProject = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.addUsersProject(req.headers.authorization, req.body.userId, req.body.projectId, req.body.status, req.body.main_role_fk, req.body.joined_in, req.body.left_in, req.body.active, req.body.leader, req.body.confirmed, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found user with id ${req.body.userId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating user with id " + req.body.userId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
+// Delete User´s Participation on Project
+exports.deleteUsersProject = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.deleteUsersProject(req.headers.authorization, req.body.userId, req.body.userProjectParticipationId, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found user´s participation project with id ${req.body.userProjectParticipationId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating user´s participation project with id " + req.body.userProjectParticipationId
+          });
+        }
+    } else res.send(data);
+  });
+};

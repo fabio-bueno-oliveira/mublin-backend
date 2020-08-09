@@ -34,7 +34,6 @@ module.exports = app => {
   // Retrieve all projects with userId
   app.get("/projects/user/:userId", checkToken, projects.findAllUserProjects);
   app.get("/secure/projects/user/:userId", checkToken, projects.findAllUserProjects);
-  app.get("")
 
   // Retrieve main projects with userId
    app.get("/projects/user/:userId/main", projects.findMainUserProjects);
