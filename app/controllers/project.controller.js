@@ -11,9 +11,14 @@ exports.create = (req, res) => {
 
   // Create a Project
   const project = new Project({
-    email: req.body.email,
-    name: req.body.name,
-    active: req.body.active
+    name: req.body.projectName,
+    username: req.body.projectName,
+    foundation_year: req.body.foundation_year,
+    end_year: req.body.end_year,
+    bio: req.body.bio,
+    type: req.body.type,
+    public: req.body.public,
+    id_user_creator_fk: req.body.id_user_creator_fk
   });
 
   // Save Project in the database

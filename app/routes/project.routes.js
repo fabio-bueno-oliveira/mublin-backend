@@ -9,8 +9,7 @@ module.exports = app => {
   //app.delete("/projects", projects.deleteAll);
 
   // Create a new Project
-  app.post("/projects", projects.create);
-  app.post("/projects", checkToken, projects.create);
+  app.post("/project/create", checkToken, projects.create);
 
   // Retrieve Users and Projects with keyword
   app.get("/search/projects/:keyword", projects.findByKeyword);

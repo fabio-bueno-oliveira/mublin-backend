@@ -2,9 +2,14 @@ const sql = require("./db.js");
 
 // constructor
 const Project = function(project) {
-  this.email = project.email;
   this.name = project.name;
-  this.active = project.active;
+  this.username = project.username;
+  this.foundation_year = project.foundation_year;
+  this.end_year = project.end_year;
+  this.bio = project.bio;
+  this.type = project.type;
+  this.public = project.public;
+  this.id_user_creator_fk = project.id_user_creator_fk;
 };
 
 // find users, projects or events by keyword
