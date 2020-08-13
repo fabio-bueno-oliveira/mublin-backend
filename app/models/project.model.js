@@ -169,6 +169,26 @@ Project.create = (newProject, result) => {
   });
 };
 
+Project.updatePictureById = (projectId, userId, picture, result) => {
+  sql.query(`UPDATE projects SET picture = '${picture}' WHERE id = (SELECT id_project_fk FROM users_projects WHERE id_project_fk = ${projectId} AND id_user_fk = ${userId} AND confirmed = 1)`, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found Customer with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+
+      console.log("updated project: ", { projectId: projectId, picture: picture });
+      result(null, { projectId: projectId, picture: picture, message: 'success' });
+    }
+  );
+};
+
 Project.updateById = (id, project, result) => {
   sql.query(
     "UPDATE projects SET email = ?, name = ?, active = ? WHERE id = ?",

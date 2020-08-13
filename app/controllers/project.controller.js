@@ -32,6 +32,30 @@ exports.create = (req, res) => {
   });
 };
 
+// Update project picture identified by projectId
+exports.updatePicture = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  Project.updatePictureById(req.params.projectId, req.body.userId, req.body.picture, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `It seems you cannot update picture for project with id ${req.params.projectId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating user with id " + req.params.projectId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Find projects by keyword
 exports.findByKeyword = (req, res) => {
   Project.findProjectsByKeyword(req.params.keyword, (err, data) => {

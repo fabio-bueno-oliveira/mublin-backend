@@ -11,6 +11,9 @@ module.exports = app => {
   // Create a new Project
   app.post("/project/create", checkToken, projects.create);
 
+  // Update project picture with projectId
+  app.put("/project/:projectId/picture", checkToken, projects.updatePicture);
+
   // Retrieve Users and Projects with keyword
   app.get("/search/projects/:keyword", projects.findByKeyword);
   app.get("/secure/search/projects/:keyword", checkToken, projects.findByKeyword);
