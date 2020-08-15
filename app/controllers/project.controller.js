@@ -32,6 +32,24 @@ exports.create = (req, res) => {
   });
 };
 
+// Check if project username is available
+exports.checkProjectUsername = (req, res) => {
+  Project.CheckProjectUsernameAvailability(req.params.projectUsername, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(200).send({
+          message: `Username ${req.params.projectUsername} is available!`,
+          available: true
+        });
+      } else {
+        res.status(500).send({
+          message: `Error retrieving username ${req.params.projectUsername}`
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Update project picture identified by projectId
 exports.updatePicture = (req, res) => {
   // Validate Request

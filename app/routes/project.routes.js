@@ -59,4 +59,7 @@ module.exports = app => {
   // Retrieve project career opportunities
   app.get("/project/:projectUsername/opportunities", checkToken, projects.opportunities);
 
+  // Check if project username is available
+  app.get("/check/project/username/:projectUsername", projects.checkProjectUsername)
+
 };

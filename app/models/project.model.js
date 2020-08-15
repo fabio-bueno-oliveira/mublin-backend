@@ -169,6 +169,24 @@ Project.create = (newProject, result) => {
   });
 };
 
+Project.CheckProjectUsernameAvailability = (username, result) => {
+  let errorMsg = {message: "Project username "+username+" is not available.", available: false}
+  sql.query(`SELECT projects.username AS username FROM projects WHERE projects.username = '${username}' LIMIT 1`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      console.log("found username: ", res[0]);
+      result(null, errorMsg);
+      return;
+    }
+    // not found project with the username
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Project.updatePictureById = (projectId, userId, picture, result) => {
   sql.query(`UPDATE projects SET picture = '${picture}' WHERE id = (SELECT id_project_fk FROM users_projects WHERE id_project_fk = ${projectId} AND id_user_fk = ${userId} AND confirmed = 1)`, (err, res) => {
       if (err) {
