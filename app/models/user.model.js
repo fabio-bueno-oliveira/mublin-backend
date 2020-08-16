@@ -400,24 +400,56 @@ User.activateByHash = (email, hash, result) => {
   );
 };
 
-User.updatePictureById = (id, picture, result) => {
-  sql.query(`UPDATE users SET picture = '${picture}' WHERE id = ${id}`, (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(null, err);
-        return;
-      }
+User.updatePictureById = (loggedID, id, picture, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == id) {
+    sql.query(`UPDATE users SET picture = '${picture}' WHERE id = ${id}`, (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+          return;
+        }
 
-      if (res.affectedRows == 0) {
-        // not found Customer with the id
-        result({ kind: "not_found" }, null);
-        return;
-      }
+        if (res.affectedRows == 0) {
+          // not found Customer with the id
+          result({ kind: "not_found" }, null);
+          return;
+        }
 
-      console.log("updated user: ", { id: id, picture: picture });
-      result(null, { id: id, picture: picture });
-    }
-  );
+        console.log("updated user: ", { id: id, picture: picture });
+        result(null, { id: id, picture: picture });
+      }
+    );
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
+};
+
+User.updateFirstAccessById = (loggedID, id, step, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == id) {
+    sql.query(`UPDATE users SET first_access = '${step}' WHERE id = ${id}`, (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+          return;
+        }
+
+        if (res.affectedRows == 0) {
+          // not found Customer with the id
+          result({ kind: "not_found" }, null);
+          return;
+        }
+
+        console.log("updated user: ", { id: id, step: step });
+        result(null, { id: id, step: step });
+      }
+    );
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
 };
 
 User.updateStep2ById = (loggedID, id, gender, bio, id_country_fk, id_region_fk, id_city_fk, result) => {
