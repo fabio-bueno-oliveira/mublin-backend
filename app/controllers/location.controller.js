@@ -44,3 +44,20 @@ exports.findByKeyword = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Find cities by keyword filtered by regionId
+exports.findByKeywordFilteredByRegion = (req, res) => {
+  Location.findAllCitiesByKeywordAndRegionId(req.params.keyword, req.params.regionId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No results found with keyword ${req.params.keyword} and region ${req.params.regionId}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving results with keyword " + req.params.keyword
+        });
+      }
+    } else res.send(data);
+  });
+};

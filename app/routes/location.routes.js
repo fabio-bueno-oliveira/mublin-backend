@@ -4,4 +4,7 @@ module.exports = app => {
   // Retrieve cities by keyword
   app.get("/search/cities/:keyword", locations.findByKeyword);
 
+  // Retrieve cities by keyword
+  app.get("/search/cities/:keyword/:regionId", locations.findByKeywordFilteredByRegion);
+
 };
