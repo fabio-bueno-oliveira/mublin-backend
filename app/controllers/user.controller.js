@@ -51,14 +51,14 @@ exports.loginUser = (req, res) => {
     if (err) {
       console.log(err);
     }
-    if (results.status === 0) {
-      return res.status(401).send({
-        message: 'Usuário inativo.'
-      });
-    }
     if (!results) {
       return res.status(401).send({
         message: 'Invalid email or passwords'
+      });
+    }
+    if (results.status === 0) {
+      return res.status(401).send({
+        message: 'Usuário inativo.'
       });
     }
 

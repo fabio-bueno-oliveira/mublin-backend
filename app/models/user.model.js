@@ -66,7 +66,12 @@ User.create = (newUser, result) => {
 };
 
 User.loginUserByEmail = (email, result) => {
-  sql.query(`SELECT id, email, username, password, status, first_access FROM users WHERE email = '${email}'`, (err, res) => {
+  if (email.indexOf('@') > -1) {
+    var loginQuery = `SELECT id, email, username, password, status, first_access FROM users WHERE email = '${email}'`
+  } else {
+    var loginQuery = `SELECT id, email, username, password, status, first_access FROM users WHERE username = '${email}'`
+  }
+  sql.query(loginQuery, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
