@@ -17,6 +17,7 @@ exports.create = (req, res) => {
     end_year: req.body.end_year,
     bio: req.body.bio,
     type: req.body.type,
+    kind: req.body.kind,
     public: req.body.public,
     id_user_creator_fk: req.body.id_user_creator_fk
   });

@@ -8,6 +8,7 @@ const Project = function(project) {
   this.end_year = project.end_year;
   this.bio = project.bio;
   this.type = project.type;
+  this.kind = project.kind;
   this.public = project.public;
   this.id_user_creator_fk = project.id_user_creator_fk;
 };
