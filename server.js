@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // });
 
 app.use(function(req, res, next) {
-  var allowedOrigins = ['http://localhost:300', 'https://mublin.com', 'https://www.mublin.com'];
+  var allowedOrigins = ['https://mublin.com', 'https://www.mublin.com'];
   var origin = req.headers.origin;
   if(allowedOrigins.indexOf(origin) > -1){
        res.setHeader('Access-Control-Allow-Origin', origin);

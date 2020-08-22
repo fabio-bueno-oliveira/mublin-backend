@@ -634,4 +634,25 @@ User.deleteUsersProject = (loggedID, userId, userProjectParticipationId, result)
   }
 };
 
+User.findTasksByLoggedUserId = (loggedID, userId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == userId) {
+    sql.query(`SELECT tasks.id AS taskId, DATE_FORMAT(tasks.created,'%d/%m/%Y às %H:%i:%s') AS taskCreated, tasks.id_user_owner AS ownerId, tasks.id_project AS projectId, tasks.title AS taskTitle, tasks.description AS taskDescription, DATE_FORMAT(tasks.target_date,'%d/%m/%Y às %H:%i:%s') AS taskTargetDate, CONCAT (users.name,' ',users.lastname) AS ownerName, users.picture AS ownerPicture, users.username AS ownerUsername, projects.name AS projectName, projects.username AS projectUsername, CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-200,w-200,c-maintain_ratio/',tasks.id_project,'/',projects.picture) AS projectPicture FROM tasks LEFT JOIN users ON users.id = tasks.id_user_owner LEFT JOIN projects ON projects.id = tasks.id_project WHERE tasks.id_user_owner = ${userId} OR tasks.id IN (SELECT id_task FROM task_association WHERE id_user_associated = ${userId}) ORDER BY tasks.created DESC`, (err, res) => {
+      if (err) {
+        result(err, null);
+        return;
+      }
+      if (res.length) {
+        result(null, res);
+        return;
+      }
+      // not found tasks with the logged userId
+      result({ kind: "not_found" }, null);
+    });
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
+};
+
 module.exports = User;
