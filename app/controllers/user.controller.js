@@ -603,17 +603,17 @@ exports.deleteUsersProject = (req, res) => {
   });
 };
 
-// Find all tasks created by logged user or associated to logged user
-exports.findTasks = (req, res) => {
-  User.findTasksByLoggedUserId(req.headers.authorization, req.params.userId, (err, data) => {
+// Find all notes created by logged user or associated to logged user
+exports.findNotes = (req, res) => {
+  User.findNotesByLoggedUserId(req.headers.authorization, req.params.userId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: "No tasks found for logged user id " + req.params.userId
+          message: "No notes found for logged user id " + req.params.userId
         });
       } else {
         res.status(500).send({
-          message: "Error retrieving tasks for logged user id " + req.params.userId
+          message: "Error retrieving notes for logged user id " + req.params.userId
         });
       }
     } else res.send(data);

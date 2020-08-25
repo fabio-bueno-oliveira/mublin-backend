@@ -86,8 +86,8 @@ module.exports = app => {
   // Delete logged user´s participation on a project
   app.delete("/user/delete/project", checkToken, users.deleteUsersProject);
 
-  // GET logged user tasks/to-dos
-  app.get("/user/:userId/tasks", checkToken, users.findTasks);
+  // GET logged user notes/to-dos
+  app.get("/user/:userId/notes", checkToken, users.findNotes);
 
   // Update a User with userId
   // app.put("/users/:projectId", users.update);
