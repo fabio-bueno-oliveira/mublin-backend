@@ -242,11 +242,28 @@ exports.members = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `No members found for project id ${req.params.projectUsername}.`
+          message: `No members found for project username ${req.params.projectUsername}.`
         });
       } else {
         res.status(500).send({
-          message: "Error retrieving members from project id " + req.params.projectUsername
+          message: "Error retrieving members from project username " + req.params.projectUsername
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// Find all members of projectId
+exports.membersByProjectId = (req, res) => {
+  Project.getMembersByProjectId(req.params.projectId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No members found for project id ${req.params.projectId}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving members from project id " + req.params.projectId
         });
       }
     } else res.send(data);

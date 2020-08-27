@@ -141,7 +141,7 @@ Project.findMainByUser = (userId, result) => {
   });
 };
 
-Project.findPortfolioByUser = (userId, result) => {
+Project.getMembers = (userId, result) => {
   sql.query(`SELECT users_projects.id, users_projects.id_user_fk, users_projects.id_project_fk, users_projects.confirmed, users_projects.status, users_projects.joined_in, users_projects.main_role_fk, users_projects.portfolio, users_projects.created, projects.id AS projectid, projects.name, projects.username, projects.type, projects.picture, projects_types.id AS ptid, projects_types.name_ptbr AS ptname, projects_types.icon AS pticon, users_projects_status.title_ptbr AS workTitle, users_projects_status.icon AS workIcon FROM users_projects LEFT JOIN projects ON users_projects.id_project_fk = projects.id LEFT JOIN projects_types ON projects.type = projects_types.id LEFT JOIN users_projects_status ON users_projects.status = users_projects_status.id WHERE users_projects.id_user_fk = ${userId} AND users_projects.confirmed IN(0,1) AND users_projects.portfolio = 1 ORDER BY users_projects.status ASC`, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -231,6 +231,23 @@ Project.updateById = (id, project, result) => {
 
 Project.getMembers = (projectUsername, result) => {
   sql.query(`SELECT users_projects.id_user_fk AS id, users_projects.id_project_fk AS projectId, users_projects.joined_in AS joinedIn, users_projects.left_in AS leftIn, users.name, users.lastname, users.username, users.picture AS picture, users.bio, role1.name_ptbr AS role1, role2.name_ptbr AS role2, role3.name_ptbr AS role3, projects.name AS projectName, projects.username AS projectUsername, users_projects_status.id AS statusId, users_projects_status.title_ptbr AS statusName, users_projects_status.icon AS statusIcon FROM users_projects LEFT JOIN projects ON users_projects.id_project_fk = projects.id LEFT JOIN users ON users_projects.id_user_fk = users.id LEFT JOIN roles AS role1 ON users_projects.main_role_fk = role1.id LEFT JOIN roles AS role2 ON users_projects.second_role_fk = role2.id LEFT JOIN roles AS role3 ON users_projects.third_role_fk = role3.id LEFT JOIN users_projects_status ON users_projects.status = users_projects_status.id WHERE projects.username = '${projectUsername}' AND users_projects.confirmed = 1 AND users_projects.left_in IS NULL AND users_projects.status IN(1,2,3,4) ORDER BY users_projects.leader DESC, users.name ASC`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      //console.log("members: ", res);
+      result(null, res);
+      return;
+    }
+    // not found members with the project username
+    result({ kind: "not_found" }, null);
+  });
+};
+
+Project.getMembersByProjectId = (projectId, result) => {
+  sql.query(`SELECT users_projects.id_user_fk AS id, users_projects.id_project_fk AS projectId, users_projects.joined_in AS joinedIn, users_projects.left_in AS leftIn, users.name, users.lastname, users.username, users.picture AS picture, users.bio, role1.name_ptbr AS role1, role2.name_ptbr AS role2, role3.name_ptbr AS role3, projects.name AS projectName, projects.username AS projectUsername, users_projects_status.id AS statusId, users_projects_status.title_ptbr AS statusName, users_projects_status.icon AS statusIcon FROM users_projects LEFT JOIN projects ON users_projects.id_project_fk = projects.id LEFT JOIN users ON users_projects.id_user_fk = users.id LEFT JOIN roles AS role1 ON users_projects.main_role_fk = role1.id LEFT JOIN roles AS role2 ON users_projects.second_role_fk = role2.id LEFT JOIN roles AS role3 ON users_projects.third_role_fk = role3.id LEFT JOIN users_projects_status ON users_projects.status = users_projects_status.id WHERE projects.id = '${projectId}' AND users_projects.confirmed = 1 AND users_projects.left_in IS NULL AND users_projects.status IN(1,2,3,4) ORDER BY users_projects.leader DESC, users.name ASC`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);

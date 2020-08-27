@@ -49,8 +49,11 @@ module.exports = app => {
   app.put("/projects/:projectId", projects.update);
   app.put("/secure/projects/:projectId", checkToken, projects.update);
 
-  // Retrieve all project members
+  // Retrieve all project members by project username
   app.get("/project/:projectUsername/members", checkToken, projects.members);
+
+  // Retrieve all project members by project id
+  app.get("/project/id/:projectId/members/", checkToken, projects.membersByProjectId);
 
   // Retrieve all official project members
   app.get("/projects/:projectUserName/members/official", projects.officialMembers);
