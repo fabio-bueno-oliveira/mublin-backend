@@ -655,4 +655,24 @@ User.findNotesByLoggedUserId = (loggedID, userId, result) => {
   }
 };
 
+User.findNoteById = (loggedID, noteID, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+
+    sql.query(`SELECT notes.id AS noteId, DATE_FORMAT(notes.created,'%d/%m/%Y às %H:%i:%s') AS noteCreated, notes.id_user_owner AS ownerId, notes.id_project AS projectId, notes.title AS noteTitle, notes.description AS noteDescription, DATE_FORMAT(notes.target_date,'%d/%m/%Y às %H:%i:%s') AS noteTargetDate, CONCAT (users.name,' ',users.lastname) AS ownerName, users.picture AS ownerPicture, users.username AS ownerUsername, projects.name AS projectName, projects.username AS projectUsername, CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-200,w-200,c-maintain_ratio/',notes.id_project,'/',projects.picture) AS projectPicture FROM notes LEFT JOIN users ON users.id = notes.id_user_owner LEFT JOIN projects ON projects.id = notes.id_project WHERE notes.id_user_owner = ${x.result.id} OR notes.id IN (SELECT id_note FROM note_association WHERE id_user_associated = ${x.result.id}) HAVING notes.id = ${noteID} ORDER BY notes.created DESC LIMIT 1`, (err, res) => {
+      if (err) {
+        // console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+      if (res.length) {
+        // console.log("found note: ", res[0]);
+        result(null, res[0]);
+        return;
+      }
+      // not found Note with the id
+      result({ kind: "not_found" }, null);
+    });
+
+};
+
 module.exports = User;

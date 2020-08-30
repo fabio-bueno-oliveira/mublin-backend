@@ -619,3 +619,20 @@ exports.findNotes = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Find a single note with a noteId
+exports.findNoteById = (req, res) => {
+  User.findNoteById(req.headers.authorization, req.params.noteId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No note found with id ${req.params.noteId}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving note with id " + req.params.noteId
+        });
+      }
+    } else res.send(data);
+  });
+};
