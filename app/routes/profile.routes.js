@@ -7,4 +7,10 @@ module.exports = app => {
 
   // Retrieve roles from profile (by username)
   app.get("/profile/:username/roles", checkToken, profile.roles);
+
+  // Retrieve followers from profile (by username)
+  app.get("/profile/:username/followers", checkToken, profile.followers);
+
+  // Retrieve following from profile (by username)
+  app.get("/profile/:username/following", checkToken, profile.following);
 };
