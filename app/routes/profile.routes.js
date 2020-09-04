@@ -19,4 +19,7 @@ module.exports = app => {
 
   // Unfollow profile (by profileId)
   app.delete("/profile/:profileId/follow", checkToken, profile.unfollow);
+
+  // Check if logged user follows the profile
+  app.get("/profile/:username/checkFollow", checkToken, profile.checkFollow);
 };

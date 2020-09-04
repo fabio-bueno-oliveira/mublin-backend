@@ -101,3 +101,20 @@ exports.unfollow = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Check if logged user follows the profile based on username
+exports.checkFollow = (req, res) => {
+  Profile.checkFollow(req.headers.authorization, req.params.username, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          following: false
+        });
+      } else {
+        res.status(500).send({
+          message: "Error checking if user follows " + req.params.username
+        });
+      }
+    } else res.send(data);
+  });
+};

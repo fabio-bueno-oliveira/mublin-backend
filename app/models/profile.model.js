@@ -115,4 +115,20 @@ Profile.unfollow = (loggedID, profileId, result) => {
   });
 };
 
+Profile.checkFollow = (loggedID, username, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`SELECT users_followers.id, IF(users_followers.id>0,'true','false') AS following FROM users_followers WHERE users_followers.id_followed = (SELECT users.id FROM users WHERE users.username = '${username}') AND id_follower = ${x.result.id} LIMIT 1`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res[0]);
+      return;
+    }
+    // not following profiile with the username informed
+    result({ kind: "not_found" }, null);
+  });
+};
+
 module.exports = Profile;
