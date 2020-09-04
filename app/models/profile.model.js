@@ -1,4 +1,5 @@
 const sql = require("./db.js");
+const jwt = require("jsonwebtoken");
 
 // constructor
 const Profile = function(profile) {
@@ -77,6 +78,40 @@ Profile.following = (username, result) => {
       return;
     }
     result(null, res);
+  });
+};
+
+Profile.follow = (loggedID, profileId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`INSERT INTO users_followers (id_follower, id_followed) VALUES (${x.result.id}, ${profileId})`, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { followingId: profileId, success: true });
+    }
+  );
+};
+
+Profile.unfollow = (loggedID, profileId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`DELETE FROM users_followers WHERE id_follower = ${x.result.id} AND id_followed = ${profileId}`, 
+  (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, res);
   });
 };
 

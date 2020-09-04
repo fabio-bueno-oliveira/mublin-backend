@@ -67,3 +67,37 @@ exports.following = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Follow profile
+exports.follow = (req, res) => {
+  Profile.follow(req.headers.authorization, req.params.profileId, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found profile with id ${req.body.profileId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error following profile with id " + req.body.profileId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
+// Unfollow profile
+exports.unfollow = (req, res) => {
+  Profile.unfollow(req.headers.authorization, req.params.profileId, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found followed user with id ${req.params.profileId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error unfollowing profile with id " + req.params.profileId
+          });
+        }
+    } else res.send(data);
+  });
+};

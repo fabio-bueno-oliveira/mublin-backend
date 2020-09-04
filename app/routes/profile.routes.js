@@ -13,4 +13,10 @@ module.exports = app => {
 
   // Retrieve following from profile (by username)
   app.get("/profile/:username/following", checkToken, profile.following);
+
+  // Follow profile (by profileId)
+  app.post("/profile/:profileId/follow", checkToken, profile.follow);
+
+  // Unfollow profile (by profileId)
+  app.delete("/profile/:profileId/follow", checkToken, profile.unfollow);
 };

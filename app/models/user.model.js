@@ -295,12 +295,11 @@ User.unfollowByProfileId = (usuId, profileID, result) => {
   sql.query(`DELETE FROM users_followers WHERE id_follower = ${usuId} AND id_followed = ${profileID}`, 
   (err, res) => {
     if (err) {
-      console.log("error: ", err);
       result(null, err);
       return;
     }
     if (res.affectedRows == 0) {
-      // not found Project with the id
+      // not found profile with the userId
       result({ kind: "not_found" }, null);
       return;
     }
