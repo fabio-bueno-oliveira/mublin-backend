@@ -22,4 +22,9 @@ module.exports = app => {
 
   // Check if logged user follows the profile
   app.get("/profile/:username/checkFollow", checkToken, profile.checkFollow);
+
+  // START GEAR ENDPOINTS
+
+  // Retrieve profile gear (by username)
+  app.get("/profile/:username/gear", checkToken, profile.gear);
 };

@@ -131,4 +131,21 @@ Profile.checkFollow = (loggedID, username, result) => {
   });
 };
 
+Profile.gear = (username, result) => {
+  sql.query(`SELECT users_gear.featured, users_gear.for_sale AS forSale, users_gear.price, users_gear.currently_using AS currentlyUsing, users_gear.id_product AS productId, brands.name AS brandName, CONCAT('https://ik.imagekit.io/mublin/products/brands/tr:h-200,w-200,cm-pad_resize,bg-FFFFFF/',brands.logo) AS brandLogo, brands_products.name AS productName, CONCAT('https://ik.imagekit.io/mublin/products/tr:h-200,w-200,cm-pad_resize,bg-FFFFFF/',brands_products.picture) AS picture, brands_products.id_brand AS brandId FROM users_gear LEFT JOIN brands_products ON users_gear.id_product = brands_products.id LEFT JOIN brands ON brands_products.id_brand = brands.id WHERE users_gear.id_user = (SELECT users.id FROM users WHERE users.username = '${username}') ORDER BY users_gear.featured DESC, users_gear.currently_using DESC, users_gear.created DESC`, (err, res) => {
+    if (err) {
+      //console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      //console.log("result: ", res);
+      result(null, res);
+      return;
+    }
+    // not found gear with the profile username
+    result({ kind: "not_found" }, null);
+  });
+};
+
 module.exports = Profile;

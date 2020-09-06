@@ -86,11 +86,15 @@ module.exports = app => {
   // Delete logged user´s participation on a project
   app.delete("/user/delete/project", checkToken, users.deleteUsersProject);
 
+  // START NOTES ENDPOINTS
+
   // GET logged user notes
   app.get("/user/:userId/notes", checkToken, users.findNotes);
 
   // GET note by id
   app.get("/notes/:noteId", checkToken, users.findNoteById);
+
+  // START ARCHIVED ENDPOINTS
 
   // Update a User with userId
   // app.put("/users/:projectId", users.update);

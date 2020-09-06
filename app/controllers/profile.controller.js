@@ -118,3 +118,20 @@ exports.checkFollow = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Find profile gear
+exports.gear = (req, res) => {
+  Profile.gear(req.params.username, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No gear found with username " + req.params.username
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving gear for username " + req.params.username
+        });
+      }
+    } else res.send(data);
+  });
+};
