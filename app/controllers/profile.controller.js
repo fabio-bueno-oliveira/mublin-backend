@@ -135,3 +135,20 @@ exports.gear = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Find profile testimonials
+exports.testimonials = (req, res) => {
+  Profile.testimonials(req.params.username, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No testimonials found with username " + req.params.username
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving testimonials for username " + req.params.username
+        });
+      }
+    } else res.send(data);
+  });
+};
