@@ -105,7 +105,7 @@ User.checkUserByToken = (loggedEmail, result) => {
 };
 
 User.getUserInfo = (email, loggedEmail, result) => {
-    sql.query(`SELECT users.id, users.name, users.lastname, users.username, users.bio, users.gender, users.id_country_fk AS country, users.id_region_fk AS region, users.id_city_fk AS city, users.email, users.picture, users.payment_plan, users.first_access FROM users WHERE users.email = '${loggedEmail}' LIMIT 1`, (err, res) => {
+    sql.query(`SELECT users.id, users.name, users.lastname, users.username, users.bio, users.gender, users.id_country_fk AS country, users.id_region_fk AS region, regions.name AS regionName, users.id_city_fk AS city, cities.name AS cityName, users.email, users.picture, users.payment_plan, users.first_access FROM users LEFT JOIN cities ON users.id_city_fk = cities.id LEFT JOIN regions ON users.id_region_fk = regions.id WHERE users.email = '${loggedEmail}' LIMIT 1`, (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(err, null);
