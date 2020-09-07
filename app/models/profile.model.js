@@ -149,7 +149,7 @@ Profile.gear = (username, result) => {
 };
 
 Profile.testimonials = (username, result) => {
-  sql.query(`SELECT users_testimonials.id, DATE_FORMAT(users_testimonials.created,'%d/%m/%Y') AS created, users_testimonials.id_user_from_fk AS friendId, users_testimonials.title, users_testimonials.testimonial, CONCAT(users.name,' ',users.lastname) AS friendName, users.username AS friendUsername, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',users_testimonials.id_user_from_fk,'/',users.picture) AS friendPicture FROM users_testimonials LEFT JOIN users ON users_testimonials.id_user_from_fk = users.id WHERE users_testimonials.id_user_to_fk = (SELECT users.id FROM users WHERE users.username = '${username}') AND users.status = 1 ORDER BY users_testimonials.created DESC`, (err, res) => {
+  sql.query(`SELECT users_testimonials.id, DATE_FORMAT(users_testimonials.created,'%d/%m/%Y') AS created, users_testimonials.id_user_from_fk AS friendId, users_testimonials.title, users_testimonials.testimonial, CONCAT(users.name,' ',users.lastname) AS friendName, users.username AS friendUsername, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',users_testimonials.id_user_from_fk,'/',users.picture) AS friendPicture, IF(users.payment_plan=1,'Free', 'Pro') AS friendPlan FROM users_testimonials LEFT JOIN users ON users_testimonials.id_user_from_fk = users.id WHERE users_testimonials.id_user_to_fk = (SELECT users.id FROM users WHERE users.username = '${username}') AND users.status = 1 ORDER BY users_testimonials.created DESC`, (err, res) => {
     if (err) {
       //console.log("error: ", err);
       result(err, null);
