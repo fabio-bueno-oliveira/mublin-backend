@@ -30,7 +30,7 @@ Location.findAllCitiesByKeyword = (keyword, result) => {
 // find cities by keyword and regionId
 Location.findAllCitiesByKeywordAndRegionId = (keyword, regionId, result) => {
   sql.query(`
-    SELECT cities.id AS value, cities.name AS text FROM cities WHERE cities.name LIKE '%${keyword}%' AND cities.region_id = ${regionId} ORDER BY name ASC LIMIT 50`, (err, res) => {
+    SELECT cities.id AS id, cities.id AS value, cities.name AS text FROM cities WHERE cities.name LIKE '%${keyword}%' AND cities.region_id = ${regionId} ORDER BY name ASC LIMIT 50`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
