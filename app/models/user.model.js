@@ -675,12 +675,12 @@ User.findNoteById = (loggedID, noteID, result) => {
 
 // START SETTINGS MENU UPDATES
 
-User.updateBasicInfo = (loggedID, id, name, lastname, gender, phone_mobile, website, bio, id_country_fk, id_region_fk, result) => {
+User.updateBasicInfo = (loggedID, userId, name, lastname, gender, phone_mobile, website, bio, id_country_fk, id_region_fk, public, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
-  if (x.result.id == id) {
-    sql.query(`UPDATE users SET name = '${name}', lastname = '${lastname}', gender = '${gender}', phone_mobile = '${phone_mobile}', website = '${website}', bio = '${bio}', id_country_fk = '${id_country_fk}', id_region_fk = '${id_region_fk}' WHERE id = ${id}`, (err, res) => {
+  if (x.result.id == userId) {
+    sql.query(`UPDATE users SET name = '${name}', lastname = '${lastname}', gender = '${gender}', phone_mobile = '${phone_mobile}', website = '${website}', bio = '${bio}', id_country_fk = '${id_country_fk}', id_region_fk = '${id_region_fk}', public = '${public}' WHERE id = ${userId}`, (err, res) => {
         if (err) {
-          console.log("error: ", err);
+          //console.log("error: ", err);
           result(null, err);
           return;
         }
@@ -690,9 +690,8 @@ User.updateBasicInfo = (loggedID, id, name, lastname, gender, phone_mobile, webs
           result({ kind: "not_found" }, null);
           return;
         }
-
-        console.log("updated user: ", { id: id });
-        result(null, { id: id });
+        // console.log("updated user: ", { userId: userId });
+        result(null, { userId: userId, success: true });
       }
     );
   } else {

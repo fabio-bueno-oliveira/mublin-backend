@@ -637,7 +637,7 @@ exports.findNoteById = (req, res) => {
   });
 };
 
-// START SETTINGS MENU UPDATES
+// START SETTINGS UPDATES
 
 // Update user profile basic information (settings/profile)
 exports.updateBasicInfo = (req, res) => {
@@ -648,7 +648,7 @@ exports.updateBasicInfo = (req, res) => {
     });
   }
 
-  User.updateBasicInfo(req.headers.authorization, req.body.userId, req.body.name, req.body.lastname, req.body.gender, req.body.phone_mobile, req.body.website, req.body.bio, req.body.id_country_fk, req.body.id_region_fk, (err, data) => {
+  User.updateBasicInfo(req.headers.authorization, req.body.userId, req.body.name, req.body.lastname, req.body.gender, req.body.phone_mobile, req.body.website, req.body.bio, req.body.id_country_fk, req.body.id_region_fk, req.body.public, (err, data) => {
     if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({

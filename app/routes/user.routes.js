@@ -97,7 +97,7 @@ module.exports = app => {
   // SETTINGS UPDATES
 
   // Update user profile basic information (settings/profile)
-  app.put("/user/:userId/updateProfile", checkToken, users.updateBasicInfo);
+  app.put("/user/updateProfile", checkToken, users.updateBasicInfo);
 
   // START ARCHIVED ENDPOINTS
 
