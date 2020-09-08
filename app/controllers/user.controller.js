@@ -636,3 +636,29 @@ exports.findNoteById = (req, res) => {
     } else res.send(data);
   });
 };
+
+// START SETTINGS MENU UPDATES
+
+// Update user profile basic information (settings/profile)
+exports.updateBasicInfo = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.updateBasicInfo(req.headers.authorization, req.body.userId, req.body.name, req.body.lastname, req.body.gender, req.body.phone_mobile, req.body.website, req.body.bio, req.body.id_country_fk, req.body.id_region_fk, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found user with id ${req.params.userId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating user with id " + req.params.userId
+          });
+        }
+    } else res.send(data);
+  });
+};

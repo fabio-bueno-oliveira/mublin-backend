@@ -671,7 +671,34 @@ User.findNoteById = (loggedID, noteID, result) => {
       // not found Note with the id
       result({ kind: "not_found" }, null);
     });
+};
 
+// START SETTINGS MENU UPDATES
+
+User.updateBasicInfo = (loggedID, id, name, lastname, gender, phone_mobile, website, bio, id_country_fk, id_region_fk, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == id) {
+    sql.query(`UPDATE users SET name = '${name}', lastname = '${lastname}', gender = '${gender}', phone_mobile = '${phone_mobile}', website = '${website}', bio = '${bio}', id_country_fk = '${id_country_fk}', id_region_fk = '${id_region_fk}' WHERE id = ${id}`, (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+          return;
+        }
+
+        if (res.affectedRows == 0) {
+          // not found user with the id
+          result({ kind: "not_found" }, null);
+          return;
+        }
+
+        console.log("updated user: ", { id: id });
+        result(null, { id: id });
+      }
+    );
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
 };
 
 module.exports = User;

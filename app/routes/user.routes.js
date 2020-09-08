@@ -94,6 +94,11 @@ module.exports = app => {
   // GET note by id
   app.get("/notes/:noteId", checkToken, users.findNoteById);
 
+  // SETTINGS UPDATES
+
+  // Update user profile basic information (settings/profile)
+  app.put("/user/:userId/updateProfile", checkToken, users.updateBasicInfo);
+
   // START ARCHIVED ENDPOINTS
 
   // Update a User with userId
