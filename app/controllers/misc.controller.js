@@ -40,3 +40,15 @@ exports.roles = (req, res) => {
     else res.send(data);
   });
 };
+
+// Retrieve all availability statuses
+exports.availabilityStatuses = (req, res) => {
+  Misc.getAvailabilityStatuses((err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving availability statuses."
+      });
+    else res.send(data);
+  });
+};

@@ -7,7 +7,9 @@ module.exports = app => {
   // Retrieve all music genres
   app.get("/music/genres", misc.musicGenres);
 
-    // Retrieve all roles
-    app.get("/music/roles", misc.roles);
+  // Retrieve all roles
+  app.get("/music/roles", misc.roles);
 
+  // Retrieve all availability statuses
+  app.get("/availabilityStatuses", misc.availabilityStatuses);
 };

@@ -30,4 +30,14 @@ Misc.getRoles = result => {
   });
 };
 
+Misc.getAvailabilityStatuses = result => {
+  sql.query("SELECT availability_statuses.id, availability_statuses.title_ptbr AS title, availability_statuses.color FROM availability_statuses ORDER BY availability_statuses.id = 8 ASC", (err, res) => {
+    if (err) {
+      result(null, err);
+      return;
+    }
+    result(null, res);
+  });
+};
+
 module.exports = Misc;
