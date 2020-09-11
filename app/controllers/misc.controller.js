@@ -52,3 +52,27 @@ exports.availabilityStatuses = (req, res) => {
     else res.send(data);
   });
 };
+
+// Retrieve all availability items
+exports.availabilityItems = (req, res) => {
+  Misc.getAvailabilityItems((err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving availability items."
+      });
+    else res.send(data);
+  });
+};
+
+// Retrieve all availability focuses
+exports.availabilityFocuses = (req, res) => {
+  Misc.getAvailabilityFocuses((err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving availability focuses."
+      });
+    else res.send(data);
+  });
+};

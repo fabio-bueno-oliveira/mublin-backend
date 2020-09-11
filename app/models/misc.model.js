@@ -40,4 +40,24 @@ Misc.getAvailabilityStatuses = result => {
   });
 };
 
+Misc.getAvailabilityItems = result => {
+  sql.query("SELECT availability_items.id, availability_items.name_ptbr AS name FROM availability_items ORDER BY availability_items.id ASC", (err, res) => {
+    if (err) {
+      result(null, err);
+      return;
+    }
+    result(null, res);
+  });
+};
+
+Misc.getAvailabilityFocuses = result => {
+  sql.query("SELECT availability_focuses.id, availability_focuses.title_ptbr AS title FROM availability_focuses ORDER BY id ASC", (err, res) => {
+    if (err) {
+      result(null, err);
+      return;
+    }
+    result(null, res);
+  });
+};
+
 module.exports = Misc;

@@ -12,4 +12,10 @@ module.exports = app => {
 
   // Retrieve all availability statuses
   app.get("/availabilityStatuses", misc.availabilityStatuses);
+
+  // Retrieve all availability items
+  app.get("/availabilityItems", misc.availabilityItems);
+
+  // Retrieve all availability focuses
+  app.get("/availabilityFocuses", misc.availabilityFocuses);
 };
