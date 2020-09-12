@@ -740,7 +740,7 @@ User.addUserAvailabilityItem = (loggedID, userId, availabilityItemId, result) =>
 User.deleteUserAvailabilityItem = (loggedID, userId, userItemId, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   if (x.result.id == userId) {
-    sql.query(`DELETE FROM users_availability_items WHERE id = ${userItemId} AND id_user_fk = ${userId}`, (err, res) => {
+    sql.query(`DELETE FROM users_availability_items WHERE id_item_fk = ${userItemId} AND id_user_fk = ${userId}`, (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(null, err);
