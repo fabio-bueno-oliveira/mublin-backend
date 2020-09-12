@@ -652,11 +652,35 @@ exports.updateBasicInfo = (req, res) => {
     if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
-            message: `Not found user with id ${req.params.userId}.`
+            message: `Not found user with id ${req.body.userId}.`
           });
         } else {
           res.status(500).send({
-            message: "Error updating user with id " + req.params.userId
+            message: "Error updating user with id " + req.body.userId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
+// Update user availability information (settings/preferences)
+exports.updateAvailabilityFocus = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.updateAvailabilityFocus(req.headers.authorization, req.body.userId, req.body.availabilityFocus, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found user with id ${req.body.userId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating availability focus for user with id " + req.body.userId
           });
         }
     } else res.send(data);

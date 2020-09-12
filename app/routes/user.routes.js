@@ -99,6 +99,9 @@ module.exports = app => {
   // Update user profile basic information (settings/profile)
   app.put("/user/updateProfile", checkToken, users.updateBasicInfo);
 
+  // Update user availability focus information (/settings/preferences)
+  app.put("/user/updateAvailabilityFocus", checkToken, users.updateAvailabilityFocus);
+
   // START ARCHIVED ENDPOINTS
 
   // Update a User with userId

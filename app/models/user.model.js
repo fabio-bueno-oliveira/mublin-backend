@@ -700,4 +700,26 @@ User.updateBasicInfo = (loggedID, userId, name, lastname, gender, phone_mobile, 
   }
 };
 
+User.updateAvailabilityFocus = (loggedID, userId, availabilityFocus, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == userId) {
+    sql.query(`UPDATE users SET availability_focus = '${availabilityFocus}' WHERE id = ${userId}`, (err, res) => {
+        if (err) {
+          result(null, err);
+          return;
+        }
+        if (res.affectedRows == 0) {
+          // not found user with the id
+          result({ kind: "not_found" }, null);
+          return;
+        }
+        result(null, { userId: userId, availabilityFocus: availabilityFocus, success: true });
+      }
+    );
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
+};
+
 module.exports = User;
