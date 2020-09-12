@@ -100,6 +100,9 @@ module.exports = app => {
   // Update user profile basic information (settings/profile)
   app.put("/user/updateProfile", checkToken, users.updateBasicInfo);
 
+  // Update user availability status (/settings/preferences)
+  app.put("/user/updateAvailabilityStatus", checkToken, users.updateAvailabilityStatus);
+
   // Add availability item (/settings/preferences)
   app.post("/user/userAvailabilityItem", checkToken, users.addUserAvailabilityItem);
 

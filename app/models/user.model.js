@@ -714,10 +714,31 @@ User.updateBasicInfo = (loggedID, userId, name, lastname, gender, phone_mobile, 
   }
 };
 
+User.updateAvailabilityStatus = (loggedID, userId, availabilityStatusId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == userId) {
+    sql.query(`UPDATE users SET availability_status = '${availabilityStatusId}' WHERE id = ${userId}`, (err, res) => {
+        if (err) {
+          result(null, err);
+          return;
+        }
+        if (res.affectedRows == 0) {
+          result({ kind: "not_found" }, null);
+          return;
+        }
+        result(null, { userId: userId, availabilityStatus: availabilityStatusId, success: true });
+      }
+    );
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
+};
+
 User.addUserAvailabilityItem = (loggedID, userId, availabilityItemId, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   if (x.result.id == userId) {
-    sql.query(`INSERT INTO  users_availability_items (id_user_fk, id_item_fk) VALUES (${userId}, ${availabilityItemId})`, (err, res) => {
+    sql.query(`INSERT INTO users_availability_items (id_user_fk, id_item_fk) VALUES (${userId}, ${availabilityItemId})`, (err, res) => {
         if (err) {
           result(null, err);
           return;
