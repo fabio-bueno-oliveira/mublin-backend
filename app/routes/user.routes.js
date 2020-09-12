@@ -15,6 +15,7 @@ module.exports = app => {
   app.get("/userInfo", checkToken, users.getInfo);
   app.get("/userInfo/:userId/genres", checkToken, users.getInfoGenres);
   app.get("/userInfo/:userId/roles", checkToken, users.getInfoRoles);
+  app.get("/userInfo/:userId/availabilityItems", checkToken, users.getInfoAvailabilityItems);
 
   // Retrieve all User
   app.get("/users", users.findAll);
@@ -98,6 +99,12 @@ module.exports = app => {
 
   // Update user profile basic information (settings/profile)
   app.put("/user/updateProfile", checkToken, users.updateBasicInfo);
+
+  // Add availability item (/settings/preferences)
+  app.post("/user/userAvailabilityItem", checkToken, users.addUserAvailabilityItem);
+
+  // Delete availability item (/settings/preferences)
+  app.delete("/user/userAvailabilityItem", checkToken, users.deleteUserAvailabilityItem);
 
   // Update user availability focus information (/settings/preferences)
   app.put("/user/updateAvailabilityFocus", checkToken, users.updateAvailabilityFocus);

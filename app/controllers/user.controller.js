@@ -183,6 +183,23 @@ exports.getInfoRoles = (req, res) => {
   });
 };
 
+// Retrieve user´s roles info from database
+exports.getInfoAvailabilityItems = (req, res) => {
+  User.getUserInfoAvailabilityItems(req.params.userId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(200).send(
+          [{id: '', idItem:'', name: ''}]
+        );
+      } else {
+        res.status(500).send({
+          message: "Error retrieving roles from user id " + req.params.userId
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Retrieve all Users from the database
 exports.findAll = (req, res) => {
   User.getAll((err, data) => {
@@ -663,7 +680,55 @@ exports.updateBasicInfo = (req, res) => {
   });
 };
 
-// Update user availability information (settings/preferences)
+// Add availability item
+exports.addUserAvailabilityItem = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.addUserAvailabilityItem(req.headers.authorization, req.body.userId, req.body.availabilityItemId, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found user id ${req.body.userId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating availability item for user id " + req.body.userId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
+// Delete user´s delete availability item
+exports.deleteUserAvailabilityItem = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.deleteUserAvailabilityItem(req.headers.authorization, req.body.userId, req.body.userItemId, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found that info for with id ${req.body.userItemId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating user availability item with id " + req.body.userItemId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
+// Update user availability focus information (settings/preferences)
 exports.updateAvailabilityFocus = (req, res) => {
   // Validate Request
   if (!req.body) {

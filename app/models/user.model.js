@@ -155,6 +155,20 @@ User.getUserInfoRoles = (userId, result) => {
   });
 };
 
+User.getUserInfoAvailabilityItems = (userId, result) => {
+  sql.query(`SELECT users_availability_items.id, users_availability_items.id_item_fk AS idItem, availability_items.name_ptbr AS name FROM users_availability_items LEFT JOIN availability_items ON users_availability_items.id_item_fk = availability_items.id WHERE users_availability_items.id_user_fk = '${userId}' ORDER BY users_availability_items.id ASC`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    result({ kind: "not_found" }, null);
+  });
+};
+
 User.getAll = result => {
   sql.query("SELECT name, lastname, username, email, picture FROM users", (err, res) => {
     if (err) {
@@ -694,6 +708,53 @@ User.updateBasicInfo = (loggedID, userId, name, lastname, gender, phone_mobile, 
         result(null, { userId: userId, success: true });
       }
     );
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
+};
+
+User.addUserAvailabilityItem = (loggedID, userId, availabilityItemId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == userId) {
+    sql.query(`INSERT INTO  users_availability_items (id_user_fk, id_item_fk) VALUES (${userId}, ${availabilityItemId})`, (err, res) => {
+        if (err) {
+          result(null, err);
+          return;
+        }
+
+        if (res.affectedRows == 0) {
+          // not found user with the id
+          result({ kind: "not_found" }, null);
+          return;
+        }
+        result(null, { userId: userId, item: availabilityItemId  });
+      }
+    );
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
+};
+
+User.deleteUserAvailabilityItem = (loggedID, userId, userItemId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == userId) {
+    sql.query(`DELETE FROM users_availability_items WHERE id = ${userItemId} AND id_user_fk = ${userId}`, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+
+      console.log("deleted user availability item with id: ", userItemId);
+      result(null, res);
+    });
   } else {
     result({ kind: "unauthorized" }, null);
     return;
