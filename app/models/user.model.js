@@ -105,7 +105,7 @@ User.checkUserByToken = (loggedEmail, result) => {
 };
 
 User.getUserInfo = (email, loggedEmail, result) => {
-    sql.query(`SELECT users.id, users.name, users.lastname, users.username, users.bio, users.gender, users.id_country_fk AS country, users.id_region_fk AS region, regions.name AS regionName, users.id_city_fk AS city, cities.name AS cityName, users.email, users.picture, IF(users.payment_plan=1,'Free', 'Pro') AS plan, users.first_access, users.public, users.instagram, website, phone_mobile AS phone, users.status, users.legend_badge FROM users LEFT JOIN cities ON users.id_city_fk = cities.id LEFT JOIN regions ON users.id_region_fk = regions.id WHERE users.email = '${loggedEmail}' LIMIT 1`, (err, res) => {
+    sql.query(`SELECT users.id, users.name, users.lastname, users.username, users.bio, users.gender, users.id_country_fk AS country, users.id_region_fk AS region, regions.name AS regionName, users.id_city_fk AS city, cities.name AS cityName, users.email, users.picture, IF(users.payment_plan=1,'Free', 'Pro') AS plan, users.first_access, users.public, users.instagram, website, phone_mobile AS phone, users.status, users.legend_badge, users.availability_status, users.availability_focus FROM users LEFT JOIN cities ON users.id_city_fk = cities.id LEFT JOIN regions ON users.id_region_fk = regions.id WHERE users.email = '${loggedEmail}' LIMIT 1`, (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(err, null);
@@ -185,7 +185,7 @@ User.findById = (userId, result) => {
 };
 
 User.findByUsername = (username, result) => {
-  sql.query(`SELECT users.id, users.name, users.lastname, users.username, users.bio, users.email, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',users.id,'/',users.picture) AS picture, users.first_access AS firstAccess, availability_statuses.id AS availabilityId, availability_statuses.title_ptbr AS availabilityTitle, availability_statuses.color AS availabilityColor, countries.name AS country, regions.name AS region, cities.name AS city, users.payment_plan AS plan FROM users LEFT JOIN availability_statuses ON users.availability = availability_statuses.id LEFT JOIN countries ON users.id_country_fk = countries.id LEFT JOIN regions ON users.id_region_fk = regions.id LEFT JOIN cities ON users.id_city_fk = cities.id WHERE users.username = '${username}' AND users.status = 1 LIMIT 1`, (err, res) => {
+  sql.query(`SELECT users.id, users.name, users.lastname, users.username, users.bio, users.email, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',users.id,'/',users.picture) AS picture, users.first_access AS firstAccess, availability_statuses.id AS availabilityId, availability_statuses.title_ptbr AS availabilityTitle, availability_statuses.color AS availabilityColor, countries.name AS country, regions.name AS region, cities.name AS city, users.payment_plan AS plan FROM users LEFT JOIN availability_statuses ON users.availability_status = availability_statuses.id LEFT JOIN countries ON users.id_country_fk = countries.id LEFT JOIN regions ON users.id_region_fk = regions.id LEFT JOIN cities ON users.id_city_fk = cities.id WHERE users.username = '${username}' AND users.status = 1 LIMIT 1`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
