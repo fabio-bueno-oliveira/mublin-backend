@@ -6,5 +6,5 @@ module.exports = app => {
   app.get("/search/users/:keyword", checkToken, search.findUsersByKeyword);
 
   // Retrieve projects with keyword
-  // app.get("/search/projects/:keyword", checkToken, search.findByKeyword);
+  app.get("/search/projects/:keyword", checkToken, search.findProjectsByKeyword);
 };

@@ -22,4 +22,19 @@ Search.findUsersByKeyword = (keyword, userCity, result) => {
   });
 };
 
+Search.findProjectsByKeyword = (keyword, userCity, result) => {
+  sql.query(`SELECT projects.id, projects.name, projects.username, CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-200,w-200,c-maintain_ratio/',projects.id,'/',projects.picture) AS picture, projects.public, cities.name AS city, regions.name AS region, countries.name AS country FROM projects LEFT JOIN cities ON projects.id_city_fk = cities.id LEFT JOIN regions ON projects.id_region_fk = regions.id LEFT JOIN countries ON projects.id_country_fk = countries.id WHERE projects.name LIKE '%${keyword}%' OR projects.username LIKE '%${keyword}%' HAVING projects.public = 1 ORDER BY projects.name ASC, (cities.name = '%${userCity}%') DESC`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    result({ kind: "not_found" }, null);
+  });
+};
+
 module.exports = Search;

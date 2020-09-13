@@ -18,20 +18,20 @@ exports.findUsersByKeyword = (req, res) => {
   });
 };
 
-// Find users and projects by keyword
-// exports.findByKeyword = (req, res) => {
-//   Search.findAllByKeyword(req.params.keyword, (err, data) => {
-//     if (err) {
-//       if (err.kind === "not_found") {
-//         res.status(404).send({
-//           message: `No results found with keyword ${req.params.keyword}.`
-//         });
-//       } else {
-//         res.status(500).send({
-//           message: "Error retrieving results with keyword " + req.params.keyword
-//         });
-//       }
-//     } else res.send(data);
-//   });
-// };
+// Find all projects with a keyword
+exports.findProjectsByKeyword = (req, res) => {
+  Search.findProjectsByKeyword(req.params.keyword, req.body.userCity, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No projects found with keyword" + req.params.keyword
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving projects with keyword " + req.params.keyword
+        });
+      }
+    } else res.send(data);
+  });
+};
 
