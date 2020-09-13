@@ -7,7 +7,7 @@ exports.findUsersByKeyword = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: "No users found with keyword" + req.params.keyword
+          message: "No users found with keyword " + req.params.keyword
         });
       } else {
         res.status(500).send({
