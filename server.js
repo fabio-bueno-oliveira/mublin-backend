@@ -41,6 +41,7 @@ app.get("/", (req, res) => {
 require("./app/routes/project.routes.js")(app);
 require("./app/routes/user.routes.js")(app);
 require("./app/routes/profile.routes.js")(app);
+require("./app/routes/search.routes.js")(app);
 require("./app/routes/notification.routes.js")(app);
 require("./app/routes/location.routes.js")(app);
 require("./app/routes/misc-routes.js")(app)
