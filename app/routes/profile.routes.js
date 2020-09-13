@@ -26,6 +26,9 @@ module.exports = app => {
   // Retrieve profile gear (by username)
   app.get("/profile/:username/gear", checkToken, profile.gear);
 
+  // Retrieve profile availabiity items (by username)
+  app.get("/profile/:username/availabilityItems", checkToken, profile.availabilityItems);
+
   // Retrieve profile testimonials (by username)
   app.get("/profile/:username/testimonials", checkToken, profile.testimonials);
 };

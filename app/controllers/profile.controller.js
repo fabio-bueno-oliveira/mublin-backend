@@ -136,6 +136,23 @@ exports.gear = (req, res) => {
   });
 };
 
+// Find profile availability items
+exports.availabilityItems = (req, res) => {
+  Profile.availabilityItems(req.params.username, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No availability items found with username " + req.params.username
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving availability items for username " + req.params.username
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Find profile testimonials
 exports.testimonials = (req, res) => {
   Profile.testimonials(req.params.username, (err, data) => {
