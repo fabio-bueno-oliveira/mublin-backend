@@ -18,6 +18,23 @@ exports.findUsersByKeyword = (req, res) => {
   });
 };
 
+// Retrieve users projects from the users result
+exports.findUsersProjectsFromUserSearch = (req, res) => {
+  Search.findUsersProjectsFromUserSearch(req.params.userId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No projects found for user with id " + req.params.userId
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving projects to user filtered with id " + req.params.userId
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Find all projects with a keyword
 exports.findProjectsByKeyword = (req, res) => {
   Search.findProjectsByKeyword(req.params.keyword, req.body.userCity, (err, data) => {
