@@ -112,6 +112,9 @@ module.exports = app => {
   // Update user availability focus information (/settings/preferences)
   app.put("/user/updateAvailabilityFocus", checkToken, users.updateAvailabilityFocus);
 
+  // Retrieve user gear (by logged userId)
+  app.get("/user/:userId/gear", checkToken, users.gear);
+
   // START ARCHIVED ENDPOINTS
 
   // Update a User with userId

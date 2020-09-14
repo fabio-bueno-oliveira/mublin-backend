@@ -775,3 +775,20 @@ exports.updateAvailabilityFocus = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Retrieve logged user´s gear
+exports.gear = (req, res) => {
+  User.gear(req.headers.authorization, req.params.userId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No gear found for logged userId ${req.params.userId}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving gear for logged userId " + req.params.userId
+        });
+      }
+    } else res.send(data);
+  });
+};
