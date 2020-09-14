@@ -5,6 +5,9 @@ module.exports = app => {
   // Retrieve profile info (by username)
   app.get("/profile/:username", checkToken, profile.infos);
 
+  // Retrieve projects from profile (by username)
+  app.get("/profile/:username/projects", checkToken, profile.projects);
+
   // Retrieve roles from profile (by username)
   app.get("/profile/:username/roles", checkToken, profile.roles);
 

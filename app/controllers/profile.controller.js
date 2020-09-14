@@ -17,6 +17,23 @@ exports.infos = (req, res) => {
   });
 };
 
+// Find profile projects
+exports.projects = (req, res) => {
+  Profile.projects(req.params.username, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No projects found with username ${req.params.username}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving projects for username " + req.params.username
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Find profile roles
 exports.roles = (req, res) => {
   Profile.roles(req.params.username, (err, data) => {

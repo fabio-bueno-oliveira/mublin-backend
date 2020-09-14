@@ -30,6 +30,23 @@ Profile.infos = (username, result) => {
   });
 };
 
+Profile.projects = (username, result) => {
+  sql.query(`SELECT users_projects.joined_in, users_projects.portfolio, users_projects.created, projects.id, projects.name, projects.username, CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-200,w-200,c-maintain_ratio/',projects.id,'/',projects.picture) AS picture, projects_types.name_ptbr AS type, users_projects_status.title_ptbr AS workTitle, users_projects_status.icon AS workIcon, r1.description_ptbr AS role1, r2.description_ptbr AS role2, r3.description_ptbr AS role3 FROM users_projects LEFT JOIN projects ON users_projects.id_project_fk = projects.id LEFT JOIN projects_types ON projects.type = projects_types.id LEFT JOIN users_projects_status ON users_projects.status = users_projects_status.id LEFT JOIN roles AS r1 ON users_projects.main_role_fk = r1.id LEFT JOIN roles AS r2 ON users_projects.second_role_fk = r2.id LEFT JOIN roles AS r3 ON users_projects.third_role_fk = r3.id WHERE users_projects.id_user_fk = (SELECT users.id FROM users WHERE users.username = '${username}') AND users_projects.confirmed IN(0,1,2) AND projects.public = 1 ORDER BY users_projects.status ASC`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      //console.log("projects: ", res);
+      result(null, res);
+      return;
+    }
+    // not found projects with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Profile.roles = (username, result) => {
   sql.query(`SELECT users_roles.id, roles.name_ptbr AS name, roles.description_ptbr AS description, users_roles.main_activity AS main FROM users_roles LEFT JOIN roles ON users_roles.id_role_fk = roles.id WHERE users_roles.id_user_fk = (SELECT users.id FROM users WHERE users.username = '${username}') ORDER BY users_roles.main_activity DESC`, (err, res) => {
     if (err) {
