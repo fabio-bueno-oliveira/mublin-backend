@@ -115,6 +115,9 @@ module.exports = app => {
   // Retrieve user gear (by logged userId)
   app.get("/user/:userId/gear", checkToken, users.gear);
 
+  // Update/change user password (/settings)
+  app.put("/user/changePassword", checkToken, users.changePassword);
+
   // START ARCHIVED ENDPOINTS
 
   // Update a User with userId

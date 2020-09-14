@@ -825,4 +825,26 @@ User.gear = (loggedID, userId, result) => {
   }
 };
 
+User.changePassword = (loggedID, userId, newPassword, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == userId) {
+    sql.query(`UPDATE users SET password = '${newPassword}' WHERE id = ${userId}`, (err, res) => {
+        if (err) {
+          result(null, err);
+          return;
+        }
+        if (res.affectedRows == 0) {
+          // not found user with the id
+          result({ kind: "not_found" }, null);
+          return;
+        }
+        result(null, { userId: userId, success: true });
+      }
+    );
+  } else {
+    result({ kind: "Unauthorized" }, null);
+    return;
+  }
+};
+
 module.exports = User;

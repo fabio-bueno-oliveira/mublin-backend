@@ -53,7 +53,7 @@ exports.loginUser = (req, res) => {
     }
     if (!results) {
       return res.status(401).send({
-        message: 'Invalid email or passwords'
+        message: 'Invalid email or password'
       });
     }
     if (results.status === 0) {
@@ -789,6 +789,33 @@ exports.gear = (req, res) => {
           message: "Error retrieving gear for logged userId " + req.params.userId
         });
       }
+    } else res.send(data);
+  });
+};
+
+// Change user password (/settings)
+exports.changePassword = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  // Generate bcrypt salt
+  var salt = genSaltSync(10);
+
+  User.changePassword(req.headers.authorization, req.body.userId, hashSync(req.body.newPassword, salt), (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found user with id ${req.body.userId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error changing the password for user id " + req.body.userId
+          });
+        }
     } else res.send(data);
   });
 };
