@@ -118,6 +118,9 @@ module.exports = app => {
   // Update/change user password (/settings)
   app.put("/user/changePassword", checkToken, users.changePassword);
 
+  // Update/change user email (/settings)
+  app.put("/user/changeEmail", checkToken, users.changeEmail);
+
   // START ARCHIVED ENDPOINTS
 
   // Update a User with userId

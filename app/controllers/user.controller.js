@@ -793,7 +793,7 @@ exports.gear = (req, res) => {
   });
 };
 
-// Change user password (/settings)
+// Change user password
 exports.changePassword = (req, res) => {
   // Validate Request
   if (!req.body) {
@@ -814,6 +814,30 @@ exports.changePassword = (req, res) => {
         } else {
           res.status(500).send({
             message: "Error changing the password for user id " + req.body.userId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
+// Change user email
+exports.changeEmail = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.changeEmail(req.headers.authorization, req.body.userId, req.body.newEmail, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found user with id ${req.body.userId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error changing the email for user id " + req.body.userId
           });
         }
     } else res.send(data);

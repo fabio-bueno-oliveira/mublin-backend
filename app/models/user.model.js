@@ -847,4 +847,25 @@ User.changePassword = (loggedID, userId, newPassword, result) => {
   }
 };
 
+User.changeEmail = (loggedID, userId, newEmail, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == userId) {
+    sql.query(`UPDATE users SET email = '${newEmail}' WHERE id = ${userId}`, (err, res) => {
+        if (err) {
+          result(null, err);
+          return;
+        }
+        if (res.affectedRows == 0) {
+          result({ kind: "not_found" }, null);
+          return;
+        }
+        result(null, { userId: userId, success: true });
+      }
+    );
+  } else {
+    result({ kind: "Unauthorized" }, null);
+    return;
+  }
+};
+
 module.exports = User;
