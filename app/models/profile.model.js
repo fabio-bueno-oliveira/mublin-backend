@@ -200,7 +200,7 @@ Profile.testimonials = (username, result) => {
 };
 
 Profile.strengths = (username, result) => {
-  sql.query(`SELECT users_strengths.id_user_to, users_strengths.id_strenght, concat(round(count( * ) *100 / (SELECT count( * ) FROM users_strengths WHERE id_user_to = (SELECT users.id FROM users WHERE users.username = '${username}'))) , '%') AS percent, strengths.id, strengths.icon, strengths.title_ptbr AS title FROM users_strengths LEFT JOIN strengths ON users_strengths.id_strenght = strengths.id WHERE users_strengths.id_user_to = (SELECT users.id FROM users WHERE users.username = '${username}') GROUP BY users_strengths.id_strenght ORDER BY percent DESC`, (err, res) => {
+  sql.query(`SELECT users_strengths.id, users_strengths.id_user_to AS idUserTo, users_strengths.id_strenght AS strengthId, concat(round(count( * ) *100 / (SELECT count( * ) FROM users_strengths WHERE id_user_to = (SELECT users.id FROM users WHERE users.username = '${username}'))) , '%') AS percent, strengths.icon, strengths.title_ptbr AS strengthTitle FROM users_strengths LEFT JOIN strengths ON users_strengths.id_strenght = strengths.id WHERE users_strengths.id_user_to = (SELECT users.id FROM users WHERE users.username = '${username}') GROUP BY users_strengths.id_strenght ORDER BY percent DESC`, (err, res) => {
     if (err) {
       result(err, null);
       return;
