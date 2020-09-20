@@ -34,4 +34,7 @@ module.exports = app => {
 
   // Retrieve profile testimonials (by username)
   app.get("/profile/:username/testimonials", checkToken, profile.testimonials);
+
+  // Retrieve profile strengths (by username)
+  app.get("/profile/:username/strengths", checkToken, profile.strengths);
 };

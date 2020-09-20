@@ -186,3 +186,20 @@ exports.testimonials = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Find profile strengths
+exports.strengths = (req, res) => {
+  Profile.strengths(req.params.username, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No strengths found with username " + req.params.username
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving strengths for username " + req.params.username
+        });
+      }
+    } else res.send(data);
+  });
+};
