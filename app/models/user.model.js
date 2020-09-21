@@ -342,7 +342,7 @@ User.followersByUserId = (usuId, result) => {
 };
 
 User.eventsByUserId = (usuId, result) => {
-  sql.query(`SELECT events_invitations.id AS invitationId, events_invitations.presence_confirmed AS accepted, events.id AS eventId, users.name AS authorName, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',events.id_author_fk,'/',users.picture) AS authorPicture, users.username AS authorUsername, events.title, events.description, IF(events.method=1,'Presencial', 'Online') AS method, DATE_FORMAT(events.date_opening,'%d/%m/%Y') AS eventDateStart, DATE_FORMAT(events.date_end,'%d/%m/%Y') AS eventDateEnd, TIME_FORMAT(events.hour_opening, '%k:%i') AS eventHourStart, TIME_FORMAT(events.hour_end, '%k:%i') AS eventHourEnd, events.leader_comments_before AS authorComments, events.picture AS eventPicture, cities.name AS city, regions.uf AS region, projects.username AS projectUsername, projects.name AS projectName, CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-200,w-200,c-maintain_ratio/',projects.id,'/',projects.picture) AS projectPicture, projects_types.name_ptbr AS projectType, events.id_event_type_fk AS eventTypeId, events_types.title_ptbr AS eventType, places.id AS placeId, places.name AS placeName FROM events_invitations LEFT JOIN events ON events_invitations.id_event_fk = events.id LEFT JOIN cities ON events.id_city_fk = cities.id LEFT JOIN regions ON events.id_region_fk = regions.id LEFT JOIN projects ON events.id_project_fk = projects.id LEFT JOIN projects_types ON projects.type = projects_types.id LEFT JOIN users_projects ON users_projects.id_project_fk = events.id_project_fk LEFT JOIN events_types ON events_types.id = events.id_event_type_fk LEFT JOIN places ON events.id_place_fk = places.id LEFT JOIN users ON events.id_author_fk = users.id WHERE events_invitations.id_user_invited_fk = ${usuId} AND users_projects.id_user_fk = ${usuId} AND users_projects.confirmed = 1 AND users_projects.active = 1 ORDER BY events.date_opening ASC`, 
+  sql.query(`SELECT events_invitations.id AS invitationId, events_invitations.response AS response, events.id AS eventId, users.name AS authorName, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',events.id_author_fk,'/',users.picture) AS authorPicture, users.username AS authorUsername, events.title, events.description, IF(events.method=1,'Presencial', 'Online') AS method, DATE_FORMAT(events.date_opening,'%d/%m/%Y') AS eventDateStart, DATE_FORMAT(events.date_end,'%d/%m/%Y') AS eventDateEnd, TIME_FORMAT(events.hour_opening, '%k:%i') AS eventHourStart, TIME_FORMAT(events.hour_end, '%k:%i') AS eventHourEnd, events.leader_comments_before AS authorComments, events.picture AS eventPicture, cities.name AS city, regions.uf AS region, projects.username AS projectUsername, projects.name AS projectName, CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-200,w-200,c-maintain_ratio/',projects.id,'/',projects.picture) AS projectPicture, projects_types.name_ptbr AS projectType, events.id_event_type_fk AS eventTypeId, events_types.title_ptbr AS eventType, places.id AS placeId, places.name AS placeName FROM events_invitations LEFT JOIN events ON events_invitations.id_event_fk = events.id LEFT JOIN cities ON events.id_city_fk = cities.id LEFT JOIN regions ON events.id_region_fk = regions.id LEFT JOIN projects ON events.id_project_fk = projects.id LEFT JOIN projects_types ON projects.type = projects_types.id LEFT JOIN users_projects ON users_projects.id_project_fk = events.id_project_fk LEFT JOIN events_types ON events_types.id = events.id_event_type_fk LEFT JOIN places ON events.id_place_fk = places.id LEFT JOIN users ON events.id_author_fk = users.id WHERE events_invitations.id_user_invited_fk = ${usuId} AND users_projects.id_user_fk = ${usuId} AND users_projects.confirmed = 1 AND users_projects.active = 1 AND events.date_opening >= CURDATE() ORDER BY events.date_opening ASC`, 
   (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -356,6 +356,30 @@ User.eventsByUserId = (usuId, result) => {
     }
     result(null, res);
   });
+};
+
+User.eventInvitationResponse = (loggedID, userId, invitationId, response, response_modified, response_comments, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == userId) {
+    sql.query(`UPDATE events_invitations SET response = ${response}, response_modified = '${response_modified}', response_comments = '${response_comments}' WHERE id = ${invitationId} AND id_user_invited_fk = ${userId}`, (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+          return;
+        }
+
+        if (res.affectedRows == 0) {
+          result({ kind: "not_found" }, null);
+          return;
+        }
+
+        result(null, { invitationId: invitationId, success: true });
+      }
+    );
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
 };
 
 User.CheckUsernameAvailability = (username, result) => {

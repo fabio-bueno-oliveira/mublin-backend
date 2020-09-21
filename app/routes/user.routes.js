@@ -48,8 +48,11 @@ module.exports = app => {
   app.get("/user/:userId/followers", users.followers);
   app.get("/secure/user/:userId/followers", checkToken, users.followers);
 
-  // User events
+  // Retrieve user events
   app.get("/user/:userId/events", checkToken, users.events);
+
+  // Respond to event invitation
+  app.put("/user/:userId/event", checkToken, users.eventInvitationResponse);
 
   // Check if username is available
   app.get("/check/username/:username", users.checkUsername)

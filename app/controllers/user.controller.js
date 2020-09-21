@@ -348,6 +348,30 @@ exports.events = (req, res) => {
   });
 };
 
+// Update event invitation
+exports.eventInvitationResponse = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.eventInvitationResponse(req.headers.authorization, req.params.userId, req.body.invitationId, req.body.response, req.body.response_modified, req.body.response_comments, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: "Not found event invitation with id " + req.body.invitationId
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating event invitation with id " + req.body.invitationId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Check if username is available
 exports.checkUsername = (req, res) => {
   User.CheckUsernameAvailability(req.params.username, (err, data) => {
