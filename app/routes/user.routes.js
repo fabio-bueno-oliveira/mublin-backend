@@ -52,7 +52,7 @@ module.exports = app => {
   app.get("/user/:userId/events", checkToken, users.events);
 
   // Respond to event invitation
-  app.put("/user/:userId/event", checkToken, users.eventInvitationResponse);
+  app.put("/user/:userId/eventInvitationResponse", checkToken, users.eventInvitationResponse);
 
   // Check if username is available
   app.get("/check/username/:username", users.checkUsername)
