@@ -337,11 +337,11 @@ exports.events = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found followers for id ${req.params.profileID}.`
+          message: `Not found events for id ${req.params.profileID}.`
         });
       } else {
         res.status(500).send({
-          message: "Error listing followers for id " + req.params.profileID
+          message: "Error listing events for id " + req.params.profileID
         });
       }
     } else res.send(data);

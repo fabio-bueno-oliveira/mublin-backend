@@ -50,3 +50,20 @@ exports.updateAllReads = (req, res) => {
     } else res.send(data);
   });
 };
+
+// user feed
+exports.feed = (req, res) => {
+  Notification.feed(req.headers.authorization, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "Not feed events for logged user."
+        });
+      } else {
+        res.status(500).send({
+          message: "Error listing feed events for logged user."
+        });
+      }
+    } else res.send(data);
+  });
+};
