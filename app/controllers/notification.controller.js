@@ -51,7 +51,7 @@ exports.updateAllReads = (req, res) => {
   });
 };
 
-// user feed
+// get user feed
 exports.feed = (req, res) => {
   Notification.feed(req.headers.authorization, (err, data) => {
     if (err) {
@@ -62,6 +62,40 @@ exports.feed = (req, res) => {
       } else {
         res.status(500).send({
           message: "Error listing feed events for logged user."
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// like feed item
+exports.feedLike = (req, res) => {
+  Notification.feedLike(req.headers.authorization, req.params.feedId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "Not found feed item with this id."
+        });
+      } else {
+        res.status(500).send({
+          message: "Error liking feed item."
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// unlike feed item
+exports.feedUnlike = (req, res) => {
+  Notification.feedUnlike(req.headers.authorization, req.params.feedId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "Not found feed item"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error unlinking feed item."
         });
       }
     } else res.send(data);

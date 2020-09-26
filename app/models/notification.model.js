@@ -62,7 +62,7 @@ Notification.updateReads = (usuId, read, authorization, result) => {
 
 Notification.feed = (loggedID, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
-  sql.query(`SELECT feed.id, feed.id_item_fk AS relatedItemId, feed.extra_text AS extraText, feed.extra_info AS extraInfo, UNIX_TIMESTAMP(feed.created) AS created, users.name AS relatedUserName, users.lastname AS relatedUserLastname, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',users.id,'/',users.picture) AS relatedUserPicture, users.username AS relatedUserUsername, IF(users.payment_plan=1,'Free', 'Pro') AS relatedUserPlan, IF(feed_types.category='project',projects.name, '') AS relatedProjectName, IF(feed_types.category='project',projects.username, '') AS relatedProjectUsername, IF(feed_types.category='project',CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-200,w-200,c-maintain_ratio/',projects.id,'/',projects.picture), '') AS relatedProjectPicture, IF(feed_types.category='project',projects_types.name_ptbr, '') AS relatedProjectType, feed_types.text_ptbr AS action, feed_types.category, feed_types.id AS categoryId, IF(feed_types.category='event',events.id, '') AS relatedEventId, IF(feed_types.category='event',events.title, '') AS relatedEventTitle, COUNT(feed_likes.id) AS likes FROM feed LEFT JOIN users ON feed.id_user_1_fk = users.id LEFT JOIN projects ON feed.id_item_fk = projects.id LEFT JOIN projects_types ON projects.type = projects_types.id LEFT JOIN feed_types ON feed.id_feed_type_fk = feed_types.id LEFT JOIN events ON feed.id_item_fk = events.id LEFT JOIN feed_likes ON feed.id = feed_likes.id_feed_item WHERE feed.id_item_fk IN (SELECT project_fans.id_fan_fk FROM project_fans WHERE project_fans.id_fan_fk = ${x.result.id}) OR feed.id_item_fk IN (SELECT users_projects.id_project_fk FROM users_projects WHERE users_projects.id_user_fk = ${x.result.id}) OR feed.id_user_1_fk IN (SELECT users_followers.id_followed FROM users_followers WHERE users_followers.id_follower = ${x.result.id}) OR feed.id_user_1_fk = ${x.result.id} AND users.id IS NOT NULL AND users.status = 1 GROUP BY feed.id ORDER BY feed.created DESC`, (err, res) => {
+  sql.query(`SELECT feed.id, feed.id_item_fk AS relatedItemId, feed.extra_text AS extraText, feed.extra_info AS extraInfo, UNIX_TIMESTAMP(feed.created) AS created, users.name AS relatedUserName, users.lastname AS relatedUserLastname, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',users.id,'/',users.picture) AS relatedUserPicture, users.username AS relatedUserUsername, IF(users.payment_plan=1,'Free', 'Pro') AS relatedUserPlan, IF(feed_types.category='project',projects.name, '') AS relatedProjectName, IF(feed_types.category='project',projects.username, '') AS relatedProjectUsername, IF(feed_types.category='project',CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-200,w-200,c-maintain_ratio/',projects.id,'/',projects.picture), '') AS relatedProjectPicture, IF(feed_types.category='project',projects_types.name_ptbr, '') AS relatedProjectType, feed_types.text_ptbr AS action, feed_types.category, feed_types.id AS categoryId, IF(feed_types.category='event',events.id, '') AS relatedEventId, IF(feed_types.category='event',events.title, '') AS relatedEventTitle, COUNT(feed_likes.id) AS likes FROM feed LEFT JOIN users ON feed.id_user_1_fk = users.id LEFT JOIN projects ON feed.id_item_fk = projects.id LEFT JOIN projects_types ON projects.type = projects_types.id LEFT JOIN feed_types ON feed.id_feed_type_fk = feed_types.id LEFT JOIN events ON feed.id_item_fk = events.id LEFT JOIN feed_likes ON feed.id = feed_likes.id_feed_item WHERE feed.id_item_fk IN (SELECT project_fans.id_fan_fk FROM project_fans WHERE project_fans.id_fan_fk = ${x.result.id}) OR feed.id_item_fk IN (SELECT users_projects.id_project_fk FROM users_projects WHERE users_projects.id_user_fk = ${x.result.id}) OR feed.id_user_1_fk IN (SELECT users_followers.id_followed FROM users_followers WHERE (users_followers.id_follower = ${x.result.id}) OR feed.id_user_1_fk = ${x.result.id}) AND users.id IS NOT NULL AND users.status = 1 GROUP BY feed.id ORDER BY feed.created DESC LIMIT 100`, (err, res) => {
     if (err) {
       result(err, null);
       return;
@@ -73,6 +73,38 @@ Notification.feed = (loggedID, result) => {
     }
     // no feed events found for logged user
     result({ kind: "not_found" }, null);
+  });
+};
+
+Notification.feedLike = (loggedID, feedId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`INSERT INTO feed_likes (id_feed_item, id_user) VALUES (${feedId}, ${x.result.id})`, (err, res) => {
+      if (err) {
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { feedId: feedId, like: true, success: true });
+    }
+  );
+};
+
+Notification.feedUnlike = (loggedID, feedId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`DELETE FROM feed_likes WHERE id_feed_item = ${feedId} AND id_user = ${x.result.id}`, 
+  (err, res) => {
+      if (err) {
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, res);
   });
 };
 

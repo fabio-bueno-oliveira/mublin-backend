@@ -13,4 +13,10 @@ module.exports = app => {
 
   // Retrieve user feed
   app.get("/feed", checkToken, notifications.feed);
+
+  // Like feed item
+  app.post("/feed/:feedId/like", checkToken, notifications.feedLike);
+
+  // Unlike feed item
+  app.delete("/feed/:feedId/unlike", checkToken, notifications.feedUnlike);
 };
