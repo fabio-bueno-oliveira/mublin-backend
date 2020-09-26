@@ -26,6 +26,12 @@ module.exports = app => {
   // Check if logged user follows the profile
   app.get("/profile/:username/checkFollow", checkToken, profile.checkFollow);
 
+  // Retrieve profile posts (by username)
+  app.get("/profile/:username/posts", checkToken, profile.posts);
+
+  // Retrieve profile strengths (by username)
+  app.get("/profile/:username/strengths", checkToken, profile.strengths);
+
   // Retrieve profile gear (by username)
   app.get("/profile/:username/gear", checkToken, profile.gear);
 
@@ -34,7 +40,4 @@ module.exports = app => {
 
   // Retrieve profile testimonials (by username)
   app.get("/profile/:username/testimonials", checkToken, profile.testimonials);
-
-  // Retrieve profile strengths (by username)
-  app.get("/profile/:username/strengths", checkToken, profile.strengths);
 };

@@ -148,6 +148,36 @@ Profile.checkFollow = (loggedID, username, result) => {
   });
 };
 
+Profile.posts = (username, result) => {
+  sql.query(`SELECT feed.id, UNIX_TIMESTAMP(feed.created) AS created, feed_types.text_ptbr AS action, feed.extra_text AS extraText, feed.image, IF(feed_types.category='project',projects.name, '') AS relatedProjectName, IF(feed_types.category='project',projects.username, '') AS relatedProjectUsername, IF(feed_types.category='project',CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-200,w-200,c-maintain_ratio/',projects.id,'/',projects.picture), '') AS relatedProjectPicture, IF(feed_types.category='project',projects_types.name_ptbr, '') AS relatedProjectType, IF(feed_types.category='event',events.id, '') AS relatedEventId, IF(feed_types.category='event',events.title, '') AS relatedEventTitle, COUNT(feed_likes.id) AS likes, (SELECT COUNT(feed_likes.id) FROM feed_likes WHERE feed_likes.id_feed_item = feed.id AND id_user = (SELECT users.id FROM users WHERE users.username = '${username}' LIMIT 1)) AS likedByMe FROM feed LEFT JOIN feed_types ON feed.id_feed_type_fk = feed_types.id LEFT JOIN feed_likes ON feed.id = feed_likes.id_feed_item LEFT JOIN projects ON feed.id_item_fk = projects.id LEFT JOIN events ON feed.id_item_fk = events.id LEFT JOIN projects_types ON projects.type = projects_types.id WHERE feed.id_user_1_fk = (SELECT users.id FROM users WHERE users.username = '${username}' LIMIT 1) AND feed.id_feed_type_fk NOT IN (6,7) GROUP BY feed.id ORDER BY feed.created DESC LIMIT 2`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found posts for the profile username
+    result({ kind: "not_found" }, null);
+  });
+};
+
+Profile.strengths = (username, result) => {
+  sql.query(`SELECT users_strengths.id, users_strengths.id_user_to AS idUserTo, users_strengths.id_strenght AS strengthId, concat(round(count( * ) *100 / (SELECT count( * ) FROM users_strengths WHERE id_user_to = (SELECT users.id FROM users WHERE users.username = '${username}'))) , '%') AS percent, strengths.icon, strengths.title_ptbr AS strengthTitle FROM users_strengths LEFT JOIN strengths ON users_strengths.id_strenght = strengths.id WHERE users_strengths.id_user_to = (SELECT users.id FROM users WHERE users.username = '${username}') GROUP BY users_strengths.id_strenght ORDER BY percent DESC`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found strengths for the profile username
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Profile.gear = (username, result) => {
   sql.query(`SELECT users_gear.featured, users_gear.for_sale AS forSale, users_gear.price, users_gear.currently_using AS currentlyUsing, users_gear.id_product AS productId, brands.name AS brandName, CONCAT('https://ik.imagekit.io/mublin/products/brands/tr:h-200,w-200,cm-pad_resize,bg-FFFFFF/',brands.logo) AS brandLogo, brands_products.name AS productName, CONCAT('https://ik.imagekit.io/mublin/products/tr:h-200,w-200,cm-pad_resize,bg-FFFFFF/',brands_products.picture) AS picture, brands_products.id_brand AS brandId, brands_categories.name_ptbr AS category FROM users_gear LEFT JOIN brands_products ON users_gear.id_product = brands_products.id LEFT JOIN brands ON brands_products.id_brand = brands.id LEFT JOIN brands_categories ON brands_products.id_category = brands_categories.id WHERE users_gear.id_user = (SELECT users.id FROM users WHERE users.username = '${username}') ORDER BY users_gear.featured DESC, users_gear.currently_using DESC, users_gear.created DESC`, (err, res) => {
     if (err) {
@@ -191,21 +221,6 @@ Profile.testimonials = (username, result) => {
     }
     if (res.length) {
       //console.log("result: ", res);
-      result(null, res);
-      return;
-    }
-    // not found testimonials with the profile username
-    result({ kind: "not_found" }, null);
-  });
-};
-
-Profile.strengths = (username, result) => {
-  sql.query(`SELECT users_strengths.id, users_strengths.id_user_to AS idUserTo, users_strengths.id_strenght AS strengthId, concat(round(count( * ) *100 / (SELECT count( * ) FROM users_strengths WHERE id_user_to = (SELECT users.id FROM users WHERE users.username = '${username}'))) , '%') AS percent, strengths.icon, strengths.title_ptbr AS strengthTitle FROM users_strengths LEFT JOIN strengths ON users_strengths.id_strenght = strengths.id WHERE users_strengths.id_user_to = (SELECT users.id FROM users WHERE users.username = '${username}') GROUP BY users_strengths.id_strenght ORDER BY percent DESC`, (err, res) => {
-    if (err) {
-      result(err, null);
-      return;
-    }
-    if (res.length) {
       result(null, res);
       return;
     }

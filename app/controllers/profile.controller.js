@@ -136,6 +136,40 @@ exports.checkFollow = (req, res) => {
   });
 };
 
+// Find profile posts
+exports.posts = (req, res) => {
+  Profile.posts(req.params.username, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No posts found with username " + req.params.username
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving posts for username " + req.params.username
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// Find profile strengths
+exports.strengths = (req, res) => {
+  Profile.strengths(req.params.username, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No strengths found with username " + req.params.username
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving strengths for username " + req.params.username
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Find profile gear
 exports.gear = (req, res) => {
   Profile.gear(req.params.username, (err, data) => {
@@ -181,23 +215,6 @@ exports.testimonials = (req, res) => {
       } else {
         res.status(500).send({
           message: "Error retrieving testimonials for username " + req.params.username
-        });
-      }
-    } else res.send(data);
-  });
-};
-
-// Find profile strengths
-exports.strengths = (req, res) => {
-  Profile.strengths(req.params.username, (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: "No strengths found with username " + req.params.username
-        });
-      } else {
-        res.status(500).send({
-          message: "Error retrieving strengths for username " + req.params.username
         });
       }
     } else res.send(data);
