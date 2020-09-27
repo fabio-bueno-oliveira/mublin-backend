@@ -1,4 +1,5 @@
 const sql = require("./db.js");
+const jwt = require("jsonwebtoken");
 
 // constructor
 const Project = function(project) {
@@ -308,6 +309,22 @@ Project.getProjectOpportunities = (projectUsername, result) => {
     // not found opportunities with the project username
     result({ kind: "not_found" }, null);
   });
+};
+
+Project.updateBio = (loggedID, projectUsername, projectId, bio, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`UPDATE projects SET projects.bio = '${bio}' WHERE projects.username = '${projectUsername}' AND projects.id = (SELECT users_projects.id_project_fk FROM users_projects WHERE users_projects.id_project_fk = ${projectId} AND users_projects.id_user_fk = ${x.result.id} AND users_projects.confirmed = 1 LIMIT 1)`, (err, res) => {
+      if (err) {
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { projectUsername: projectUsername, newBio: bio, success: true });
+    }
+  );
 };
 
 // Project.remove = (id, result) => {
