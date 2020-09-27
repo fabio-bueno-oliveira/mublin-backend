@@ -327,6 +327,22 @@ Project.updateBio = (loggedID, projectUsername, projectId, bio, result) => {
   );
 };
 
+Project.updateTag = (loggedID, projectUsername, projectId, label_show, label_text, label_color, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`UPDATE projects SET projects.label_show = '${label_show}', projects.label_text = '${label_text}', projects.label_color = '${label_color}' WHERE projects.username = '${projectUsername}' AND projects.id = (SELECT users_projects.id_project_fk FROM users_projects WHERE users_projects.id_project_fk = ${projectId} AND users_projects.id_user_fk = ${x.result.id} AND users_projects.confirmed = 1 LIMIT 1)`, (err, res) => {
+      if (err) {
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { projectUsername: projectUsername, label_show: label_show, label_text: label_text, label_color: label_color, success: true });
+    }
+  );
+};
+
 // Project.remove = (id, result) => {
 //   sql.query("DELETE FROM projects WHERE id = ?", id, (err, res) => {
 //     if (err) {

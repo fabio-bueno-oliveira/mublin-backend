@@ -67,4 +67,7 @@ module.exports = app => {
 
   // Update project bio
   app.put("/project/:projectUsername/updateBio", checkToken, projects.updateBio);
+
+  // Update project tag
+  app.put("/project/:projectUsername/updateTag", checkToken, projects.updateTag);
 };

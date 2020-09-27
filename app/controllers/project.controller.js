@@ -328,6 +328,30 @@ exports.updateBio = (req, res) => {
   });
 };
 
+// Update project tag
+exports.updateTag = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  Project.updateTag(req.headers.authorization, req.params.projectUsername, req.body.projectId, req.body.label_show, req.body.label_text, req.body.label_color, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: "You cannot update the project with username " + req.params.projectUsername
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating tag for project with username " + req.params.projectUsername
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // // Delete a Project with the specified projectId in the request
 // exports.delete = (req, res) => {
 //   Project.remove(req.params.projectId, (err, data) => {
