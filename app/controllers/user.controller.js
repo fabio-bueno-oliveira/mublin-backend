@@ -867,3 +867,21 @@ exports.changeEmail = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Check if user can admin the project page
+exports.checkProjectAdmin = (req, res) => {
+  User.checkProjectAdmin(req.headers.authorization, req.params.projectUsername, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(200).send({
+          message: `Acesso negado a ${req.params.projectUsername}`,
+          accessible: 0
+        });
+      } else {
+        res.status(500).send({
+          message: `Erro ao verificar acesso a ${req.params.projectUsername}`
+        });
+      }
+    } else res.send(data);
+  });
+};

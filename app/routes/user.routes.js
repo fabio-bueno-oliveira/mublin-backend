@@ -124,6 +124,11 @@ module.exports = app => {
   // Update/change user email (/settings)
   app.put("/user/changeEmail", checkToken, users.changeEmail);
 
+  // START ADMIN FUNCTIONS
+
+  // Check if user can admin the project page
+  app.get("/user/:projectUsername/admin", checkToken, users.checkProjectAdmin);
+
   // START ARCHIVED ENDPOINTS
 
   // Update a User with userId
