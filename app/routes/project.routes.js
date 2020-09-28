@@ -62,6 +62,9 @@ module.exports = app => {
   // Retrieve project career opportunities
   app.get("/project/:projectUsername/opportunities", checkToken, projects.opportunities);
 
+  // Retrieve all project notes by project username
+  app.get("/project/:projectUsername/notes", checkToken, projects.notes);
+  
   // Check if project username is available
   app.get("/check/project/username/:projectUsername", projects.checkProjectUsername)
 

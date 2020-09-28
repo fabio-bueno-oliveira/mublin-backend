@@ -304,6 +304,23 @@ exports.opportunities = (req, res) => {
   });
 };
 
+// Find all notes of projectUsername
+exports.notes = (req, res) => {
+  Project.getNotes(req.headers.authorization, req.params.projectUsername, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No notes found for project username ${req.params.projectUsername} or you do not have access.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving notes from project username " + req.params.projectUsername
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Update project bio
 exports.updateBio = (req, res) => {
   // Validate Request

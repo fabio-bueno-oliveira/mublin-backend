@@ -311,6 +311,22 @@ Project.getProjectOpportunities = (projectUsername, result) => {
   });
 };
 
+Project.getNotes = (loggedID, projectUsername, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`SELECT project_notes.id, project_notes.note, UNIX_TIMESTAMP(project_notes.created) AS created, users.username AS authorUsername, users.name AS authorName, users.lastname AS authorLastname, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',users.id,'/',users.picture) AS authorPicture FROM project_notes LEFT JOIN users ON project_notes.id_author = users.id WHERE project_notes.id_project = (SELECT projects.id FROM projects WHERE projects.username = '${projectUsername}' LIMIT 1) AND project_notes.id_project = (SELECT id_project_fk FROM users_projects WHERE id_user_fk = ${x.result.id} AND id_project_fk = (SELECT projects.id FROM projects WHERE projects.username = '${projectUsername}' LIMIT 1) AND confirmed = 1 AND left_in IS NULL) ORDER BY project_notes.created DESC`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found notes with the project username
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Project.updateBio = (loggedID, projectUsername, projectId, bio, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   sql.query(`UPDATE projects SET projects.bio = '${bio}' WHERE projects.username = '${projectUsername}' AND projects.id = (SELECT users_projects.id_project_fk FROM users_projects WHERE users_projects.id_project_fk = ${projectId} AND users_projects.id_user_fk = ${x.result.id} AND users_projects.confirmed = 1 LIMIT 1)`, (err, res) => {
