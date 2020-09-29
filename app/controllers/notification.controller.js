@@ -101,3 +101,37 @@ exports.feedUnlike = (req, res) => {
     } else res.send(data);
   });
 };
+
+// get user all notitications
+exports.notifications = (req, res) => {
+  Notification.notifications(req.headers.authorization, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "Not notifications for logged user."
+        });
+      } else {
+        res.status(500).send({
+          message: "Error listing notifications for logged user."
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// get user only recent notifications
+exports.notificationsUnseen = (req, res) => {
+  Notification.notificationsUnseen(req.headers.authorization, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "Not unseen notifications for logged user."
+        });
+      } else {
+        res.status(500).send({
+          message: "Error listing unseen notifications for logged user."
+        });
+      }
+    } else res.send(data);
+  });
+};
