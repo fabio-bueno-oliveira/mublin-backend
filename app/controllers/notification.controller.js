@@ -36,7 +36,7 @@ exports.findByUserId = (req, res) => {
 
 // Update all user notifications status
 exports.updateAllReads = (req, res) => {
-  Notification.updateReads(req.params.userId, req.header('read'), req.header('authorization'), (err, data) => {
+  Notification.updateReads(req.headers.authorization, req.params.userId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({

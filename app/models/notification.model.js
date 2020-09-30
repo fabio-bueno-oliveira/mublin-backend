@@ -42,22 +42,28 @@ Notification.findNotificationsByUserId = (userId, authorization, result) => {
 //   });
 // };
 
-Notification.updateReads = (usuId, read, authorization, result) => {
-  sql.query(`UPDATE feed SET feed.notification_read = ${read} WHERE feed.id_user_2_fk IN (SELECT log_users.id_user_fk FROM log_users WHERE log_users.session = '${authorization}' AND log_users.id_user_fk = ${usuId})`, 
-  (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
-    }
-    if (res.affectedRows == 0) {
-      // not found Project with the id
-      result({ kind: "not_found" }, null);
-      return;
-    }
-    console.log("updated feeds:");
-    result(null, { usuId: usuId });
-  });
+Notification.updateReads = (loggedID, usuId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == usuId) {
+    sql.query(`UPDATE feed SET feed.seen = 1 WHERE feed.id_user_2_fk = ${usuId}`, 
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        // not found Project with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      console.log("updated feeds:");
+      result(null, { userId: usuId, success: true, message: 'All messages set to seen' });
+    });
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
 };
 
 Notification.feed = (loggedID, result) => {

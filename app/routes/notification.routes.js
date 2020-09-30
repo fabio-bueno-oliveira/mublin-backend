@@ -9,7 +9,7 @@ module.exports = app => {
   // app.get("/notifications/:userId/:feedId", notifications.updateReadById);
 
   // Update notifications to read with userId (authorization and read status needed on headers)
-  app.get("/notifications/:userId/read", notifications.updateAllReads);
+  app.put("/notifications/:userId/read", checkToken, notifications.updateAllReads);
 
   // Retrieve user feed
   app.get("/feed", checkToken, notifications.feed);
