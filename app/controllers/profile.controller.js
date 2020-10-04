@@ -1,4 +1,32 @@
 const Profile = require("../models/profile.model.js");
+const { hashSync, genSaltSync } = require("bcrypt");
+
+// Generate bcrypt salt
+var salt = genSaltSync(10);
+
+// Change password for userId (admin)
+exports.changePassword = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  Profile.changePassword(req.headers.authorization, req.body.userId, hashSync(req.body.newPassword, salt), (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found user with id ${req.body.userId} or you are not allowed for this operation.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error changing the password for user id " + req.body.userId
+          });
+        }
+    } else res.send(data);
+  });
+};
 
 // Find profile infos
 exports.infos = (req, res) => {

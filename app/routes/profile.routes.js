@@ -2,6 +2,9 @@ module.exports = app => {
   const profile = require("../controllers/profile.controller.js");
   const { checkToken } = require("../auth/token_validation");
 
+  // Change password for userId (admin)
+  app.put("/profile/changePassword", checkToken, profile.changePassword);
+
   // Retrieve profile info (by username)
   app.get("/profile/:username", checkToken, profile.infos);
 
