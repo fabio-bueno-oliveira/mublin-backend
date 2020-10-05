@@ -37,7 +37,7 @@ exports.findUsersProjectsFromUserSearch = (req, res) => {
 
 // Find all projects with a keyword
 exports.findProjectsByKeyword = (req, res) => {
-  Search.findProjectsByKeyword(req.params.keyword, req.body.userCity, (err, data) => {
+  Search.findProjectsByKeyword(req.headers.authorization, req.params.keyword, req.body.userCity, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
