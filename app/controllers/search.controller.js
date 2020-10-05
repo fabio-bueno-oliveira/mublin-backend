@@ -52,3 +52,19 @@ exports.findProjectsByKeyword = (req, res) => {
   });
 };
 
+// Find users for suggestion
+exports.findUsersBySuggestion = (req, res) => {
+  Search.findUsersBySuggestion(req.headers.authorization, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No users found for suggestion"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving users for suggestion"
+        });
+      }
+    } else res.send(data);
+  });
+};
