@@ -2,9 +2,6 @@ module.exports = app => {
   const projects = require("../controllers/project.controller.js");
   const { checkToken } = require("../auth/token_validation");
 
-  // Delete a Project with projectId
-  //app.delete("/projects/:projectId", projects.delete);
-
   // Delete all Projects
   //app.delete("/projects", projects.deleteAll);
 
@@ -73,4 +70,7 @@ module.exports = app => {
 
   // Update project tag
   app.put("/project/:projectUsername/updateTag", checkToken, projects.updateTag);
+
+  // Delete a Project with projectId
+  app.delete("/projects/:projectId/delete", projects.delete);
 };

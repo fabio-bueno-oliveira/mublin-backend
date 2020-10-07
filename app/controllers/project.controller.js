@@ -369,22 +369,22 @@ exports.updateTag = (req, res) => {
   });
 };
 
-// // Delete a Project with the specified projectId in the request
-// exports.delete = (req, res) => {
-//   Project.remove(req.params.projectId, (err, data) => {
-//     if (err) {
-//       if (err.kind === "not_found") {
-//         res.status(404).send({
-//           message: `Not found Project with id ${req.params.projectId}.`
-//         });
-//       } else {
-//         res.status(500).send({
-//           message: "Could not delete Project with id " + req.params.projectId
-//         });
-//       }
-//     } else res.send({ message: `Project was deleted successfully!` });
-//   });
-// };
+// Delete a Customer with the specified customerId in the request
+exports.delete = (req, res) => {
+  Project.delete(req.headers.authorization, req.params.projectId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Project id ${req.params.projectId} not found or you do not have permission to that.`
+        });
+      } else {
+        res.status(500).send({
+          message: `Could not delete project with id ${req.params.projectId}.`
+        });
+      }
+    } else res.send({ message: `Project was deleted successfully`, success: true });
+  });
+};
 
 // // Delete all Projects from the database.
 // exports.deleteAll = (req, res) => {
