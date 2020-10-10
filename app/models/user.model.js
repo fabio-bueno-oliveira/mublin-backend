@@ -894,8 +894,8 @@ User.changeEmail = (loggedID, userId, newEmail, result) => {
 
 User.checkProjectAdmin = (loggedID, projectUsername, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
-  let msg = {project: projectUsername, accessible: 1}
-  sql.query(`SELECT users_projects.confirmed, users_projects.admin FROM users_projects WHERE users_projects.id_project_fk = (SELECT projects.id FROM projects WHERE projects.username = '${projectUsername}') AND users_projects.id_user_fk = ${x.result.id} LIMIT 1`, (err, res) => {
+  // let msg = {project: projectUsername, accessible: 1}
+  sql.query(`SELECT users_projects.confirmed, users_projects.admin, users_projects.active, users_projects.leader FROM users_projects WHERE users_projects.id_project_fk = (SELECT projects.id FROM projects WHERE projects.username = '${projectUsername}') AND users_projects.id_user_fk = ${x.result.id} LIMIT 1`, (err, res) => {
     if (err) {
       result(err, null);
       return;
