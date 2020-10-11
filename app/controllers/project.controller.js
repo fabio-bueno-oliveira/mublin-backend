@@ -369,6 +369,30 @@ exports.updateTag = (req, res) => {
   });
 };
 
+// Update project bio
+exports.updateMemberDetails = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  Project.updateMemberDetails(req.headers.authorization, req.body.userId, req.body.projectId, req.body.admin, req.body.active, req.body.leader, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: "You cannot update the member with user id " + req.body.userId + " for this project"
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating member details for user id " + req.body.userId  + " in this project"
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Delete a Customer with the specified customerId in the request
 exports.delete = (req, res) => {
   Project.delete(req.headers.authorization, req.params.projectId, (err, data) => {
