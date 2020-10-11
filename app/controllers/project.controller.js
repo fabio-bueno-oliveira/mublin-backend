@@ -1,5 +1,10 @@
 const Project = require("../models/project.model.js");
 
+var today = new Date();
+var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+var dateTime = date+' '+time;
+
 // Create and Save a new Project
 exports.create = (req, res) => {
   // Validate request
@@ -387,6 +392,30 @@ exports.updateMemberDetails = (req, res) => {
         } else {
           res.status(500).send({
             message: "Error updating member details for user id " + req.body.userId  + " in this project"
+          });
+        }
+    } else res.send(data);
+  });
+};
+
+// Update member status
+exports.updateMemberRequest = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+  // console.log(409, dateTime)
+  Project.updateMemberRequest(req.headers.authorization, req.params.projectId, req.body.userId, req.body.requestResponse, dateTime, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: "You cannot update the member confirmation with user id " + req.body.userId + " for this project"
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating member confirmation for user id " + req.body.userId  + " in this project"
           });
         }
     } else res.send(data);
