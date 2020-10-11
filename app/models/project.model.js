@@ -391,6 +391,22 @@ Project.updateMemberRequest = (loggedID, projectId, userId, requestResponse, dat
   );
 };
 
+Project.declineMemberRequest = (loggedID, projectId, userId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`DELETE FROM users_projects WHERE users_projects.id_project_fk = ${projectId} AND users_projects.id_user_fk = ${userId} AND 1 = (SELECT admin FROM (SELECT DISTINCT admin FROM users_projects WHERE users_projects.id_project_fk = ${projectId} AND users_projects.id_user_fk = ${x.result.id} AND users_projects.admin = 1 LIMIT 1) AS admin)`, (err, res) => {
+      if (err) {
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { userId: userId, projectId: projectId, message: 'Request declined' });
+    }
+  );
+};
+
 Project.delete = (loggedID, projectId, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   sql.query(`DELETE FROM projects WHERE id = ${projectId} AND ${x.result.id} = (SELECT id_user_fk FROM users_projects WHERE id_project_fk = ${projectId} AND id_user_fk = ${x.result.id}) AND 1 = (SELECT admin FROM users_projects WHERE id_project_fk = ${projectId} AND id_user_fk = ${x.result.id})`, (err, res) => {

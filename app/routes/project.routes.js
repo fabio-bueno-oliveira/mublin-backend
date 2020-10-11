@@ -77,6 +77,9 @@ module.exports = app => {
   // Update user confirmation on a project (ex: request to join a project)
   app.put("/project/:projectId/updateMemberRequest", checkToken, projects.updateMemberRequest);
 
+  // Decline user request to join a project
+  app.put("/project/:projectId/declineMemberRequest", checkToken, projects.declineMemberRequest);
+
   // Delete a Project with projectId
   app.delete("/projects/:projectId/delete", projects.delete);
 };
