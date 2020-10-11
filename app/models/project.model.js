@@ -294,6 +294,38 @@ Project.getOfficialMembers = (projectUserName, result) => {
   });
 };
 
+Project.getEvents = (projectUsername, result) => {
+  sql.query(`SELECT events.id, events.title, events.description, DATE_FORMAT(events.date_opening,'%d/%m/%Y') AS dateOpening, TIME_FORMAT(events.hour_opening, '%k:%i') AS eventHourStart, DATE_FORMAT(events.date_end,'%d/%m/%Y') AS dateEnd, TIME_FORMAT(events.hour_end, '%k:%i') AS eventHourEnd, events.picture, users.name AS authorName, users.lastname AS authorLastname, users.username AS authorUsername, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',events.id_author_fk,'/',users.picture) AS authorPicture, cities.name AS city, regions.uf AS region, events.id_event_type_fk AS typeId, events_types.title_ptbr AS type, places.id AS placeId, places.name AS placeName, events_purposes.name_ptbr AS purpose FROM events LEFT JOIN projects ON events.id_project_fk = projects.id LEFT JOIN users ON events.id_author_fk = users.id LEFT JOIN cities ON events.id_city_fk = cities.id LEFT JOIN regions ON events.id_region_fk = regions.id LEFT JOIN events_types ON events_types.id = events.id_event_type_fk LEFT JOIN places ON events.id_place_fk = places.id LEFT JOIN events_purposes ON events.id_event_purpose_fk = events_purposes.id WHERE projects.username = '${projectUsername}' AND events.date_opening >= CURDATE() ORDER BY events.date_opening ASC`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found future events with the project username
+    result({ kind: "not_found" }, null);
+  });
+};
+
+Project.getAllEvents = (projectUsername, result) => {
+  sql.query(`SELECT events.id, events.title, events.description, DATE_FORMAT(events.date_opening,'%d/%m/%Y') AS dateOpening, TIME_FORMAT(events.hour_opening, '%k:%i') AS eventHourStart, DATE_FORMAT(events.date_end,'%d/%m/%Y') AS dateEnd, TIME_FORMAT(events.hour_end, '%k:%i') AS eventHourEnd, events.picture, users.name AS authorName, users.lastname AS authorLastname, users.username AS authorUsername, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',events.id_author_fk,'/',users.picture) AS authorPicture, cities.name AS city, regions.uf AS region, events.id_event_type_fk AS typeId, events_types.title_ptbr AS type, places.id AS placeId, places.name AS placeName, events_purposes.name_ptbr AS purpose FROM events LEFT JOIN projects ON events.id_project_fk = projects.id LEFT JOIN users ON events.id_author_fk = users.id LEFT JOIN cities ON events.id_city_fk = cities.id LEFT JOIN regions ON events.id_region_fk = regions.id LEFT JOIN events_types ON events_types.id = events.id_event_type_fk LEFT JOIN places ON events.id_place_fk = places.id LEFT JOIN events_purposes ON events.id_event_purpose_fk = events_purposes.id WHERE projects.username = '${projectUsername}' ORDER BY events.date_opening ASC`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found events with the project username
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Project.getProjectOpportunities = (projectUsername, result) => {
   sql.query(`SELECT projects_opportunities.created, roles.description_ptbr AS rolename, projects_opportunities.info, projects_opportunities.experience AS experienceLevel, projects_opportunities_exp.title_ptbr AS experienceName FROM projects_opportunities LEFT JOIN roles ON projects_opportunities.id_role = roles.id LEFT JOIN projects ON projects_opportunities.id_project = projects.id LEFT JOIN projects_opportunities_exp ON projects_opportunities.experience = projects_opportunities_exp.id WHERE projects.username = '${projectUsername}' AND projects_opportunities.visible = 1 ORDER BY projects_opportunities.created DESC`, (err, res) => {
     if (err) {

@@ -309,6 +309,40 @@ exports.opportunities = (req, res) => {
   });
 };
 
+// Find future events for projectUsername
+exports.events = (req, res) => {
+  Project.getEvents(req.params.projectUsername, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No future events found for project username ${req.params.projectUsername}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving future events from project username " + req.params.projectUsername
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// Find all events for projectUsername
+exports.allEvents = (req, res) => {
+  Project.getAllEvents(req.params.projectUsername, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No events found for project username ${req.params.projectUsername}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving events from project username " + req.params.projectUsername
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Find all notes of projectUsername
 exports.notes = (req, res) => {
   Project.getNotes(req.headers.authorization, req.params.projectUsername, (err, data) => {
