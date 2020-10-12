@@ -76,7 +76,7 @@ Misc.getProductInfo = (productId, result) => {
 };
 
 Misc.getProductOwners = (productId, result) => {
-  sql.query(`SELECT users.id AS ownerId, users.name AS ownerName, users.lastname AS ownerLastname, users.username AS ownerUsername, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',users.id,'/',users.picture) AS ownerPicture, users_gear.featured, users_gear.currently_using AS currentlyUsing, users_gear.for_sale AS forSale, users_gear.price AS price, users_gear.photo, users_gear.id_product AS productId, users_gear.created FROM users_gear LEFT JOIN users ON users_gear.id_user = users.id WHERE users_gear.id_product = ${productId} ORDER BY users_gear.created DESC`, (err, res) => {
+  sql.query(`SELECT users.id, users.name, users.lastname, users.username, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',users.id,'/',users.picture) AS picture, countries.name AS country, regions.name AS region, cities.name AS city, users_gear.featured, users_gear.currently_using AS currentlyUsing, users_gear.for_sale AS forSale, users_gear.price AS price, users_gear.photo, users_gear.id_product AS productId, users_gear.created FROM users_gear LEFT JOIN users ON users_gear.id_user = users.id LEFT JOIN countries ON users.id_country_fk = countries.id LEFT JOIN regions ON users.id_region_fk = regions.id LEFT JOIN cities ON users.id_city_fk = cities.id WHERE users_gear.id_product = ${productId} ORDER BY users_gear.created DESC`, (err, res) => {
     if (err) {
       result(err, null);
       return;
