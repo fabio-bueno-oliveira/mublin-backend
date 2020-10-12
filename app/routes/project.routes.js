@@ -86,6 +86,9 @@ module.exports = app => {
   // Decline user request to join a project
   app.put("/project/:projectId/declineMemberRequest", checkToken, projects.declineMemberRequest);
 
+  // Remove user from project
+  app.delete("/projects/:projectId/removeMember", projects.removeMember);
+
   // Delete a Project with projectId
   app.delete("/projects/:projectId/delete", projects.delete);
 };

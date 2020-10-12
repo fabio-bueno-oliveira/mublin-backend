@@ -480,6 +480,23 @@ exports.declineMemberRequest = (req, res) => {
   });
 };
 
+// Remove user from project
+exports.removeMember = (req, res) => {
+  Project.removeMember(req.headers.authorization, req.params.projectId, req.body.userId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `User ${req.body.userId} not found or you do not have permission to that.`
+        });
+      } else {
+        res.status(500).send({
+          message: `Could not remove user ${req.body.userId} from project with id ${req.params.projectId}.`
+        });
+      }
+    } else res.send({ message: `Project was deleted successfully`, success: true });
+  });
+};
+
 // Delete a Customer with the specified customerId in the request
 exports.delete = (req, res) => {
   Project.delete(req.headers.authorization, req.params.projectId, (err, data) => {
