@@ -28,6 +28,9 @@ module.exports = app => {
   // Retrieve all product Brands
   app.get("/gear/brands", misc.brands);
 
+  // Retrieve all brand categories
+  app.get("/gear/brand/:brandId/categories", misc.brandCategories);
+
   // Retrieve all product from a Brand
   app.get("/gear/brand/:brandId/products", misc.brandProducts);
 };

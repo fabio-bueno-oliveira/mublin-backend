@@ -111,7 +111,7 @@ exports.productOwners = (req, res) => {
   });
 };
 
-// Get product owners
+// Get product Brands
 exports.brands = (req, res) => {
   Misc.getBrands((err, data) => {
     if (err) {
@@ -122,6 +122,23 @@ exports.brands = (req, res) => {
       } else {
         res.status(500).send({
           message: "Error retrieving Brands"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// Get all categories by brandId (based on its products)
+exports.brandCategories = (req, res) => {
+  Misc.getBrandCategories(req.params.brandId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No categories found for the Brand id " + req.params.brandId
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving categories for Brand id " + req.params.brandId
         });
       }
     } else res.send(data);
