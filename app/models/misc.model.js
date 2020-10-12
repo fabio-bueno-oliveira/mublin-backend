@@ -60,4 +60,34 @@ Misc.getAvailabilityFocuses = result => {
   });
 };
 
+Misc.getProductInfo = (productId, result) => {
+  sql.query(`SELECT brands_products.id, brands_products.name, CONCAT('https://ik.imagekit.io/mublin/products/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',brands_products.picture) AS picture, brands.id AS brandId, brands.name AS brandName, brands.logo AS brandLogo, brands_categories.id AS categoryId, brands_categories.name_ptbr AS categoryName FROM brands_products LEFT JOIN brands ON brands_products.id_brand = brands.id LEFT JOIN brands_categories ON brands_products.id_category = brands_categories.id WHERE brands_products.id = ${productId} LIMIT 1`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found product with the productId
+    result({ kind: "not_found" }, null);
+  });
+};
+
+Misc.getProductOwners = (productId, result) => {
+  sql.query(`SELECT users.id AS ownerId, users.name AS ownerName, users.lastname AS ownerLastname, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',users.id,'/',users.picture) AS ownerPicture, users_gear.featured, users_gear.currently_using AS currentlyUsing, users_gear.for_sale AS forSale, users_gear.price AS price, users_gear.photo, users_gear.id_product AS productId, users_gear.created FROM users_gear LEFT JOIN users ON users_gear.id_user = users.id WHERE users_gear.id_product = ${productId} ORDER BY users_gear.created DESC`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found product owners with the productId
+    result({ kind: "not_found" }, null);
+  });
+};
+
 module.exports = Misc;

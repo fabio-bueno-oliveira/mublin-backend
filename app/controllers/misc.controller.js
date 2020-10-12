@@ -76,3 +76,37 @@ exports.availabilityFocuses = (req, res) => {
     else res.send(data);
   });
 };
+
+// Get product info
+exports.productInfo = (req, res) => {
+  Misc.getProductInfo(req.params.productId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No product found with id " + req.params.productId
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving product info for id " + req.params.productId
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// Get product owners
+exports.productOwners = (req, res) => {
+  Misc.getProductOwners(req.params.productId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No product owners found for product id " + req.params.productId
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving product owners for id " + req.params.productId
+        });
+      }
+    } else res.send(data);
+  });
+};

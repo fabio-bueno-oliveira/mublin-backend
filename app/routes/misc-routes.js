@@ -18,4 +18,10 @@ module.exports = app => {
 
   // Retrieve all availability focuses
   app.get("/availabilityFocuses", misc.availabilityFocuses);
+
+  // Retrieve product info
+  app.get("/gear/product/:productId/productInfo", misc.productInfo);
+
+  // Retrieve product info
+  app.get("/gear/product/:productId/productOwners", misc.productOwners);
 };
