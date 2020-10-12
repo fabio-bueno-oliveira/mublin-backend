@@ -24,4 +24,10 @@ module.exports = app => {
 
   // Retrieve product info
   app.get("/gear/product/:productId/productOwners", misc.productOwners);
+
+  // Retrieve all product Brands
+  app.get("/gear/brands", misc.brands);
+
+  // Retrieve all product from a Brand
+  app.get("/gear/brand/:brandId/products", misc.brandProducts);
 };

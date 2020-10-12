@@ -110,3 +110,37 @@ exports.productOwners = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Get product owners
+exports.brands = (req, res) => {
+  Misc.getBrands((err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No Brands found"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving Brands"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// Get brand products
+exports.brandProducts = (req, res) => {
+  Misc.getBrandProducts(req.params.brandId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No products found for the Brand id " + req.params.brandId
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving products for Brand id " + req.params.brandId
+        });
+      }
+    } else res.send(data);
+  });
+};
