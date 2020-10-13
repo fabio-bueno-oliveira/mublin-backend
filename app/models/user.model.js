@@ -849,6 +849,25 @@ User.gear = (loggedID, userId, result) => {
   }
 };
 
+User.deleteGearItem = (loggedID, userGearId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`DELETE FROM users_gear WHERE users_gear.id = ${userGearId} AND users_gear.id_user = ${x.result.id}`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    if (res.affectedRows == 0) {
+      result({ kind: "not_found" }, null);
+      return;
+    }
+
+    console.log("deleted user gear with id: ", userGearId);
+    result(null, res);
+  });
+};
+
 User.changePassword = (loggedID, userId, newPassword, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   if (x.result.id == userId) {

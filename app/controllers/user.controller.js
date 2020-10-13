@@ -817,6 +817,30 @@ exports.gear = (req, res) => {
   });
 };
 
+// Delete user gear item
+exports.deleteGearItem = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.deleteGearItem(req.headers.authorization, req.params.userGearId, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found gear item with id ${req.params.userGearId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error deleting gear item with id " + req.params.userGearId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Change user password
 exports.changePassword = (req, res) => {
   // Validate Request

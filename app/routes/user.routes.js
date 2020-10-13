@@ -118,6 +118,9 @@ module.exports = app => {
   // Retrieve user gear (by logged userId)
   app.get("/user/:userId/gear", checkToken, users.gear);
 
+  // Delete user gear item (by logged userId and gearId)
+  app.delete("/user/:userGearId/deleteGearItem", checkToken, users.deleteGearItem);
+
   // Update/change user password (/settings)
   app.put("/user/changePassword", checkToken, users.changePassword);
 
