@@ -817,6 +817,30 @@ exports.gear = (req, res) => {
   });
 };
 
+// Add gear item to userId
+exports.addGearItem = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.addGearItem(req.headers.authorization, req.body.productId, req.body.featured, req.body.for_sale, req.body.price, req.body.currently_using, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found user id ${req.body.userId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating availability item for user id " + req.body.userId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Delete user gear item
 exports.deleteGearItem = (req, res) => {
   // Validate Request

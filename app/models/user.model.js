@@ -849,6 +849,24 @@ User.gear = (loggedID, userId, result) => {
   }
 };
 
+User.addGearItem = (loggedID, productId, featured, for_sale, price, currently_using, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`INSERT INTO users_gear (id_user, id_product, featured, for_sale, price, currently_using) VALUES (${x.result.id}, ${productId}, ${featured}, ${for_sale}, ${price}, ${currently_using})`, (err, res) => {
+      if (err) {
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found user with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { userId: x.result.id, productId: productId, featured: featured, for_sale: for_sale, price: price, currently_using: currently_using, message: 'Product added successfully to user gear'  });
+    }
+  );
+};
+
 User.deleteGearItem = (loggedID, userGearId, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   sql.query(`DELETE FROM users_gear WHERE users_gear.id = ${userGearId} AND users_gear.id_user = ${x.result.id}`, (err, res) => {
