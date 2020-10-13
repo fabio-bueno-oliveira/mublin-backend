@@ -121,6 +121,9 @@ module.exports = app => {
   // Add user gear item (by logged userId)
   app.post("/user/addGearItem", checkToken, users.addGearItem);
 
+  // Update user gear item
+  app.put("/user/updateGearItem", checkToken, users.updateGearItem);
+
   // Delete user gear item (by logged userId and gearId)
   app.delete("/user/:userGearId/deleteGearItem", checkToken, users.deleteGearItem);
 

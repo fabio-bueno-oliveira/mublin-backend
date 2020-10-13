@@ -841,6 +841,30 @@ exports.addGearItem = (req, res) => {
   });
 };
 
+// Update user gear item
+exports.updateGearItem = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.updateGearItem(req.headers.authorization, req.body.id, req.body.productId, req.body.featured, req.body.for_sale, req.body.price, req.body.currently_using, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found gear item with id ${req.body.id}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating gear item with id " + req.body.id
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Delete user gear item
 exports.deleteGearItem = (req, res) => {
   // Validate Request
