@@ -61,3 +61,37 @@ exports.findByKeywordFilteredByRegion = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Find cities filtered by regionId
+exports.getCitiesByRegion = (req, res) => {
+  Location.getCitiesByRegion(req.params.regionId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No cities found with region ${req.params.regionId}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving cities with region " + req.params.regionId
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// Find places by keyword
+exports.findPlacesByKeyword = (req, res) => {
+  Location.findPlacesByKeyword(req.params.keyword, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No places found with keyword " + req.params.keyword
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving places with keyword " + req.params.keyword
+        });
+      }
+    } else res.send(data);
+  });
+};

@@ -46,4 +46,40 @@ Location.findAllCitiesByKeywordAndRegionId = (keyword, regionId, result) => {
   });
 };
 
+// Find cities filtered by regionId
+Location.getCitiesByRegion = (regionId, result) => {
+  sql.query(`
+    SELECT cities.id AS id, cities.id AS value, cities.name AS text FROM cities WHERE cities.region_id = ${regionId} ORDER BY cities.name ASC`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      console.log("result: ", res);
+      result(null, res);
+      return;
+    }
+    // not found cities with the regionId
+    result({ kind: "not_found" }, null);
+  });
+};
+
+// find places by keyword
+Location.findPlacesByKeyword = (keyword, result) => {
+  sql.query(`
+  SELECT places.id AS id, places.name, places.about, places.id_city_fk AS cityId, cities.name AS cityName, places.id_state_fk AS regionId, regions.name AS regionName, places.id_country_fk AS countryId, countries.name AS countryName FROM places LEFT JOIN countries ON places.id_country_fk = countries.id LEFT JOIN regions ON places.id_state_fk = regions.id LEFT JOIN cities ON places.id_city_fk = cities.id WHERE places.name LIKE '%${keyword}%' ORDER BY places.name ASC LIMIT 50`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found places with the keyword
+    result({ kind: "not_found" }, null);
+  });
+};
+
 module.exports = Location;
