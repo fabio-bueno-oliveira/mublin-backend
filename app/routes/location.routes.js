@@ -12,4 +12,7 @@ module.exports = app => {
 
   // Retrieve places by keyword
   app.get("/search/places/:keyword", locations.findPlacesByKeyword);
+
+  // Retrieve places by keyword
+  app.get("/search/places/minimalResult/:keyword", locations.findPlacesByKeywordMinimal);
 };

@@ -82,4 +82,21 @@ Location.findPlacesByKeyword = (keyword, result) => {
   });
 };
 
+// find places by keyword (minimal result)
+Location.findPlacesByKeywordMinimal = (keyword, result) => {
+  sql.query(`
+  SELECT places.id AS value, places.name AS text FROM places WHERE places.name LIKE '%${keyword}%' ORDER BY places.name ASC LIMIT 50`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found places with the keyword
+    result({ kind: "not_found" }, null);
+  });
+};
+
 module.exports = Location;

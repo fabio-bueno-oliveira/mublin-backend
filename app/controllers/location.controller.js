@@ -95,3 +95,20 @@ exports.findPlacesByKeyword = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Find places by keyword (minimal result)
+exports.findPlacesByKeywordMinimal = (req, res) => {
+  Location.findPlacesByKeywordMinimal(req.params.keyword, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No places found with keyword " + req.params.keyword
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving places with keyword " + req.params.keyword
+        });
+      }
+    } else res.send(data);
+  });
+};
