@@ -85,7 +85,7 @@ Location.findPlacesByKeyword = (keyword, result) => {
 // find places by keyword (minimal result)
 Location.findPlacesByKeywordMinimal = (keyword, result) => {
   sql.query(`
-  SELECT places.id AS value, places.name AS text FROM places WHERE places.name LIKE '%${keyword}%' ORDER BY places.name ASC LIMIT 50`, (err, res) => {
+  SELECT places.id AS value, places.name AS text, CONCAT(places.name,' (',cities.name,', ',regions.name,')') AS text FROM places LEFT JOIN regions ON places.id_state_fk = regions.id LEFT JOIN cities ON places.id_city_fk = cities.id WHERE places.name LIKE '%${keyword}%' ORDER BY places.name ASC LIMIT 50`, (err, res) => {
     if (err) {
       result(err, null);
       return;
