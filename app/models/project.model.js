@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const Project = function(project) {
   this.name = project.name;
   this.username = project.username;
+  this.picture = project.picture;
   this.foundation_year = project.foundation_year;
   this.end_year = project.end_year;
   this.bio = project.bio;
