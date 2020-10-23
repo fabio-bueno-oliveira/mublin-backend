@@ -18,6 +18,7 @@ exports.create = (req, res) => {
   const project = new Project({
     name: req.body.projectName,
     username: req.body.projectUserName,
+    picture: req.body.projectImage,
     foundation_year: req.body.foundation_year,
     end_year: req.body.end_year,
     bio: req.body.bio,
