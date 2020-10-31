@@ -117,6 +117,22 @@ exports.checkSession = (req, res) => {
   });
 };
 
+exports.forgotPassword = (req, res) => {
+  User.forgotPassword(req.body.username, req.body.email, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No user found with username " + req.body.username + " or email " + req.body.email
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving user with username " + req.body.username + " or email " + req.body.email
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Retrieve logged user info from the database
 exports.getInfo = (req, res) => {
   const token = req.get("authorization").slice(7);

@@ -11,6 +11,9 @@ module.exports = app => {
   // Check active session
   app.get("/session", users.checkSession);
 
+  // Forgot password
+  app.get("/forgotPassword", users.forgotPassword);
+
   // Fetch logged user info
   app.get("/userInfo", checkToken, users.getInfo);
   app.get("/userInfo/:userId/genres", checkToken, users.getInfoGenres);

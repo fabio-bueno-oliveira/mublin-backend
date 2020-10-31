@@ -87,6 +87,50 @@ User.loginUserByEmail = (email, result) => {
   });
 };
 
+User.forgotPassword = (username, email, result) => {
+  sql.query(`SELECT users.id, users.name, users.lastname FROM users WHERE users.email = '${email}' LIMIT 1`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      console.log("found user: ", res[0]);
+      result(null, res[0]);
+      
+      var transporter = nodemailer.createTransport({
+        pool: true,
+        host: process.env.SMTP_SERVICE_HOST,
+        port: process.env.SMTP_SERVICE_PORT,
+        secure: process.env.SMTP_SERVICE_SECURE,
+        auth: {
+          user: process.env.SMTP_USER_NAME,
+          pass: process.env.SMTP_USER_PASSWORD
+        }
+      });
+  
+      var mailOptions = {
+        from: process.env.SMTP_USER_NAME,
+        to: 'fabiobueno@outlook.com',
+        subject: 'Sending Email using Node.js',
+        html: '<h1>Welcome</h1><p>That was easy!</p>'
+      };
+  
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+
+      return;
+    }
+    // not found User with the email in the token
+    result({ kind: "not_found" }, null);
+  });
+};
+
 User.checkUserByToken = (loggedEmail, result) => {
   sql.query(`SELECT id, email, status FROM users WHERE email = '${loggedEmail}' AND status = '1' LIMIT 1`, (err, res) => {
     if (err) {
