@@ -924,7 +924,7 @@ User.forgotPassword = (email, result) => {
           from: process.env.SMTP_USER_NAME,
           to: 'fabiobueno@outlook.com',
           subject: 'Sending Email using Node.js',
-          html: '<h1>Mublin</h1><p>Olá! Foi solicitada a recuperação de sua senha através do mublin.com.</p><p><a href="'+md5(dateTime+email)+'" target="_blank">Clique aqui para redefinir sua senha</a></p>'
+          html: '<h1>Mublin</h1><p>Olá! Foi solicitada a recuperação de sua senha através do mublin.com.</p><p><a href="https://mublin.com/redefine-password?hash='+md5(dateTime+email)+'" target="_blank">Clique aqui para redefinir sua senha</a></p>'
         };
 
         transporter.sendMail(mailOptions, function(error, info){
