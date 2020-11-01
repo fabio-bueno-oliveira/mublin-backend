@@ -12,7 +12,7 @@ module.exports = app => {
   app.get("/session", users.checkSession);
 
   // Forgot password
-  app.get("/forgotPassword", users.forgotPassword);
+  app.post("/forgotPassword", users.forgotPassword);
 
   // Fetch logged user info
   app.get("/userInfo", checkToken, users.getInfo);
