@@ -1,7 +1,26 @@
 const sql = require("./db.js");
+const md5 = require("md5");
 const { sign } = require("jsonwebtoken");
-var nodemailer = require('nodemailer');
 const jwt = require("jsonwebtoken");
+
+var today = new Date();
+var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+var dateTime = date+' '+time;
+
+// start nodemailer
+const nodemailer = require('nodemailer');
+const transporter = nodemailer.createTransport({
+  pool: true,
+  host: process.env.SMTP_SERVICE_HOST,
+  port: process.env.SMTP_SERVICE_PORT,
+  secure: process.env.SMTP_SERVICE_SECURE,
+  auth: {
+    user: process.env.SMTP_USER_NAME,
+    pass: process.env.SMTP_USER_PASSWORD
+  }
+});
+// end nodemailer
 
 // constructor
 const User = function(user) {
@@ -35,17 +54,6 @@ User.create = (newUser, result) => {
         expiresIn: "6h"
     });
     result(null, { id: res.insertId, username: newUser.username, name: newUser.name, lastname: newUser.lastname, email: newUser.email, token: jsontoken });
-
-    var transporter = nodemailer.createTransport({
-      pool: true,
-      host: process.env.SMTP_SERVICE_HOST,
-      port: process.env.SMTP_SERVICE_PORT,
-      secure: process.env.SMTP_SERVICE_SECURE,
-      auth: {
-        user: process.env.SMTP_USER_NAME,
-        pass: process.env.SMTP_USER_PASSWORD
-      }
-    });
 
     var mailOptions = {
       from: process.env.SMTP_USER_NAME,
@@ -83,50 +91,6 @@ User.loginUserByEmail = (email, result) => {
       return;
     }
     // not found User with the id
-    result({ kind: "not_found" }, null);
-  });
-};
-
-User.forgotPassword = (username, email, result) => {
-  sql.query(`SELECT users.id, users.name, users.lastname FROM users WHERE users.email = '${email}' LIMIT 1`, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
-    if (res.length) {
-      console.log("found user: ", res[0]);
-      result(null, res[0]);
-      
-      var transporter = nodemailer.createTransport({
-        pool: true,
-        host: process.env.SMTP_SERVICE_HOST,
-        port: process.env.SMTP_SERVICE_PORT,
-        secure: process.env.SMTP_SERVICE_SECURE,
-        auth: {
-          user: process.env.SMTP_USER_NAME,
-          pass: process.env.SMTP_USER_PASSWORD
-        }
-      });
-  
-      var mailOptions = {
-        from: process.env.SMTP_USER_NAME,
-        to: 'fabiobueno@outlook.com',
-        subject: 'Sending Email using Node.js',
-        html: '<h1>Welcome</h1><p>That was easy!</p>'
-      };
-  
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
-        }
-      });
-
-      return;
-    }
-    // not found User with the email in the token
     result({ kind: "not_found" }, null);
   });
 };
@@ -946,26 +910,36 @@ User.deleteGearItem = (loggedID, userGearId, result) => {
   });
 };
 
-User.changePassword = (loggedID, userId, newPassword, result) => {
-  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
-  if (x.result.id == userId) {
-    sql.query(`UPDATE users SET password = '${newPassword}' WHERE id = ${userId}`, (err, res) => {
-        if (err) {
-          result(null, err);
-          return;
-        }
-        if (res.affectedRows == 0) {
-          // not found user with the id
-          result({ kind: "not_found" }, null);
-          return;
-        }
-        result(null, { userId: userId, success: true });
+User.forgotPassword = (email, result) => {
+  sql.query(`UPDATE users SET random_key = '${md5(dateTime+email)}' WHERE users.email = '${email}'`, (err, res) => {
+      if (err) {
+        result(null, err);
+        return;
       }
-    );
-  } else {
-    result({ kind: "Unauthorized" }, null);
-    return;
-  }
+      if (res.affectedRows == 0) {
+        // not found user with the username or email
+        result({ kind: "not_found" }, null);
+        // start sending email
+        var mailOptions = {
+          from: process.env.SMTP_USER_NAME,
+          to: 'fabiobueno@outlook.com',
+          subject: 'Sending Email using Node.js',
+          html: '<h1>Mublin</h1><p>Olá! Foi solicitada a recuperação de sua senha através do mublin.com.</p><p><a href="'+md5(dateTime+email)+'" target="_blank">Clique aqui para redefinir sua senha</a></p>'
+        };
+
+        transporter.sendMail(mailOptions, function(error, info){
+          if (error) {
+            console.log(error);
+          } else {
+            console.log('Email sent: ' + info.response);
+          }
+        });
+        // end sending email
+        return;
+      }
+      result(null, { success: true, message: 'Email de refinição de senha enviado com sucesso para '+email });
+    }
+  );
 };
 
 User.changeEmail = (loggedID, userId, newEmail, result) => {

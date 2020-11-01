@@ -118,17 +118,24 @@ exports.checkSession = (req, res) => {
 };
 
 exports.forgotPassword = (req, res) => {
-  User.forgotPassword(req.body.username, req.body.email, (err, data) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.forgotPassword(req.body.email, (err, data) => {
     if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: "No user found with username " + req.body.username + " or email " + req.body.email
-        });
-      } else {
-        res.status(500).send({
-          message: "Error retrieving user with username " + req.body.username + " or email " + req.body.email
-        });
-      }
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: "No user found with email " + req.body.email
+          });
+        } else {
+          res.status(500).send({
+            message: "Error retrieving user email " + req.body.email
+          });
+        }
     } else res.send(data);
   });
 };
