@@ -919,24 +919,24 @@ User.forgotPassword = (email, result) => {
       if (res.affectedRows == 0) {
         // not found user with the username or email
         result({ kind: "not_found" }, null);
-        // start sending email
-        var mailOptions = {
-          from: process.env.SMTP_USER_NAME,
-          to: 'fabiobueno@outlook.com',
-          subject: 'Sending Email using Node.js',
-          html: '<h1>Mublin</h1><p>Olá! Foi solicitada a recuperação de sua senha através do mublin.com.</p><p><a href="https://mublin.com/redefine-password?hash='+md5(dateTime+email)+'" target="_blank">Clique aqui para redefinir sua senha</a></p>'
-        };
-
-        transporter.sendMail(mailOptions, function(error, info){
-          if (error) {
-            console.log(error);
-          } else {
-            console.log('Email sent: ' + info.response);
-          }
-        });
-        // end sending email
         return;
       }
+      // start sending email
+      var mailOptions = {
+        from: process.env.SMTP_USER_NAME,
+        to: 'fabiobueno@outlook.com',
+        subject: 'Sending Email using Node.js',
+        html: '<h1>Mublin</h1><p>Olá! Foi solicitada a recuperação de sua senha através do mublin.com.</p><p><a href="https://mublin.com/redefine-password?hash='+md5(dateTime+process.env.FORGOT_EMAIL_KEY+email)+'" target="_blank">Clique aqui para redefinir sua senha</a></p>'
+      };
+
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+      // end sending email
       result(null, { success: true, message: 'Email de refinição de senha enviado com sucesso para '+email });
     }
   );
