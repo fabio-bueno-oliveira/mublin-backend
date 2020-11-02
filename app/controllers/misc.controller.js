@@ -145,6 +145,23 @@ exports.brandCategories = (req, res) => {
   });
 };
 
+// Get all categories
+exports.gearCategories = (req, res) => {
+  Misc.getGearCategories((err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No gear categories found"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving gear categories"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Get brand products
 exports.brandProducts = (req, res) => {
   Misc.getBrandProducts(req.params.brandId, req.params.categoryId, (err, data) => {
