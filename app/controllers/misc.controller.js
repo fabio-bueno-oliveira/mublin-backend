@@ -161,3 +161,53 @@ exports.brandProducts = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Create and save a new Gear Product
+exports.submitNewGearProduct = (req, res) => {
+  // Validate request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  // Create a Gear
+  const gearProduct = new Project({
+    name: req.body.name,
+    idBrand: req.body.idBrand,
+    idCategory: req.body.idCategory,
+    year: req.body.year,
+    color: req.body.color,
+    picture: req.body.color
+  });
+
+  // Save gear product in database
+  Misc.submitNewGearProduct(gearProduct, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while submitting the product."
+      });
+    else res.send(data);
+  });
+};
+
+// Create and save a new Gear Brand
+exports.submitNewGearBrand = (req, res) => {
+  // Validate request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  // Save gear brand in database
+  Misc.submitNewGearBrand(req.body.name, req.body.logo, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while submitting the brand."
+      });
+    else res.send(data);
+  });
+};

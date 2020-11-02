@@ -1,5 +1,6 @@
 module.exports = app => {
   const misc = require("../controllers/misc.controller.js");
+  const { checkToken } = require("../auth/token_validation");
 
   // Retrieve cities by keyword
   app.get("/imagekit", misc.imagekit);
@@ -33,4 +34,10 @@ module.exports = app => {
 
   // Retrieve all products from a Brand/Category
   app.get("/gear/brand/:brandId/:categoryId/products", misc.brandProducts);
+
+  // Submit a new product
+  app.post("/gear/submitNewGearProduct", checkToken, misc.submitNewGearProduct);
+
+  // Submit a new brand
+  app.post("/gear/submitNewGearBrand", checkToken, misc.submitNewGearBrand);
 };

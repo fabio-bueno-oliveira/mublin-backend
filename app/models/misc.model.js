@@ -2,8 +2,12 @@ const sql = require("./db.js");
 
 // constructor
 const Misc = function(misc) {
-  this.id = misc.id;
   this.name = misc.name;
+  this.idBrand = misc.idBrand;
+  this.idCategory = misc.idCategory;
+  this.year = misc.year;
+  this.color = misc.color;
+  this.picture = misc.picture;
 };
 
 Misc.getMusicGenres = result => {
@@ -132,6 +136,30 @@ Misc.getBrandProducts = (brandId, categoryId, result) => {
     }
     // not found any products for this brand
     result({ kind: "not_found" }, null);
+  });
+};
+
+Misc.submitNewGearProduct = (newProduct, result) => {
+  sql.query("INSERT INTO brands_products SET ?", newProduct, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    console.log("created product: ", { id: res.insertId, ...newProduct });
+    result(null, { id: res.insertId, ...newProject });
+  });
+};
+
+Misc.submitNewGearBrand = (name, logo, result) => {
+  sql.query(`INSERT INTO brands (name, logo) VALUES ('${name}', '${logo}')`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    console.log("created brand: ", { id: res.insertId, name: name, logo: logo });
+    result(null, { id: res.insertId, name: name, logo: logo, success: true });
   });
 };
 
