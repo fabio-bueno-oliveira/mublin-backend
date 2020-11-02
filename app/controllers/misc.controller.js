@@ -206,13 +206,13 @@ exports.submitNewGearProduct = (req, res) => {
   }
 
   // Create a Gear
-  const gearProduct = new Project({
+  const gearProduct = new Misc({
     name: req.body.name,
-    idBrand: req.body.idBrand,
-    idCategory: req.body.idCategory,
+    id_brand: req.body.id_brand,
+    id_category: req.body.id_category,
     year: req.body.year,
     color: req.body.color,
-    picture: req.body.color
+    picture: req.body.picture
   });
 
   // Save gear product in database

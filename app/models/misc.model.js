@@ -3,8 +3,8 @@ const sql = require("./db.js");
 // constructor
 const Misc = function(misc) {
   this.name = misc.name;
-  this.idBrand = misc.idBrand;
-  this.idCategory = misc.idCategory;
+  this.id_brand = misc.id_brand;
+  this.id_category = misc.id_category;
   this.year = misc.year;
   this.color = misc.color;
   this.picture = misc.picture;
@@ -177,7 +177,7 @@ Misc.submitNewGearProduct = (newProduct, result) => {
       return;
     }
     console.log("created product: ", { id: res.insertId, ...newProduct });
-    result(null, { id: res.insertId, ...newProject });
+    result(null, { id: res.insertId, ...newProduct });
   });
 };
 
