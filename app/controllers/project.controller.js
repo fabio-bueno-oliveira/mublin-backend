@@ -433,6 +433,30 @@ exports.updateCategory = (req, res) => {
   });
 };
 
+// Update project featured
+exports.updateFeatured = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  Project.updateFeatured(req.headers.authorization, req.params.projectId, req.body.userProjectId, req.body.featured, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: "You cannot update this project"
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating featured toggle for project with id " + req.params.projectId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Update project bio
 exports.updateMemberDetails = (req, res) => {
   // Validate Request

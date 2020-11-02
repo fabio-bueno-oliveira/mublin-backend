@@ -80,6 +80,9 @@ module.exports = app => {
   // Update project category (main/portfolio)
   app.put("/project/:projectId/updateCategory", checkToken, projects.updateCategory);
 
+  // Update project featured
+  app.put("/project/:projectId/updateFeatured", checkToken, projects.updateFeatured);
+
   // Update user_project details
   app.put("/project/:userId/updateMemberDetails", checkToken, projects.updateMemberDetails);
 
