@@ -212,7 +212,8 @@ exports.submitNewGearProduct = (req, res) => {
     id_category: req.body.id_category,
     year: req.body.year,
     color: req.body.color,
-    picture: req.body.picture
+    picture: req.body.picture,
+    id_user_creator: req.body.id_user_creator
   });
 
   // Save gear product in database
@@ -236,7 +237,7 @@ exports.submitNewGearBrand = (req, res) => {
   }
 
   // Save gear brand in database
-  Misc.submitNewGearBrand(req.body.name, req.body.logo, (err, data) => {
+  Misc.submitNewGearBrand(req.body.name, req.body.logo, req.body.id_user_creator, (err, data) => {
     if (err)
       res.status(500).send({
         message:

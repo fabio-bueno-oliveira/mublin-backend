@@ -8,6 +8,7 @@ const Misc = function(misc) {
   this.year = misc.year;
   this.color = misc.color;
   this.picture = misc.picture;
+  this.id_user_creator = misc.id_user_creator;
 };
 
 Misc.getMusicGenres = result => {
@@ -181,8 +182,8 @@ Misc.submitNewGearProduct = (newProduct, result) => {
   });
 };
 
-Misc.submitNewGearBrand = (name, logo, result) => {
-  sql.query(`INSERT INTO brands (name, logo) VALUES ('${name}', '${logo}')`, (err, res) => {
+Misc.submitNewGearBrand = (name, logo, id_user_creator, result) => {
+  sql.query(`INSERT INTO brands (name, logo, id_user_creator) VALUES ('${name}', '${logo}', ${id_user_creator})`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
