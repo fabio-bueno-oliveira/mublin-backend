@@ -77,6 +77,9 @@ module.exports = app => {
   // Update project tag
   app.put("/project/:projectUsername/updateTag", checkToken, projects.updateTag);
 
+  // Update project category (main/portfolio)
+  app.put("/project/:projectId/updateCategory", checkToken, projects.updateCategory);
+
   // Update user_project details
   app.put("/project/:userId/updateMemberDetails", checkToken, projects.updateMemberDetails);
 

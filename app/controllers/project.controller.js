@@ -409,6 +409,30 @@ exports.updateTag = (req, res) => {
   });
 };
 
+// Update project category (main/portfolio)
+exports.updateCategory = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  Project.updateCategory(req.headers.authorization, req.params.projectId, req.body.userProjectId, req.body.portfolio, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: "You cannot update this project"
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating category for project with id " + req.params.projectId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Update project bio
 exports.updateMemberDetails = (req, res) => {
   // Validate Request
