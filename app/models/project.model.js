@@ -394,7 +394,7 @@ Project.updateTag = (loggedID, projectUsername, projectId, label_show, label_tex
 
 Project.updateCategory = (loggedID, projectId, userProjectId, portfolio, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
-  sql.query(`UPDATE users_projects SET users_projects.portfolio = ${portfolio} WHERE users_projects.id = ${userProjectId} AND users_projects.id_project_fk = ${projectId} AND users_projects.id_user_fk = ${x.result.id} AND users_projects.confirmed = 1`, (err, res) => {
+  sql.query(`UPDATE users_projects SET users_projects.portfolio = ${portfolio} WHERE users_projects.id = ${userProjectId} AND users_projects.id_project_fk = ${projectId} AND users_projects.id_user_fk = ${x.result.id}`, (err, res) => {
       if (err) {
         result(null, err);
         return;
