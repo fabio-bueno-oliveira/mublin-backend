@@ -109,6 +109,21 @@ Misc.getBrands = (result) => {
   });
 };
 
+Misc.getAllBrands = (result) => {
+  sql.query(`SELECT brands.id, brands.name, CONCAT('https://ik.imagekit.io/mublin/products/brands/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',brands.logo) AS logo FROM brands ORDER BY brands.name ASC`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found any brands
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Misc.getBrandCategories = (brandId, result) => {
   sql.query(`SELECT brands_categories.id, brands_categories.name_ptbr AS name FROM brands_products LEFT JOIN brands_categories ON brands_products.id_category = brands_categories.id WHERE brands_products.id_brand = ${brandId} GROUP BY brands_categories.id ORDER BY brands_categories.name_ptbr ASC`, (err, res) => {
     if (err) {

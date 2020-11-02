@@ -111,9 +111,26 @@ exports.productOwners = (req, res) => {
   });
 };
 
-// Get product Brands
+// Get product Brands with products under it
 exports.brands = (req, res) => {
   Misc.getBrands((err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No Brands found"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving Brands"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// Get all product Brands
+exports.allBrands = (req, res) => {
+  Misc.getAllBrands((err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
