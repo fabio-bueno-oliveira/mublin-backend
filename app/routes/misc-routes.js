@@ -35,6 +35,9 @@ module.exports = app => {
   // Retrieve all brand categories
   app.get("/gear/brand/:brandId/categories", misc.brandCategories);
 
+  // Retrieve all macro categories
+  app.get("/gear/macroCategories", misc.gearMacroCategories);
+
   // Retrieve all categories
   app.get("/gear/categories", misc.gearCategories);
 

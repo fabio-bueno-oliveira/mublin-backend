@@ -140,6 +140,21 @@ Misc.getBrandCategories = (brandId, result) => {
   });
 };
 
+Misc.getGearMacroCategories = (result) => {
+  sql.query(`SELECT brands_categories.macro_category AS name FROM brands_categories GROUP BY brands_categories.macro_category ORDER BY brands_categories.macro_category ASC`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found any macro categories
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Misc.getGearCategories = (result) => {
   sql.query(`SELECT brands_categories.id, brands_categories.name_ptbr AS name, brands_categories.macro_category FROM brands_categories ORDER BY brands_categories.name_ptbr ASC`, (err, res) => {
     if (err) {

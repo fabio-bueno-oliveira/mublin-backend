@@ -162,6 +162,23 @@ exports.brandCategories = (req, res) => {
   });
 };
 
+// Get all macro categories
+exports.gearMacroCategories = (req, res) => {
+  Misc.getGearMacroCategories((err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No gear macro categories found"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving gear macro categories"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Get all categories
 exports.gearCategories = (req, res) => {
   Misc.getGearCategories((err, data) => {
