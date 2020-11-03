@@ -57,9 +57,9 @@ User.create = (newUser, result) => {
 
     var mailOptions = {
       from: process.env.SMTP_USER_NAME,
-      to: 'fabiobueno@outlook.com',
-      subject: 'Sending Email using Node.js',
-      html: '<h1>Welcome</h1><p>That was easy!</p>'
+      to: newUser.email,
+      subject: 'Bem-vindo ao Mublin!',
+      html: '<h1>Bem-vindo ao Mublin, '+newUser.name+'!</h1><p>Somos uma plataforma de soluções para artistas que trabalham com música. Estamos felizes em ter você conosco!</p><p>Equipe Mublin</p><p>mublin.com</p>'
     };
 
     transporter.sendMail(mailOptions, function(error, info){
@@ -926,7 +926,7 @@ User.forgotPassword = (email, result) => {
         from: process.env.SMTP_USER_NAME,
         to: 'fabiobueno@outlook.com',
         subject: '[Mublin] Definição de nova senha',
-        html: '<h1>Mublin</h1><p>Olá! Foi solicitada a recuperação de sua senha através do mublin.com.</p><p><a href="https://mublin.com/redefine-password?hash='+md5(dateTime+process.env.FORGOT_EMAIL_KEY+email)+'" target="_blank">Clique aqui para redefinir sua senha</a></p>'
+        html: '<h1>Mublin</h1><p>Olá! Foi solicitada a recuperação de sua senha através do mublin.com.</p><p><a href="https://mublin.com/redefine-password?hash='+md5(dateTime+process.env.FORGOT_EMAIL_KEY+email)+'&email='+email+'" target="_blank">Clique aqui para redefinir sua senha</a></p>'
       };
 
       transporter.sendMail(mailOptions, function(error, info){
