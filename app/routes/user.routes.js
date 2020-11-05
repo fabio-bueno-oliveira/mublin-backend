@@ -131,7 +131,10 @@ module.exports = app => {
   app.delete("/user/:userGearId/deleteGearItem", checkToken, users.deleteGearItem);
 
   // Update/change user password (/settings)
-  app.put("/user/changePassword", checkToken, users.changePassword);
+  app.put("/userInfo/changePassword", checkToken, users.changePassword);
+
+  // Update/change user password using hash (password recovery)
+  app.put("/userInfo/changePasswordbyHash", users.changePasswordbyHash);
 
   // Update/change user email (/settings)
   app.put("/user/changeEmail", checkToken, users.changeEmail);

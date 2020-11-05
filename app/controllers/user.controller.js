@@ -939,6 +939,33 @@ exports.changePassword = (req, res) => {
   });
 };
 
+// Change user password
+exports.changePasswordbyHash = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  // Generate bcrypt salt
+  var salt = genSaltSync(10);
+
+  User.changePasswordbyHash(req.body.email, req.body.hash, hashSync(req.body.newPassword, salt), (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: "Not found user with email " + req.body.email + " or maybe your hash has expired"
+          });
+        } else {
+          res.status(500).send({
+            message: "Error changing the password for user " + req.body.email
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Change user email
 exports.changeEmail = (req, res) => {
   // Validate Request

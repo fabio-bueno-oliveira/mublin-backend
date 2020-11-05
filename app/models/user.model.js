@@ -911,7 +911,7 @@ User.deleteGearItem = (loggedID, userGearId, result) => {
 };
 
 User.forgotPassword = (email, result) => {
-  sql.query(`UPDATE users SET random_key = '${md5(dateTime+email)}' WHERE users.email = '${email}'`, (err, res) => {
+  sql.query(`UPDATE users SET random_key = '${md5(dateTime+process.env.FORGOT_EMAIL_KEY+email)}' WHERE users.email = '${email}'`, (err, res) => {
       if (err) {
         result(null, err);
         return;
@@ -925,7 +925,7 @@ User.forgotPassword = (email, result) => {
       var mailOptions = {
         from: process.env.SMTP_USER_NAME,
         to: email,
-        subject: '[Mublin] Definição de nova senha',
+        subject: '[Mublin] Definir nova senha',
         html: '<h1>Mublin</h1><p>Olá! Foi solicitada a recuperação de sua senha através do mublin.com.</p><p><a href="https://mublin.com/redefine-password?hash='+md5(dateTime+process.env.FORGOT_EMAIL_KEY+email)+'&email='+email+'" target="_blank">Clique aqui para redefinir sua senha</a></p>'
       };
 
@@ -938,6 +938,43 @@ User.forgotPassword = (email, result) => {
       });
       // end sending email
       result(null, { success: true, message: 'Email de refinição de senha enviado com sucesso para '+email });
+    }
+  );
+};
+
+User.changePassword = (loggedID, userId, newPassword, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == userId) {
+    sql.query(`UPDATE users SET password = '${newPassword}' WHERE id = ${userId} AND id = ${x.result.id}`, (err, res) => {
+        if (err) {
+          result(null, err);
+          return;
+        }
+        if (res.affectedRows == 0) {
+          result({ kind: "not_found" }, null);
+          return;
+        }
+        result(null, { userId: userId, success: true });
+      }
+    );
+  } else {
+    result({ kind: "Unauthorized" }, null);
+    return;
+  }
+};
+
+// Forgot password
+User.changePasswordbyHash = (email, hash, newPassword, result) => {
+  sql.query(`UPDATE users SET password = '${newPassword}' WHERE email = '${email}' AND random_key = '${hash}'`, (err, res) => {
+      if (err) {
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { userId: userId, success: true });
     }
   );
 };
