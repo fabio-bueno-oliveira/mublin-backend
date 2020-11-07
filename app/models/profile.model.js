@@ -195,6 +195,23 @@ Profile.strengths = (username, result) => {
   });
 };
 
+Profile.voteStrength = (loggedID, strengthId, profileId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`INSERT INTO users_strengths (id_user_from, id_user_to, id_strenght) VALUES (${x.result.id}, ${profileId}, ${strengthId})`, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { profileId: profileId, success: true, strengthId: strengthId });
+    }
+  );
+};
+
 Profile.unvoteStrength = (loggedID, voteId, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   sql.query(`DELETE FROM users_strengths WHERE id = ${voteId}	AND id_user_from = ${x.result.id}`, 

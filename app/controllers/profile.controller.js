@@ -198,6 +198,23 @@ exports.strengths = (req, res) => {
   });
 };
 
+// Vote for profile strength
+exports.voteStrength = (req, res) => {
+  Profile.voteStrength(req.headers.authorization, req.body.strengthId, req.body.profileId, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found profile id ${req.body.profileId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error voting strength for profile id " + req.body.profileId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Unvote profile strength
 exports.unvoteStrength = (req, res) => {
   Profile.unvoteStrength(req.headers.authorization, req.params.voteId, (err, data) => {
