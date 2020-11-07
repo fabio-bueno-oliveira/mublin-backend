@@ -137,7 +137,7 @@ module.exports = app => {
   app.put("/userInfo/changePasswordbyHash", users.changePasswordbyHash);
 
   // Update/change user email (/settings)
-  app.put("/user/changeEmail", checkToken, users.changeEmail);
+  app.put("/userInfo/changeEmail", checkToken, users.changeEmail);
 
   // START ADMIN FUNCTIONS
 
