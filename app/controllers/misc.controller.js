@@ -263,3 +263,20 @@ exports.submitNewGearBrand = (req, res) => {
     else res.send(data);
   });
 };
+
+// Get all strengths
+exports.getAllStrengths = (req, res) => {
+  Misc.getAllStrengths((err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No strengths found"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving strengths list"
+        });
+      }
+    } else res.send(data);
+  });
+};

@@ -49,4 +49,7 @@ module.exports = app => {
 
   // Submit a new brand
   app.post("/gear/submitNewGearBrand", checkToken, misc.submitNewGearBrand);
+
+  // Retrieve all strengths
+  app.get("/strengths/getAllStrengths", checkToken, misc.getAllStrengths);
 };

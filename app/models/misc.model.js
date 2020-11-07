@@ -209,4 +209,19 @@ Misc.submitNewGearBrand = (name, logo, id_user_creator, result) => {
   });
 };
 
+Misc.getAllStrengths = (result) => {
+  sql.query(`SELECT strengths.id, strengths.title_ptbr AS title, strengths.icon FROM strengths ORDER BY strengths.title_ptbr ASC`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found any strengths
+    result({ kind: "not_found" }, null);
+  });
+};
+
 module.exports = Misc;
