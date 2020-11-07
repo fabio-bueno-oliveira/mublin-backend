@@ -35,6 +35,9 @@ module.exports = app => {
   // Retrieve profile strengths (by username)
   app.get("/profile/:username/strengths", checkToken, profile.strengths);
 
+  // Delete my vote for profile strengths (by voteId)
+  app.delete("/profile/:voteId/unvoteStrength", checkToken, profile.unvoteStrength);
+
   // Retrieve profile gear (by username)
   app.get("/profile/:username/gear", checkToken, profile.gear);
 

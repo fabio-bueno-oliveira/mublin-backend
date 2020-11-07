@@ -198,6 +198,23 @@ exports.strengths = (req, res) => {
   });
 };
 
+// Unvote profile strength
+exports.unvoteStrength = (req, res) => {
+  Profile.unvoteStrength(req.headers.authorization, req.params.voteId, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found vote with voteId ${req.params.voteId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error unvoting for with voteId " + req.params.profileId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Find profile gear
 exports.gear = (req, res) => {
   Profile.gear(req.params.username, (err, data) => {
