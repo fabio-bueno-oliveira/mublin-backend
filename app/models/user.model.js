@@ -974,7 +974,7 @@ User.changePasswordbyHash = (email, hash, newPassword, result) => {
         result({ kind: "not_found" }, null);
         return;
       }
-      result(null, { userId: userId, success: true });
+      result(null, { email: email, success: true, message: "Password updated" });
     }
   );
 };
