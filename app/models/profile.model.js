@@ -210,7 +210,7 @@ Profile.strengthsRaw = (username, result) => {
   });
 };
 
-Profile.voteStrength = (loggedID, strengthId, profileId, result) => {
+Profile.voteStrength = (loggedID, strengthId, strengthTitle, profileId, nameTo, emailTo, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   sql.query(`INSERT INTO users_strengths (id_user_from, id_user_to, id_strength) VALUES (${x.result.id}, ${profileId}, ${strengthId})`, (err, res) => {
       if (err) {
@@ -223,6 +223,22 @@ Profile.voteStrength = (loggedID, strengthId, profileId, result) => {
         return;
       }
       result(null, { profileId: profileId, success: true, strengthId: strengthId });
+
+      var mailOptions = {
+        from: process.env.SMTP_USER_NAME,
+        to: emailTo,
+        subject: 'Você recebeu um ponto forte no Mublin!',
+        html: '<h1>Olá, '+nameTo+'!</h1><p>Você recebeu um voto para o ponto forte "'+strengthTitle+'" em seu perfil. Parabéns!</p><p>Equipe Mublin</p><p>mublin.com</p>'
+      };
+  
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+
     }
   );
 };

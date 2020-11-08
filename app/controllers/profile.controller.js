@@ -217,7 +217,7 @@ exports.strengthsRaw = (req, res) => {
 
 // Vote for profile strength
 exports.voteStrength = (req, res) => {
-  Profile.voteStrength(req.headers.authorization, req.body.strengthId, req.body.profileId, (err, data) => {
+  Profile.voteStrength(req.headers.authorization, req.body.strengthId, req.body.strengthTitle, req.body.profileId, req.body.nameTo, req.body.emailTo, (err, data) => {
     if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
