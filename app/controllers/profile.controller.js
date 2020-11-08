@@ -198,6 +198,23 @@ exports.strengths = (req, res) => {
   });
 };
 
+// Find profile strengths
+exports.strengthsRaw = (req, res) => {
+  Profile.strengthsRaw(req.params.username, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No strengths found with username " + req.params.username
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving strengths for username " + req.params.username
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Vote for profile strength
 exports.voteStrength = (req, res) => {
   Profile.voteStrength(req.headers.authorization, req.body.strengthId, req.body.profileId, (err, data) => {

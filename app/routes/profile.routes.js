@@ -32,8 +32,11 @@ module.exports = app => {
   // Retrieve profile posts (by username)
   app.get("/profile/:username/posts", checkToken, profile.posts);
 
-  // Retrieve profile strengths (by username)
+  // Retrieve profile strengths grouped by percentage (by username)
   app.get("/profile/:username/strengths", checkToken, profile.strengths);
+
+  // Retrieve profile strengths raw list (by username)
+  app.get("/profile/:username/strengthsRaw", checkToken, profile.strengthsRaw);
 
   // Vote for profile strength (by voteId)
   app.post("/profile/voteStrength", checkToken, profile.voteStrength);
