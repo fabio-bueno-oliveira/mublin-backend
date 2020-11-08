@@ -6,19 +6,19 @@ module.exports = app => {
   app.put("/profile/changePassword", checkToken, profile.changePassword);
 
   // Retrieve profile info (by username)
-  app.get("/profile/:username", checkToken, profile.infos);
+  app.get("/profile/:username", profile.infos);
 
   // Retrieve projects from profile (by username)
-  app.get("/profile/:username/projects", checkToken, profile.projects);
+  app.get("/profile/:username/projects", profile.projects);
 
   // Retrieve roles from profile (by username)
-  app.get("/profile/:username/roles", checkToken, profile.roles);
+  app.get("/profile/:username/roles", profile.roles);
 
   // Retrieve followers from profile (by username)
-  app.get("/profile/:username/followers", checkToken, profile.followers);
+  app.get("/profile/:username/followers", profile.followers);
 
   // Retrieve following from profile (by username)
-  app.get("/profile/:username/following", checkToken, profile.following);
+  app.get("/profile/:username/following", profile.following);
 
   // Follow profile (by profileId)
   app.post("/profile/:profileId/follow", checkToken, profile.follow);
