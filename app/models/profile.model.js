@@ -13,6 +13,20 @@ const Profile = function(profile) {
   this.random_key = profile.random_key;
 };
 
+// start nodemailer
+const nodemailer = require('nodemailer');
+const transporter = nodemailer.createTransport({
+  pool: true,
+  host: process.env.SMTP_SERVICE_HOST,
+  port: process.env.SMTP_SERVICE_PORT,
+  secure: process.env.SMTP_SERVICE_SECURE,
+  auth: {
+    user: process.env.SMTP_USER_NAME,
+    pass: process.env.SMTP_USER_PASSWORD
+  }
+});
+// end nodemailer
+
 Profile.changePassword = (loggedID, userId, newPassword, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   sql.query(`UPDATE users SET password = '${newPassword}' WHERE id = ${userId} AND ${x.result.id} = 1`, (err, res) => {
@@ -224,20 +238,20 @@ Profile.voteStrength = (loggedID, strengthId, strengthTitle, profileId, nameTo, 
       }
       result(null, { profileId: profileId, success: true, strengthId: strengthId });
 
-      // var mailOptions = {
-      //   from: process.env.SMTP_USER_NAME,
-      //   to: emailTo,
-      //   subject: 'Você recebeu um ponto forte no Mublin!',
-      //   html: '<h1>Olá, '+nameTo+'!</h1><p>Você recebeu um voto para o ponto forte <strong>'+strengthTitle+'</strong> em seu perfil. Parabéns!</p><p>Equipe Mublin</p><p>mublin.com</p>'
-      // };
+      var mailOptions = {
+        from: process.env.SMTP_USER_NAME,
+        to: emailTo,
+        subject: 'Você recebeu um ponto forte no Mublin!',
+        html: '<h1>Olá, '+nameTo+'!</h1><p>Você recebeu um voto para o ponto forte <strong>'+strengthTitle+'</strong> em seu perfil. Parabéns!</p><p>Equipe Mublin</p><p>mublin.com</p>'
+      };
   
-      // transporter.sendMail(mailOptions, function(error, info){
-      //   if (error) {
-      //     console.log(error);
-      //   } else {
-      //     console.log('Email sent: ' + info.response);
-      //   }
-      // });
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
 
     }
   );
