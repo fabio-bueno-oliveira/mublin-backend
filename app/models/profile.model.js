@@ -224,20 +224,20 @@ Profile.voteStrength = (loggedID, strengthId, strengthTitle, profileId, nameTo, 
       }
       result(null, { profileId: profileId, success: true, strengthId: strengthId });
 
-      var mailOptions = {
-        from: process.env.SMTP_USER_NAME,
-        to: emailTo,
-        subject: 'Você recebeu um ponto forte no Mublin!',
-        html: '<h1>Olá, '+nameTo+'!</h1><p>Você recebeu um voto para o ponto forte "'+strengthTitle+'" em seu perfil. Parabéns!</p><p>Equipe Mublin</p><p>mublin.com</p>'
-      };
+      // var mailOptions = {
+      //   from: process.env.SMTP_USER_NAME,
+      //   to: emailTo,
+      //   subject: 'Você recebeu um ponto forte no Mublin!',
+      //   html: '<h1>Olá, '+nameTo+'!</h1><p>Você recebeu um voto para o ponto forte <strong>'+strengthTitle+'</strong> em seu perfil. Parabéns!</p><p>Equipe Mublin</p><p>mublin.com</p>'
+      // };
   
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
-        }
-      });
+      // transporter.sendMail(mailOptions, function(error, info){
+      //   if (error) {
+      //     console.log(error);
+      //   } else {
+      //     console.log('Email sent: ' + info.response);
+      //   }
+      // });
 
     }
   );
