@@ -5,8 +5,11 @@ module.exports = app => {
   // Retrieve conversations list grouped by userFrom and lastMessage
   app.get("/messages/conversations", checkToken, message.getAllConversations);
 
-  // // Retrieve all messages from a conversation
-  // app.get("/messages/:profileId/conversation", message.getConversation);
+  // Retrieve all messages from a specific conversation
+  app.get("/messages/:senderId/conversation", checkToken, message.getConversationBySenderId);
+
+  // Retrieve profileId basic info
+  app.get("/messages/:senderId/basicInfo", message.getSenderBasicInfo);
 
   // // Submit a new message
   // app.post("/messages/submitNewMessage", checkToken, message.submitNewMessage);
