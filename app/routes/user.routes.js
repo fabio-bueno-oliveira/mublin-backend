@@ -139,6 +139,9 @@ module.exports = app => {
   // Update/change user email (/settings)
   app.put("/userInfo/changeEmail", checkToken, users.changeEmail);
 
+  // Retrieve user X project details
+  app.get("/user/:projectUsername/preferences", checkToken, users.getProjectPreferences);
+
   // START ADMIN FUNCTIONS
 
   // Check if user can admin the project page

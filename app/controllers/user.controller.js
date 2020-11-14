@@ -990,6 +990,23 @@ exports.changeEmail = (req, res) => {
   });
 };
 
+// Retrieve user X project details
+exports.getProjectPreferences = (req, res) => {
+  User.getProjectPreferences(req.headers.authorization, req.params.projectUsername, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "Not found related project with username " + req.params.projectUsername
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving Project with id " + req.params.projectUsername
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Check if user can admin the project page
 exports.checkProjectAdmin = (req, res) => {
   User.checkProjectAdmin(req.headers.authorization, req.params.projectUsername, (err, data) => {

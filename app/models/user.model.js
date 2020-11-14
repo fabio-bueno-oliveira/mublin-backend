@@ -1000,6 +1000,24 @@ User.changeEmail = (loggedID, userId, newEmail, result) => {
   }
 };
 
+User.getProjectPreferences = (loggedID, projectUsername, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`SELECT projects.name, projects.username, projects.foundation_year, projects.end_year, users_projects.admin, users_projects.status, users_projects_status.title_ptbr AS statusName,  users_projects.featured, users_projects.portfolio, users_projects.joined_in, users_projects.left_in, users_projects.touring, users_projects.show_on_profile, users_projects.main_role_fk, r1.name_ptbr AS role1, users_projects.second_role_fk, r2.name_ptbr AS role2, users_projects.third_role_fk, r3.name_ptbr AS role3 FROM users_projects LEFT JOIN projects ON users_projects.id_project_fk = projects.id LEFT JOIN roles AS r1 ON users_projects.main_role_fk = r1.id LEFT JOIN roles AS r2 ON users_projects.second_role_fk = r2.id LEFT JOIN roles AS r3 ON users_projects.third_role_fk = r3.id LEFT JOIN users_projects_status ON users_projects.status = users_projects_status.id WHERE projects.username = '${projectUsername}' AND users_projects.id_user_fk = ${x.result.id} LIMIT 1`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      // console.log("found user: ", res[0]);
+      result(null, res[0]);
+      return;
+    }
+    // not found related project with the projectUsername
+    result({ kind: "not_found" }, null);
+  });
+};
+
 User.checkProjectAdmin = (loggedID, projectUsername, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   // let msg = {project: projectUsername, accessible: 1}
