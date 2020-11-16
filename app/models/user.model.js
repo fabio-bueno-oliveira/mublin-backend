@@ -679,6 +679,27 @@ User.deleteUsersProject = (loggedID, userId, userProjectParticipationId, result)
   }
 };
 
+User.updatePreferencesinProject = (loggedID, projectId, status, featured, portfolio, joined_in, left_in, touring, show_on_profile, main_role_fk, second_role_fk, third_role_fk, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`UPDATE users_projects SET status = ${status}, featured = ${featured}, portfolio = ${portfolio}, joined_in = ${joined_in}, left_in = ${left_in}, touring = ${touring}, show_on_profile = ${show_on_profile}, main_role_fk = ${main_role_fk}, second_role_fk = ${second_role_fk}, third_role_fk = ${third_role_fk} WHERE id_project_fk = ${projectId} AND id_user_fk = ${x.result.id}`, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found user with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+
+      console.log("updated project: ", { userId: x.result.id, projectId: projectId });
+      result(null, { success: true, userId: x.result.id, projectId: projectId, status: status, featured: featured, portfolio: portfolio, joined_in: joined_in, left_in: left_in, touring: touring, show_on_profile: show_on_profile, main_role_fk: main_role_fk, second_role_fk: second_role_fk, third_role_fk: third_role_fk });
+    }
+  );
+};
+
 User.findNotesByLoggedUserId = (loggedID, userId, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   if (x.result.id == userId) {

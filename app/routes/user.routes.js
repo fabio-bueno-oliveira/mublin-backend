@@ -93,6 +93,9 @@ module.exports = app => {
   // Delete logged user´s participation on a project
   app.delete("/user/delete/project", checkToken, users.deleteUsersProject);
 
+  // Update logged user´s preferences on a participation to a project
+  app.put("/user/project/updatePreferencesInProject", checkToken, users.updatePreferencesinProject);
+  
   // START NOTES ENDPOINTS
 
   // GET logged user notes

@@ -667,6 +667,30 @@ exports.deleteUsersProject = (req, res) => {
   });
 };
 
+// Update logged user´s preferences on a participation to a project
+exports.updatePreferencesinProject = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.updatePreferencesinProject(req.headers.authorization, req.body.projectId, req.body.status, req.body.featured, req.body.portfolio, req.body.joined_in, req.body.left_in, req.body.touring, req.body.show_on_profile, req.body.main_role_fk, req.body.second_role_fk, req.body.third_role_fk, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: "Not found project with id " + req.params.projectId
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating project with id " + req.params.projectId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Find all notes created by logged user or associated to logged user
 exports.findNotes = (req, res) => {
   User.findNotesByLoggedUserId(req.headers.authorization, req.params.userId, (err, data) => {
