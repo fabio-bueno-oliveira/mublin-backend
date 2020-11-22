@@ -25,4 +25,9 @@ module.exports = app => {
 
   // Retrieve user recent notifications
   app.get("/notificationsUnseen", checkToken, notifications.notificationsUnseen);
+
+  // START send notifications
+
+  // Send notification 
+  app.post("/notifications/sendNotification", checkToken, notifications.sendNotification);
 };

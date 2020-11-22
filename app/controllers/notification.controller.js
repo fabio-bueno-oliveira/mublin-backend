@@ -135,3 +135,22 @@ exports.notificationsUnseen = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Send notification
+exports.sendNotification = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  Notification.sendNotification(req.headers.authorization, req.body.id_user_2_fk, req.body.id_item_fk, req.body.id_event, req.body.id_feed_type_fk, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the notification."
+      });
+    else res.send(data);
+  });
+};

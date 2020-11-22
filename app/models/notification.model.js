@@ -146,4 +146,18 @@ Notification.notificationsUnseen = (loggedID, result) => {
   });
 };
 
+Notification.sendNotification = (loggedID, id_user_2_fk, id_item_fk, id_event, id_feed_type_fk, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`INSERT INTO feed (id_user_1_fk, id_user_2_fk, id_item_fk, id_event, id_feed_type_fk) VALUES (${x.result.id}, ${id_user_2_fk}, ${id_item_fk}, ${id_event}, ${id_feed_type_fk})`, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+      console.log("Created notification: ", { id: res.insertId });
+      result(null, { id: res.insertId, message: 'Notification created successfully' });
+    }
+  );
+};
+
 module.exports = Notification;
