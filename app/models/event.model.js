@@ -23,4 +23,22 @@ Event.findEventInfoById = (eventId, result) => {
   });
 };
 
+Event.deleteEventById = (loggedID, eventId, projectId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`DELETE FROM events WHERE id = ${eventId} AND id_project_fk = (SELECT id_project_fk FROM users_projects WHERE id_project_fk = ${projectId} AND id_user_fk = ${x.result.id} AND confirmed = 1 AND admin = 1)`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    if (res.affectedRows == 0) {
+      // not found event with the id
+      result({ kind: "not_found" }, null);
+      return;
+    }
+    //console.log("deleted user event with id: ", eventId);
+    result(null, res);
+  });
+};
+
 module.exports = Event;
