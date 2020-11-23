@@ -17,6 +17,26 @@ exports.findEventInfoById = (req, res) => {
   });
 };
 
+// Create and save a new Event
+exports.createEvent = (req, res) => {
+  // Validate request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  // Save Event in database
+  Event.createEvent(req.headers.authorization, req.body.public, req.body.id_project_fk, req.body.id_event_type_fk, req.body.title, req.body.method, req.body.description, req.body.date_opening, req.body.hour_opening, req.body.date_end, req.body.hour_end, req.body.id_country_fk, req.body.id_region_fk, req.body.id_city_fk, req.body.id_place_fk, req.body.price, req.body.url_more_info, req.body.picture, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while creating the event."
+      });
+    else res.send(data);
+  });
+};
+
 // Delete a event with the specified eventId in the request
 exports.deleteEventById = (req, res) => {
   Event.deleteEventById(req.headers.authorization, req.body.eventId, req.body.projectId, (err, data) => {

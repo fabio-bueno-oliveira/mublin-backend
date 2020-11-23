@@ -23,6 +23,19 @@ Event.findEventInfoById = (eventId, result) => {
   });
 };
 
+Event.createEvent = (loggedID, public, id_project_fk, id_event_type_fk, title, method, description, date_opening, hour_opening, date_end, hour_end, id_country_fk, id_region_fk, id_city_fk, id_place_fk, price, url_more_info, picture, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`INSERT INTO events (public, id_author_fk, id_project_fk, id_event_type_fk, title, method, description, date_opening, hour_opening, date_end, hour_end, id_country_fk, id_region_fk, id_city_fk, id_place_fk, price, url_more_info, picture) VALUES (${public}, ${x.result.id}, ${id_project_fk}, ${id_event_type_fk}, '${title}', ${method}, '${description}', '${date_opening}', '${hour_opening}', '${date_end}', '${hour_end}', ${id_country_fk}, ${id_region_fk}, ${id_city_fk}, ${id_place_fk}, ${price}, '${url_more_info}', '${picture}')`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    console.log("Event created: ", { id: res.insertId, title: title, message: 'success' });
+    result(null, { id: res.insertId, title: title, message: 'success' });
+  });
+};
+
 Event.deleteEventById = (loggedID, eventId, projectId, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   sql.query(`DELETE FROM events WHERE id = ${eventId} AND id_project_fk = (SELECT id_project_fk FROM users_projects WHERE id_project_fk = ${projectId} AND id_user_fk = ${x.result.id} AND confirmed = 1 AND admin = 1)`, (err, res) => {
