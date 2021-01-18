@@ -73,8 +73,8 @@ exports.loginUser = (req, res) => {
           res.status(500).send({
             message:
               err.message || "Some error occurred while saving user log"
-          });
-        else res.send(data);
+        });
+        // else res.send(data);
       });
       return res.json({
         success: 1,
