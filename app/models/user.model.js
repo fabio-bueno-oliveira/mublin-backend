@@ -95,6 +95,20 @@ User.loginUserByEmail = (email, result) => {
   });
 };
 
+User.log = (usuId, token, result) => {
+  sql.query(`INSERT INTO log_users (id_user_fk, date_login, date_activity, session) VALUES (${usuId}, ${dateTime}, ${dateTime}, ${token})`, 
+  (err, res) => {
+    if (err) {
+      console.log("error saving log: ", err);
+      result(err, null);
+      return;
+    }
+
+    console.log("Log saved: ", { id: res.insertId, userId: usuId });
+    result(null, { id: res.insertId, userId: usuId });
+  });
+};
+
 User.checkUserByToken = (loggedEmail, result) => {
   sql.query(`SELECT id, email, status FROM users WHERE email = '${loggedEmail}' AND status = '1' LIMIT 1`, (err, res) => {
     if (err) {
