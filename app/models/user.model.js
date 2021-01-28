@@ -1071,4 +1071,26 @@ User.checkProjectAdmin = (loggedID, projectUsername, result) => {
   });
 };
 
+User.getFriendsRecentlyConnected = (loggedID, result) => {
+  sql.query(`
+      SELECT u.name, u.lastname, u.username, u.picture, MAX(log_users.date_login) FROM log_users
+      LEFT JOIN users u ON log_users.id_user_fk = u.id
+      WHERE u.id IS NOT NULL AND u.id <> ${loggedID} AND u.status = 1 AND log_users.id_user_fk = (SELECT users_followers.id_followed FROM users_followers WHERE users_followers.id_follower = ${loggedID} AND users_followers.id_followed = log_users.id_user_fk)
+      GROUP BY u.id
+      ORDER BY MAX(log_users.date_login) DESC
+      LIMIT 20
+    `, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res[0]);
+      return;
+    }
+    // not found friends logs
+    result({ kind: "not_found" }, null);
+  });
+};
+
 module.exports = User;
