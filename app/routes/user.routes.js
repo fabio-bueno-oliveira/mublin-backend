@@ -145,6 +145,9 @@ module.exports = app => {
   // Retrieve user X project details
   app.get("/user/:projectUsername/preferences", checkToken, users.getProjectPreferences);
 
+  // Retrieve list of last connected friends
+  app.get("/lastConnectedFriends", checkToken, users.getLastConnectedFriends);
+
   // START ADMIN FUNCTIONS
 
   // Check if user can admin the project page
