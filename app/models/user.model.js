@@ -1074,7 +1074,7 @@ User.checkProjectAdmin = (loggedID, projectUsername, result) => {
 User.getLastConnectedFriends = (loggedID, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   sql.query(`
-      SELECT u.name, u.lastname, u.username, u.picture, MAX(log_users.date_login) FROM log_users
+      SELECT u.id, u.name, u.lastname, u.username, u.picture, MAX(log_users.date_login) FROM log_users
       LEFT JOIN users u ON log_users.id_user_fk = u.id
       WHERE u.id IS NOT NULL AND u.id <> ${x.result.id} AND u.status = 1 AND log_users.id_user_fk = (SELECT users_followers.id_followed FROM users_followers WHERE users_followers.id_follower = ${x.result.id} AND users_followers.id_followed = log_users.id_user_fk)
       GROUP BY u.id
