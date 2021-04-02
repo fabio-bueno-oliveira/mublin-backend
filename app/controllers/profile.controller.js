@@ -299,3 +299,20 @@ exports.testimonials = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Submit new Testimonial
+exports.newTestimonial = (req, res) => {
+  Profile.newTestimonial(req.headers.authorization, req.body.testimonialTitle, req.body.testimonialText, req.body.profileId, req.body.nameTo, req.body.emailTo, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found profile id ${req.body.profileId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error submitting testimonial to profile id " + req.body.profileId
+          });
+        }
+    } else res.send(data);
+  });
+};

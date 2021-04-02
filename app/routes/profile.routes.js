@@ -52,4 +52,7 @@ module.exports = app => {
 
   // Retrieve profile testimonials (by username)
   app.get("/profile/:username/testimonials", checkToken, profile.testimonials);
+
+  // Retrieve profile testimonials (by username)
+  app.post("/profile/:username/newTestimonial", checkToken, profile.newTestimonial);
 };

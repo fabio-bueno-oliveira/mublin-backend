@@ -324,4 +324,37 @@ Profile.testimonials = (username, result) => {
   });
 };
 
+Profile.newTestimonial = (loggedID, testimonialTitle, testimonialText, profileId, nameTo, emailTo, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`INSERT INTO users_testimonials (	id_user_from_fk, id_user_to_fk, title, testimonial) VALUES (${x.result.id}, ${profileId}, "${testimonialTitle}", "${testimonialText}")`, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { profileId: profileId, success: true });
+
+      var mailOptions = {
+        from: process.env.SMTP_USER_NAME,
+        to: emailTo,
+        subject: 'Você recebeu um depoimento no Mublin!',
+        html: '<h1>Olá, '+nameTo+'!</h1><p>Você recebeu um voto para o ponto forte <strong>'+strengthTitle+'</strong> em seu perfil. Parabéns!</p><p>Equipe Mublin</p><p>mublin.com</p>'
+      };
+  
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+
+    }
+  );
+};
+
 module.exports = Profile;
