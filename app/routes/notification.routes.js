@@ -11,8 +11,11 @@ module.exports = app => {
   // Update notifications to read with userId (authorization and read status needed on headers)
   app.put("/notifications/:userId/read", checkToken, notifications.updateAllReads);
 
-  // Retrieve user feed
+  // Retrieve feed
   app.get("/feed", checkToken, notifications.feed);
+
+  // Retrieve simple feed (only users posts)
+  app.get("/simpleFeed", checkToken, notifications.simpleFeed);
 
   // Like feed item
   app.post("/feed/:feedId/like", checkToken, notifications.feedLike);
