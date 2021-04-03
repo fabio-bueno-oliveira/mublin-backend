@@ -357,4 +357,22 @@ Profile.newTestimonial = (loggedID, testimonialTitle, testimonialText, profileId
   );
 };
 
+// Update my testimonial on user profile
+Profile.updateTestimonial = (loggedID, testimonialId, testimonialTitle, testimonialText, profileId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`UPDATE users_testimonials SET title = '${testimonialTitle}', testimonial = '${testimonialText}' WHERE id = ${testimonialId} AND id_user_from_fk = ${x.result.id} AND id_user_to_fk = ${profileId}`, (err, res) => {
+      if (err) {
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        // not found user with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { profileId: profileId, success: true, message: "Testimonial updated successfully!" });
+    }
+  );
+};
+
 module.exports = Profile;

@@ -310,7 +310,31 @@ exports.newTestimonial = (req, res) => {
           });
         } else {
           res.status(500).send({
-            message: "Error submitting testimonial to profile id " + req.body.profileId
+            message: `Error submitting testimonial to profile id ${req.body.profileId}`
+          });
+        }
+    } else res.send(data);
+  });
+};
+
+// Update my testimonial on user profile
+exports.updateTestimonial = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  Profile.updateTestimonial(req.headers.authorization, req.body.testimonialId, req.body.testimonialTitle, req.body.testimonialText, req.body.profileId, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found profile id ${req.body.profileId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: `Error submitting testimonial to profile id ${req.body.profileId}`
           });
         }
     } else res.send(data);
