@@ -375,4 +375,20 @@ Profile.updateTestimonial = (loggedID, testimonialId, testimonialTitle, testimon
   );
 };
 
+Profile.deleteTestimonial = (loggedID, testimonialId, profileId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`DELETE FROM users_testimonials WHERE id = ${testimonialId}	AND id_user_from_fk = ${x.result.id} AND 	id_user_to_fk = ${profileId}`,
+  (err, res) => {
+      if (err) {
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, res);
+  });
+};
+
 module.exports = Profile;

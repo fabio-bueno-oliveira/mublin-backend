@@ -334,7 +334,24 @@ exports.updateTestimonial = (req, res) => {
           });
         } else {
           res.status(500).send({
-            message: `Error submitting testimonial to profile id ${req.body.profileId}`
+            message: `Error updating testimonial to profile id ${req.body.profileId}`
+          });
+        }
+    } else res.send(data);
+  });
+};
+
+// Unvote profile strength
+exports.deleteTestimonial = (req, res) => {
+  Profile.deleteTestimonial(req.headers.authorization, req.body.testimonialId, req.body.profileId, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found profile id ${req.body.profileId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: `Error deleting testimonial from profile id ${req.body.profileId}`
           });
         }
     } else res.send(data);
