@@ -1073,3 +1073,27 @@ exports.getLastConnectedFriends = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Add new post
+exports.newPost = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.newPost(req.headers.authorization, req.body.text, req.body.image, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: "User not found."
+          });
+        } else {
+          res.status(500).send({
+            message: "Error submitting new post"
+          });
+        }
+    } else res.send(data);
+  });
+};

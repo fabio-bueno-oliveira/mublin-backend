@@ -153,6 +153,9 @@ module.exports = app => {
   // Check if user can admin the project page
   app.get("/user/:projectUsername/admin", checkToken, users.checkProjectAdmin);
 
+  // New post
+  app.post("/user/newPost", checkToken, users.newPost);
+
   // START ARCHIVED ENDPOINTS
 
   // Update a User with userId

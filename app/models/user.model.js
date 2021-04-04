@@ -1094,4 +1094,22 @@ User.getLastConnectedFriends = (loggedID, result) => {
   });
 };
 
+User.newPost = (loggedID, text, image, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`INSERT INTO feed (id_user_1_fk, extra_text, image, id_feed_type_fk) VALUES (${x.result.id}, '${text}', '${image}', ${8})`, (err, res) => {
+      if (err) {
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found user with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { userId: x.result.id, success: true, message: 'New post submitted successfully!'  });
+    }
+  );
+};
+
 module.exports = User;
