@@ -148,13 +148,17 @@ module.exports = app => {
   // Retrieve list of last connected friends
   app.get("/lastConnectedFriends", checkToken, users.getLastConnectedFriends);
 
+  // New post
+  app.post("/user/newPost", checkToken, users.newPost);
+
+  // Delete post
+  app.delete("/user/deletePost", checkToken, users.deletePost);
+
   // START ADMIN FUNCTIONS
 
   // Check if user can admin the project page
   app.get("/user/:projectUsername/admin", checkToken, users.checkProjectAdmin);
 
-  // New post
-  app.post("/user/newPost", checkToken, users.newPost);
 
   // START ARCHIVED ENDPOINTS
 

@@ -1112,4 +1112,23 @@ User.newPost = (loggedID, text, image, result) => {
   );
 };
 
+User.deletePost = (loggedID, postId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`DELETE FROM feed WHERE feed.id = ${postId} AND feed.id_user_1_fk = ${x.result.id}`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    if (res.affectedRows == 0) {
+      result({ kind: "not_found" }, null);
+      return;
+    }
+
+    console.log("deleted user post with id: ", postId);
+    result(null, res);
+  });
+};
+
 module.exports = User;

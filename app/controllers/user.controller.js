@@ -1097,3 +1097,27 @@ exports.newPost = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Delete user post
+exports.deletePost = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.deletePost(req.headers.authorization, req.body.postId, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found post item with id ${req.body.postId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: `Error deleting post item with id ${req.body.postId}.`
+          });
+        }
+    } else res.send(data);
+  });
+};
