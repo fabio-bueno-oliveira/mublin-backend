@@ -61,4 +61,7 @@ module.exports = app => {
 
   // Update my testimonial on user profile (by username)
   app.delete("/profile/:username/deleteTestimonial", checkToken, profile.deleteTestimonial);
+
+  // Retrieve profile partners
+  app.get("/profile/:username/partners", checkToken, profile.partners);
 };

@@ -357,3 +357,20 @@ exports.deleteTestimonial = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Find profile partners
+exports.partners = (req, res) => {
+  Profile.partners(req.params.username, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No partners found with username " + req.params.username
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving partners for username " + req.params.username
+        });
+      }
+    } else res.send(data);
+  });
+};
