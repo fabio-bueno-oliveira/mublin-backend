@@ -8,9 +8,10 @@ module.exports = app => {
   // Retrieve all messages from a specific conversation
   app.get("/messages/:senderId/conversation", checkToken, message.getConversationBySenderId);
 
+  // Submit a new message
+  app.post("/messages/submitNewMessage", checkToken, message.submitNewMessage);
+
   // Retrieve profileId basic info
   app.get("/messages/:senderId/basicInfo", message.getSenderBasicInfo);
 
-  // // Submit a new message
-  // app.post("/messages/submitNewMessage", checkToken, message.submitNewMessage);
 };

@@ -34,6 +34,30 @@ exports.getConversationBySenderId = (req, res) => {
   });
 };
 
+// Submit new message
+exports.submitNewMessage = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  Message.submitNewMessage(req.headers.authorization, req.body.receiverId, req.body.message, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found user id ${req.body.receiverId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: `Error sending message to user id ${req.body.receiverId}.`
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Retrieve profileId basic info
 exports.getSenderBasicInfo = (req, res) => {
   Message.getSenderBasicInfo(req.params.senderId, (err, data) => {

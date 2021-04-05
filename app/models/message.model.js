@@ -42,6 +42,24 @@ Message.getConversationBySenderId = (loggedID, senderId, result) => {
   });
 };
 
+Message.submitNewMessage = (loggedID, receiverId, message, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`INSERT INTO messages (id_user_from, id_user_to, message) VALUES (${x.result.id}, ${receiverId}, '${message}')`, (err, res) => {
+      if (err) {
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found user with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { success: true, message: 'Message sent successfully!'  });
+    }
+  );
+};
+
 Message.getSenderBasicInfo = (senderId, result) => {
   sql.query(`SELECT id, name, lastname, username, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',id,'/',picture) AS picture FROM users WHERE id = ${senderId} AND status = 1`, (err, res) => {
     if (err) {
