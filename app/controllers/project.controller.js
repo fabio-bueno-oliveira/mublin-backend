@@ -161,6 +161,18 @@ exports.findProject = (req, res) => {
   });
 };
 
+// Retrieve related projects
+exports.relatedProjects = (req, res) => {
+  Project.relatedProjects(req.body.projectId, req.body.projectCity, req.body.projectMainGenre, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving related projects."
+      });
+    else res.send(data);
+  });
+};
+
 // Find all Projects from a user with a userId
 exports.findAllUserProjects = (req, res) => {
   Project.findAllByUser(req.params.userId, (err, data) => {
