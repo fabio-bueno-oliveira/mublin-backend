@@ -163,7 +163,7 @@ exports.findProject = (req, res) => {
 
 // Retrieve related projects
 exports.relatedProjects = (req, res) => {
-  Project.relatedProjects(req.body.projectId, req.body.projectCity, req.body.projectMainGenre, (err, data) => {
+  Project.relatedProjects(req.params.projectId, req.params.projectCity, req.params.projectMainGenre, (err, data) => {
     if (err)
       res.status(500).send({
         message:
