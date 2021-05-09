@@ -50,6 +50,9 @@ module.exports = app => {
   // Submit a new brand
   app.post("/gear/submitNewGearBrand", checkToken, misc.submitNewGearBrand);
 
+  // Retrieve all product colors
+  app.get("/gear/product/colors", misc.productColors);
+
   // Retrieve all strengths
   app.get("/strengths/getAllStrengths", checkToken, misc.getAllStrengths);
 };

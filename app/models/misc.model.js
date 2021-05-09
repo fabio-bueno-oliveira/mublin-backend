@@ -209,6 +209,21 @@ Misc.submitNewGearBrand = (name, logo, id_user_creator, result) => {
   });
 };
 
+Misc.getProductColors = (result) => {
+  sql.query(`SELECT brands_products_colors.id, brands_products_colors.name, brands_products_colors.name_ptbr FROM brands_products_colors ORDER BY brands_products_colors.name ASC`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found any colors
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Misc.getAllStrengths = (result) => {
   sql.query(`SELECT strengths.id, strengths.title_ptbr AS title, strengths.icon FROM strengths ORDER BY strengths.title_ptbr ASC`, (err, res) => {
     if (err) {

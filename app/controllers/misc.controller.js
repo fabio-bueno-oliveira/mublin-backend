@@ -264,6 +264,23 @@ exports.submitNewGearBrand = (req, res) => {
   });
 };
 
+// Get all categories
+exports.productColors = (req, res) => {
+  Misc.getProductColors((err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No product colors found"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving gear product colors"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Get all strengths
 exports.getAllStrengths = (req, res) => {
   Misc.getAllStrengths((err, data) => {
