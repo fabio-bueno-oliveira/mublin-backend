@@ -66,7 +66,7 @@ exports.loginUser = (req, res) => {
     if (result) {
       results.password = undefined;
       const jsontoken = sign({ result: results }, process.env.JWT_SECRET, {
-        expiresIn: "7 days" 
+        expiresIn: "30 days" 
       });
       User.log(results.id, jsontoken, (err, data) => {
         if (err)
