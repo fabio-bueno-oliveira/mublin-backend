@@ -285,7 +285,7 @@ exports.gearSetups = (req, res) => {
 
 // Find profile gear setup products
 exports.gearSetupProducts = (req, res) => {
-  Profile.gearSetupProducts(req.params.username, req.body.setupId, (err, data) => {
+  Profile.gearSetupProducts(req.params.username, req.params.setupId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({

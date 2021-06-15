@@ -51,7 +51,7 @@ module.exports = app => {
   app.get("/profile/:username/gearSetups", checkToken, profile.gearSetups);
 
   // Retrieve profile gear setup products (by username)
-  app.get("/profile/:username/gearSetupProducts", checkToken, profile.gearSetupProducts);
+  app.get("/profile/:username/:setupId/gearSetupProducts", checkToken, profile.gearSetupProducts);
 
   // Retrieve profile availabiity items (by username)
   app.get("/profile/:username/availabilityItems", checkToken, profile.availabilityItems);
