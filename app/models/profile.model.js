@@ -297,6 +297,38 @@ Profile.gear = (username, result) => {
   });
 };
 
+Profile.gearSetups = (username, result) => {
+  sql.query(`
+  SELECT users_gear_setup.id, users_gear_setup.name, DATE_FORMAT(users_gear_setup.created,'%Y-%m-%d %H:%i:%s') AS created, users_gear_setup.image FROM users_gear_setup WHERE users_gear_setup.id_user = (SELECT users.id FROM users WHERE users.username = '${username}') ORDER BY users_gear_setup.id ASC`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found setups for the profile username
+    result({ kind: "not_found" }, null);
+  });
+};
+
+Profile.gearSetupProducts = (username, setupId, result) => {
+  sql.query(`
+  SELECT id_product AS productId FROM users_gear_setup_items WHERE id_setup = ${setupId} ORDER BY id_product ASC`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found setup products for the profile username
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Profile.availabilityItems = (username, result) => {
   sql.query(`SELECT users_availability_items.id, availability_items.id AS itemId, availability_items.name_ptbr AS itemName FROM users_availability_items LEFT JOIN availability_items ON users_availability_items.id_item_fk = availability_items.id WHERE users_availability_items.id_user_fk = (SELECT users.id FROM users WHERE users.username = '${username}') ORDER BY users_availability_items.id ASC`, (err, res) => {
     if (err) {

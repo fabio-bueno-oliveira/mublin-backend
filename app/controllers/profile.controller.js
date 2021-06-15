@@ -266,6 +266,40 @@ exports.gear = (req, res) => {
   });
 };
 
+// Find profile gear setups
+exports.gearSetups = (req, res) => {
+  Profile.gearSetups(req.params.username, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No gear setup found with username " + req.params.username
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving gear setups for username " + req.params.username
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// Find profile gear setup products
+exports.gearSetupProducts = (req, res) => {
+  Profile.gearSetupProducts(req.params.username, req.body.setupId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No gear setup product found with username " + req.params.username
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving gear setups products for username " + req.params.username
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Find profile availability items
 exports.availabilityItems = (req, res) => {
   Profile.availabilityItems(req.params.username, (err, data) => {
