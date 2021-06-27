@@ -288,7 +288,7 @@ Profile.gear = (username, result) => {
       return;
     }
     if (results.length) {
-      //console.log("result: ", res);
+      console.log("result: ", res);
       result(null, results);
       return;
     }

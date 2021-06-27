@@ -161,7 +161,7 @@ User.getUserInfoGenres = (userId, result) => {
 };
 
 User.getUserInfoRoles = (userId, result) => {
-  sql.query(`SELECT users_roles.id, users_roles.id_role_fk AS idRole, roles.name_ptbr AS name, roles.description_ptbr AS description, users_roles.main_activity AS mainActivity FROM users_roles LEFT JOIN roles ON users_roles.id_role_fk = roles.id WHERE users_roles.id_user_fk = '${userId}' ORDER BY mainActivity DESC`, (err, res) => {
+  sql.query(`SELECT users_roles.id, users_roles.id_role_fk AS idRole, roles.name_ptbr AS name, roles.description_ptbr AS description, users_roles.main_activity AS mainActivity, roles.icon FROM users_roles LEFT JOIN roles ON users_roles.id_role_fk = roles.id WHERE users_roles.id_user_fk = '${userId}' ORDER BY mainActivity DESC`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
