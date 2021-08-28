@@ -134,7 +134,11 @@ Project.findAllByUser = (userId, result) => {
 
   LEFT JOIN (SELECT id_project, id_user, DATE_FORMAT(goal_date,'%d/%m/%Y') AS goal_date, goal_description, completed FROM projects_goals WHERE goal_date >= CURDATE() AND id_user = ${userId} ORDER BY goal_date DESC) AS projects_goals_user ON projects.id = projects_goals_user.id_project 
 
-  WHERE users_projects.id_user_fk = ${userId} AND users_projects.confirmed IN(0,1,2) AND projects.id IS NOT NULL GROUP BY users_projects.id ORDER BY users_projects.confirmed ASC, users_projects.featured DESC, users_projects.joined_in DESC, users_projects.status ASC, projects.name ASC`, (err, res) => {
+  WHERE users_projects.id_user_fk = ${userId} AND users_projects.confirmed IN(0,1,2) AND projects.id IS NOT NULL 
+  
+  GROUP BY users_projects.id 
+  
+  ORDER BY projects.end_year IS NOT NULL ASC, users_projects.left_in IS NOT NULL ASC, users_projects.confirmed DESC, users_projects.featured DESC, users_projects.joined_in DESC, users_projects.status ASC, projects.name ASC, events.date_opening DESC`, (err, res) => {
     if (err) {
       result(err, null);
       return;
