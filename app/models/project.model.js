@@ -152,15 +152,17 @@ Project.findAllByUser = (userId, type, result) => {
   
   GROUP BY users_projects.id 
   
-  ORDER BY projects.end_year IS NOT NULL ASC, users_projects.left_in IS NOT NULL ASC, users_projects.confirmed DESC, users_projects.featured DESC, users_projects.joined_in DESC, users_projects.status ASC, projects.name ASC, events.date_opening DESC`, (err, res) => {
+  ORDER BY projects.end_year IS NOT NULL ASC, users_projects.left_in IS NOT NULL ASC, users_projects.confirmed DESC, users_projects.featured DESC, users_projects.joined_in DESC, users_projects.status ASC, projects.name ASC, events.date_opening DESC;
+
+  SELECT users_projects.confirmed, users_projects.joined_in, users_projects.left_in, users_projects.portfolio, projects.id AS projectid, projects.name, projects.username FROM users_projects LEFT JOIN projects ON users_projects.id_project_fk = projects.id LEFT JOIN projects_types ON projects.type = projects_types.id LEFT JOIN users_projects_status ON users_projects.status = users_projects_status.id WHERE users_projects.id_user_fk = ${userId} AND users_projects.confirmed IN(0,1,2) AND projects.id IS NOT NULL GROUP BY users_projects.id ORDER BY projects.end_year IS NOT NULL ASC, users_projects.left_in IS NOT NULL ASC, users_projects.confirmed DESC, users_projects.featured DESC, users_projects.joined_in DESC, users_projects.status ASC, projects.name ASC`, (err, results) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }
-    if (res.length) {
+    if (results.length) {
       // console.log("User Projects: ", res);
-      result(null, res);
+      result(null, results);
       return;
     }
     // not found Project with the id
