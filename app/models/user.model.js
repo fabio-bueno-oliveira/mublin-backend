@@ -127,14 +127,14 @@ User.checkUserByToken = (loggedEmail, result) => {
 };
 
 User.getUserInfo = (email, loggedEmail, result) => {
-    sql.query(`SELECT users.id, users.name, users.lastname, users.username, users.bio, users.gender, users.id_country_fk AS country, users.id_region_fk AS region, regions.name AS regionName, users.id_city_fk AS city, cities.name AS cityName, users.email, users.picture, IF(users.payment_plan=1,'Free', 'Pro') AS plan, users.first_access, users.public, users.instagram, website, phone_mobile AS phone, users.status, users.legend_badge, users.availability_status, users.availability_focus, users.level FROM users LEFT JOIN cities ON users.id_city_fk = cities.id LEFT JOIN regions ON users.id_region_fk = regions.id WHERE users.email = '${loggedEmail}' LIMIT 1`, (err, res) => {
+    sql.query(`SELECT users.id, users.name, users.lastname, users.username, users.bio, users.gender, users.verified, users.id_country_fk AS country, users.id_region_fk AS region, regions.name AS regionName, users.id_city_fk AS city, cities.name AS cityName, users.email, users.picture, IF(users.payment_plan=1,'Free', 'Pro') AS plan, users.first_access, users.public, users.instagram, website, phone_mobile AS phone, users.status, users.legend_badge, users.availability_status, users.availability_focus, users.level FROM users LEFT JOIN cities ON users.id_city_fk = cities.id LEFT JOIN regions ON users.id_region_fk = regions.id WHERE users.email = '${loggedEmail}' LIMIT 1`, (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(err, null);
         return;
       }
       if (res.length) {
-        console.log("found user: ", res[0]);
+        // console.log("found user: ", res[0]);
         result(null, res[0]);
         return;
       }
