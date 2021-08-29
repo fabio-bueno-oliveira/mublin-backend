@@ -175,7 +175,7 @@ exports.relatedProjects = (req, res) => {
 
 // Find all Projects from a user with a userId
 exports.findAllUserProjects = (req, res) => {
-  Project.findAllByUser(req.params.userId, (err, data) => {
+  Project.findAllByUser(req.params.userId, req.query.type, (err, data) => {
     if (err) {
       // if (err.kind === "not_found") {
       //   res.status(404).send({
