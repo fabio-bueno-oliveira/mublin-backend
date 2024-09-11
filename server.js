@@ -35,7 +35,7 @@ app.use(function(req, res, next) {
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to Mublin API." });
+  res.json({ message: "Welcome to Mublin API!" });
 });
 
 require("./app/routes/project.routes.js")(app);
