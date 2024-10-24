@@ -212,6 +212,21 @@ Profile.strengths = (username, result) => {
   });
 };
 
+Profile.strengthsTotalVotes = (username, result) => {
+  sql.query(`SELECT users_strengths.id_user_to AS idUserTo, users_strengths.id_strength AS strengthId, count(id_strength) AS totalVotes FROM users_strengths WHERE users_strengths.id_user_to = ${username} GROUP BY id_strength ORDER BY totalVotes DESC`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found strengths for the profile username
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Profile.strengthsRaw = (username, result) => {
   sql.query(`SELECT users_strengths.id, users_strengths.id_user_to AS idUserTo, users_strengths.id_user_from AS idUserFrom, users_strengths.id_strength AS strengthId, strengths.icon, strengths.title_ptbr AS strengthTitle, DATE_FORMAT(users_strengths.created,'%d/%m/%Y %H:%i:%s') AS created FROM users_strengths LEFT JOIN strengths ON users_strengths.id_strength = strengths.id WHERE users_strengths.id_user_to = (SELECT users.id FROM users WHERE users.username = '${username}') GROUP BY users_strengths.id ORDER BY users_strengths.created DESC`, (err, res) => {
     if (err) {
