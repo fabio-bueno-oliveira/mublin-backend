@@ -213,7 +213,7 @@ Profile.strengths = (username, result) => {
 };
 
 Profile.strengthsTotalVotes = (username, result) => {
-  sql.query(`SELECT users_strengths.id_user_to AS idUserTo, users_strengths.id_strength AS strengthId, count(id_strength) AS totalVotes FROM users_strengths WHERE users_strengths.id_user_to = ${username} GROUP BY id_strength ORDER BY totalVotes DESC`, (err, res) => {
+  sql.query(`SELECT users_strengths.id_user_to AS idUserTo, users_strengths.id_strength AS strengthId, count(id_strength) AS totalVotes FROM users_strengthsWHERE users_strengths.id_user_to = (SELECT users.id FROM users WHERE users.username = '${username}') GROUP BY id_strength ORDER BY totalVotes DESC`, (err, res) => {
     if (err) {
       result(err, null);
       return;

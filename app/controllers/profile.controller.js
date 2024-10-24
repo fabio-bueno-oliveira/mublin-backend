@@ -199,7 +199,7 @@ exports.strengths = (req, res) => {
 };
 
 // Find profile total votes by strengths
-exports.strengthsTotalVotes = (req, res) => {
+exports.strengthsByTotalVotes = (req, res) => {
   Profile.strengthsTotalVotes(req.params.username, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {

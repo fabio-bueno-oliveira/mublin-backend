@@ -36,7 +36,7 @@ module.exports = app => {
   app.get("/profile/:username/strengths", checkToken, profile.strengths);
 
   // Retrieve profile strengths grouped by total votes (by username)
-  app.get("/profile/:username/strengthsTotalVotes", checkToken, profile.strengthsTotalVotes);
+  app.get("/profile/:username/strengthsTotalVotes", checkToken, profile.strengthsByTotalVotes);
 
   // Retrieve profile strengths raw list (by username)
   app.get("/profile/:username/strengthsRaw", checkToken, profile.strengthsRaw);
