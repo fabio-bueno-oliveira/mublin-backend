@@ -72,7 +72,7 @@ Misc.getProductInfo = (productId, result) => {
       return;
     }
     if (res.length) {
-      result(null, res);
+      result(null, res[0]);
       return;
     }
     // not found product with the productId
