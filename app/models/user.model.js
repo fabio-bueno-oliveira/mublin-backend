@@ -127,7 +127,7 @@ User.checkUserByToken = (loggedEmail, result) => {
 };
 
 User.getUserInfo = (email, loggedEmail, result) => {
-    sql.query(`SELECT users.id, users.name, users.lastname, users.username, users.bio, users.gender, users.verified, users.id_country_fk AS country, users.id_region_fk AS region, regions.name AS regionName, users.id_city_fk AS city, cities.name AS cityName, users.email, users.picture, IF(users.payment_plan=1,'Free', 'Pro') AS plan, users.first_access, users.public, users.instagram, website, phone_mobile AS phone, users.status, users.legend_badge, users.availability_status, users.availability_focus, users.level FROM users LEFT JOIN cities ON users.id_city_fk = cities.id LEFT JOIN regions ON users.id_region_fk = regions.id WHERE users.email = '${loggedEmail}' LIMIT 1`, (err, res) => {
+    sql.query(`SELECT u.id, u.name, u.lastname, u.username, u.bio, u.gender, u.verified, u.id_country_fk AS country, u.id_region_fk AS region, regions.name AS regionName, u.id_city_fk AS city, cities.name AS cityName, u.email, u.picture, IF(u.payment_plan=1,'Free', 'Pro') AS plan, u.first_access, u.public, u.instagram, website, phone_mobile AS phone, u.status, u.legend_badge, u.availability_status, u.availability_focus, u.level, u.previously_registered FROM users AS u LEFT JOIN cities ON u.id_city_fk = cities.id LEFT JOIN regions ON u.id_region_fk = regions.id WHERE u.email = '${loggedEmail}' LIMIT 1`, (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(err, null);
