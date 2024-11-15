@@ -144,14 +144,14 @@ User.getUserInfo = (email, loggedEmail, result) => {
 };
 
 User.getUserInfoGenres = (userId, result) => {
-  sql.query(`SELECT users_genres.id, users_genres.id_genre_fk AS idGenre, genres.name, users_genres.main_genre AS mainGenre FROM users_genres LEFT JOIN genres ON users_genres.id_genre_fk = genres.id WHERE users_genres.id_user_fk = '${userId}' ORDER BY mainGenre DESC`, (err, res) => {
+  sql.query(`SELECT ug.id, ug.id_genre_fk AS idGenre, genres.name_ptbr AS name, ug.main_genre AS mainGenre FROM users_genres AS ug LEFT JOIN genres ON ug.id_genre_fk = genres.id WHERE ug.id_user_fk = '${userId}' ORDER BY ug.main_genre DESC`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }
     if (res.length) {
-      console.log("found user´s genres: ", res);
+      // console.log("Found user´s genres: ", res);
       result(null, res);
       return;
     }
