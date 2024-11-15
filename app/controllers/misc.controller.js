@@ -29,6 +29,18 @@ exports.musicGenres = (req, res) => {
   });
 };
 
+// Retrieve all music genres from database
+exports.musicGenresCategories = (req, res) => {
+  Misc.getMusicGenresCategories((err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving music genres."
+      });
+    else res.send(data);
+  });
+};
+
 // Retrieve all roles from database
 exports.roles = (req, res) => {
   Misc.getRoles((err, data) => {

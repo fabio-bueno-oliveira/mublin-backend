@@ -12,13 +12,25 @@ const Misc = function(misc) {
 };
 
 Misc.getMusicGenres = result => {
-  sql.query("SELECT g.id, g.name_ptbr AS name, c.id AS categoryId, c.name_ptbr AS categoryName, cs.id AS secondCategoryId, cs.name_ptbr AS secondCategoryName FROM genres AS g LEFT JOIN genres_categories AS c ON g.id_category = c.id LEFT JOIN genres_categories AS cs ON g.id_category_secondary = cs.id WHERE g.active = 1 ORDER BY c.id = 4 DESC, c.name_ptbr ASC, g.main_genre DESC, g.name_ptbr ASC;", (err, res) => {
+  sql.query("SELECT g.id, g.name_ptbr AS name, c.id AS categoryId, c.name_ptbr AS categoryName, cs.id AS secondCategoryId, cs.name_ptbr AS secondCategoryName FROM genres AS g LEFT JOIN genres_categories AS c ON g.id_category = c.id LEFT JOIN genres_categories AS cs ON g.id_category_secondary = cs.id WHERE g.active = 1 ORDER BY c.id = 4 DESC, c.id = 5 ASC, c.name_ptbr ASC, g.main_genre DESC, g.name_ptbr ASC;", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
       return;
     }
     // console.log("Music Genres: ", res);
+    result(null, res);
+  });
+};
+
+Misc.getMusicGenresCategories = result => {
+  sql.query("SELECT gc.id, gc.name_ptbr, gc.name FROM genres_categories AS gc ORDER BY gc.id = 4 DESC, gc.id = 5 ASC, gc.name_ptbr ASC;", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    // console.log("Music Genres Categories: ", res);
     result(null, res);
   });
 };
