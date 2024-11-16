@@ -36,13 +36,13 @@ Misc.getMusicGenresCategories = result => {
 };
 
 Misc.getRoles = result => {
-  sql.query("SELECT roles.id, roles.name_ptbr AS name, roles.description_ptbr AS description, roles.instrumentalist, roles.icon FROM roles ORDER BY roles.id = 30 DESC, roles.id = 31 DESC, roles.id = 29 DESC, roles.id = 10 DESC, roles.id = 11 DESC, roles.id = 48 DESC, name ASC", (err, res) => {
+  sql.query("SELECT roles.id, roles.name_ptbr AS name, roles.description_ptbr AS description, roles.instrumentalist, roles.icon FROM roles ORDER BY roles.id = 31 DESC, roles.id = 29 DESC, roles.id = 10 DESC, roles.id = 11 DESC, roles.id = 30 DESC, roles.id = 48 DESC, name ASC", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
       return;
     }
-    console.log("Roles: ", res);
+    // console.log("Roles: ", res);
     result(null, res);
   });
 };
