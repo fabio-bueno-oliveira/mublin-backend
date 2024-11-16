@@ -37,14 +37,14 @@ Project.findProjectsByKeyword = (keyword, result) => {
 // find projects by keyword
 Project.findProjectByKeyword = (keyword, result) => {
   sql.query(`
-  SELECT projects.id AS price, CONCAT(projects.name,' (',projects_types.name_ptbr,')') AS title, CONCAT(genres.name,' - ',cities.name,'/',regions.name,' (@',projects.username,')') AS description, CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-200,w-200,c-maintain_ratio/',projects.picture) AS image, projects.foundation_year, projects.end_year FROM projects LEFT JOIN cities ON projects.id_city_fk = cities.id LEFT JOIN regions ON projects.id_region_fk = regions.id LEFT JOIN genres ON projects.id_genre_1_fk = genres.id LEFT JOIN projects_types ON projects.type = projects_types.id WHERE projects.name LIKE '%${keyword}%' ORDER BY projects.name ASC`, (err, res) => {
+  SELECT p.id, CONCAT(p.name,' (',projects_types.name_ptbr,')') AS title, CONCAT(genres.name,' - ',cities.name,'/',regions.uf) AS description, p.username, CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-200,w-200,c-maintain_ratio/',p.picture) AS image, p.foundation_year, p.end_year FROM projects AS p LEFT JOIN cities ON p.id_city_fk = cities.id LEFT JOIN regions ON p.id_region_fk = regions.id LEFT JOIN genres ON p.id_genre_1_fk = genres.id LEFT JOIN projects_types ON p.type = projects_types.id WHERE p.name LIKE '%${keyword}%' ORDER BY p.name ASC`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }
     if (res.length) {
-      console.log("result: ", res);
+      // console.log("result: ", res);
       result(null, res);
       return;
     }
