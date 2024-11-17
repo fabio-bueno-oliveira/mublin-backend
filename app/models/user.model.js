@@ -642,10 +642,10 @@ User.deleteUsersRole = (loggedID, userId, userRoleId, result) => {
   }
 };
 
-User.addUsersProject = (loggedID, userId, projectId, status, main_role_fk, joined_in, left_in, active, leader, confirmed, admin, portfolio, result) => {
+User.addUsersProject = (loggedID, userId, projectId, status, main_role_fk, joined_in, left_in, active, leader, featured, confirmed, admin, portfolio, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   if (x.result.id == userId) {
-    sql.query(`INSERT INTO users_projects (id_user_fk, id_project_fk, active, status, main_role_fk, joined_in, left_in, leader, confirmed, admin, portfolio) VALUES (${userId}, ${projectId}, ${active}, ${status}, ${main_role_fk}, ${joined_in}, ${left_in}, ${leader}, ${confirmed}, ${admin}, ${portfolio})`, (err, res) => {
+    sql.query(`INSERT INTO users_projects (id_user_fk, id_project_fk, active, status, main_role_fk, joined_in, left_in, leader, confirmed, admin, portfolio) VALUES (${userId}, ${projectId}, ${active}, ${status}, ${main_role_fk}, ${joined_in}, ${left_in}, ${leader}, ${featured}, ${confirmed}, ${admin}, ${portfolio})`, (err, res) => {
         if (err) {
           //console.log("error: ", err);
           result(null, err);
@@ -659,7 +659,7 @@ User.addUsersProject = (loggedID, userId, projectId, status, main_role_fk, joine
         }
 
         //console.log("added project to user: ", { userId: userId, roleId: roleId });
-        result(null, { userId: userId, projectId: projectId });
+        result(null, { userId: userId, projectId: projectId, success: true });
       }
     );
   } else {

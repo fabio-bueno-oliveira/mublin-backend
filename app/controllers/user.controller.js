@@ -636,7 +636,7 @@ exports.addUsersProject = (req, res) => {
     });
   }
 
-  User.addUsersProject(req.headers.authorization, req.body.userId, req.body.projectId, req.body.status, req.body.main_role_fk, req.body.joined_in, req.body.left_in, req.body.active, req.body.leader, req.body.confirmed, req.body.admin, req.body.portfolio, (err, data) => {
+  User.addUsersProject(req.headers.authorization, req.body.userId, req.body.projectId, req.body.status, req.body.main_role_fk, req.body.joined_in, req.body.left_in, req.body.active, req.body.leader, req.body.featured, req.body.confirmed, req.body.admin, req.body.portfolio, (err, data) => {
     if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
