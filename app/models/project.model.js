@@ -37,7 +37,7 @@ Project.findProjectsByKeyword = (keyword, result) => {
 // find projects by keyword
 Project.findProjectByKeyword = (keyword, result) => {
   sql.query(`
-  SELECT p.id, p.name AS title, CONCAT(genres.name,' - ',cities.name,'/',regions.uf) AS description, p.username, CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-200,w-200,c-maintain_ratio/',p.picture) AS image, p.foundation_year, p.end_year FROM projects AS p LEFT JOIN cities ON p.id_city_fk = cities.id LEFT JOIN regions ON p.id_region_fk = regions.id LEFT JOIN genres ON p.id_genre_1_fk = genres.id LEFT JOIN projects_types ON p.type = projects_types.id WHERE p.name LIKE '%${keyword}%' ORDER BY p.name ASC`, (err, res) => {
+  SELECT p.id, p.name AS title, pt.name_ptbr AS type, CONCAT(genres.name,' - ',cities.name,'/',regions.uf) AS description, p.username, CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-200,w-200,c-maintain_ratio/',p.picture) AS image, p.foundation_year, p.end_year FROM projects AS p LEFT JOIN cities ON p.id_city_fk = cities.id LEFT JOIN regions ON p.id_region_fk = regions.id LEFT JOIN genres ON p.id_genre_1_fk = genres.id LEFT JOIN projects_types AS pt ON p.type = pt.id WHERE p.name LIKE '%${keyword}%' ORDER BY p.name ASC`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
