@@ -36,7 +36,7 @@ Misc.getMusicGenresCategories = result => {
 };
 
 Misc.getRoles = result => {
-  sql.query("SELECT roles.id, roles.name_ptbr AS name, roles.description_ptbr AS description, roles.instrumentalist, roles.icon FROM roles ORDER BY roles.id = 31 DESC, roles.id = 29 DESC, roles.id = 10 DESC, roles.id = 11 DESC, roles.id = 30 DESC, roles.id = 48 DESC, name ASC", (err, res) => {
+  sql.query("SELECT r.id, r.name_ptbr AS name, r.description_ptbr AS description, r.instrumentalist, r.icon, r.applies_to_a_project AS appliesToProject FROM roles AS r ORDER BY r.id = 31 DESC, r.id = 29 DESC, r.id = 10 DESC, r.id = 11 DESC, r.id = 30 DESC, r.id = 48 DESC, name ASC", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
