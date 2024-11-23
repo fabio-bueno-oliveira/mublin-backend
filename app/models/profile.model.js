@@ -204,7 +204,8 @@ Profile.strengths = (username, result) => {
       return;
     }
     if (res.length) {
-      result(null, res);
+      // result(null, res);
+      result(null, { total: res.length, success: true, result: res });
       return;
     }
     // not found strengths for the profile username
