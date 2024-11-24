@@ -180,8 +180,7 @@ Project.findAllByUser = (userId, type, result) => {
       return;
     }
     if (results.length) {
-      // console.log("User Projects: ", res);
-      result(null, results);
+      result(null, { totalProjects: results[0].length, success: true, result: results });
       return;
     }
     // not found Project with the id
