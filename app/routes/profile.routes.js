@@ -14,6 +14,9 @@ module.exports = app => {
   // Retrieve roles from profile (by username)
   app.get("/profile/:username/roles", profile.roles);
 
+  // Retrieve roles from profile (by username)
+  app.get("/profile/:username/genres", profile.genres);
+
   // Retrieve followers from profile (by username)
   app.get("/profile/:username/followers", profile.followers);
 

@@ -95,6 +95,23 @@ Profile.roles = (username, result) => {
   });
 };
 
+Profile.genres = (username, result) => {
+  sql.query(`SELECT users_genres.id, genres.name_ptbr AS name, users_genres.main_genre AS main FROM users_genres LEFT JOIN genres ON users_genres.id_genre_fk = genres.id WHERE users_genres.id_user_fk = (SELECT users.id FROM users WHERE users.username = '${username}') ORDER BY users_genres.main_genre DESC`, (err, res) => {
+    if (err) {
+      //console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      //console.log("result: ", res);
+      result(null, res);
+      return;
+    }
+    // not found roles with the profile username
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Profile.followers = (username, result) => {
   sql.query(`SELECT users_followers.id, users_followers.id_follower AS followerId, users_followers.id_followed AS followedId, users.id, users.name, users.lastname, users.username, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',users.id,'/',users.picture) AS picture FROM users_followers LEFT JOIN users ON users_followers.id_follower = users.id WHERE users_followers.id_followed = (SELECT users.id FROM users WHERE users.username = '${username}') AND users.status = 1`, 
   (err, res) => {

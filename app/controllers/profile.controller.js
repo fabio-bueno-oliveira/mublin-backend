@@ -79,6 +79,23 @@ exports.roles = (req, res) => {
   });
 };
 
+// Find profile genres
+exports.genres = (req, res) => {
+  Profile.genres(req.params.username, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No genre found with username ${req.params.username}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving genres for username " + req.params.username
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Find profile followers
 exports.followers = (req, res) => {
   Profile.followers(req.params.username, (err, data) => {
