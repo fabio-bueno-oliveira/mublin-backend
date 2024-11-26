@@ -407,14 +407,19 @@ User.eventInvitationResponse = (loggedID, userId, invitationId, response, respon
 User.CheckUsernameAvailability = (username, result) => {
   let errorMsg = {message: "Username "+username+" is not available.", available: false}
   // sql.query(`SELECT users.username AS username FROM users WHERE users.username = '${username}' LIMIT 1 UNION SELECT projects.username AS username FROM projects WHERE projects.username = '${username}' LIMIT 1`, (err, res) => {
-  sql.query(`SELECT users.username AS username FROM users WHERE users.username = '${username}' LIMIT 1`, (err, res) => {
+  sql.query(`
+    SELECT u.username FROM users AS u WHERE u.username = '${username}' LIMIT 1; 
+    SELECT ss.name FROM system_slugs AS ss WHERE ss.name = '${username}' LIMIT 1; 
+    SELECT b.name_for_url FROM brands AS b WHERE b.name_for_url = '${username}' LIMIT 1; 
+  `, (err, results) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }
-    if (res.length) {
-      console.log("found user: ", res[0]);
+    if (results[0].length || results[1].length || results[2].length) {
+      // console.log("found user: ", results[0]);
+      // console.log("found slug: ", results[1]);
       result(null, errorMsg);
       return;
     }
