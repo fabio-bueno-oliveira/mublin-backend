@@ -107,6 +107,21 @@ Misc.getProductOwners = (productId, result) => {
   });
 };
 
+Misc.getBrandInfo = (brandUrlName, result) => {
+  sql.query(`SELECT b.id, b.name, b.name_for_url, b.description, CONCAT('https://ik.imagekit.io/mublin/products/brands/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',b.logo) AS logo, b.id_related_brand AS relatedBrandId, rb.name AS relatedBrandName, rb.name_for_url AS relatedBrandUrl, CONCAT('https://ik.imagekit.io/mublin/products/brands/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',rb.logo) AS relatedBrandLogo FROM brands AS b LEFT JOIN brands AS rb ON b.id_related_brand = rb.id WHERE b.name_for_url = '${brandUrlName}' LIMIT 1`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res[0]);
+      return;
+    }
+    // not found product with the productId
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Misc.getBrands = (result) => {
   sql.query(`SELECT brands.id, brands.name, CONCAT('https://ik.imagekit.io/mublin/products/brands/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',brands.logo) AS logo FROM brands_products LEFT JOIN brands ON brands_products.id_brand = brands.id GROUP BY brands.id ORDER BY brands.name ASC`, (err, res) => {
     if (err) {

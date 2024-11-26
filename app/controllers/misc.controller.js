@@ -123,6 +123,23 @@ exports.productOwners = (req, res) => {
   });
 };
 
+// Get brand info
+exports.brandInfo = (req, res) => {
+  Misc.getBrandInfo(req.params.brandUrlName, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No brand found with URL name " + req.params.brandUrlName
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving brand info URL name " + req.params.brandUrlName
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Get product Brands with products under it
 exports.brands = (req, res) => {
   Misc.getBrands((err, data) => {
