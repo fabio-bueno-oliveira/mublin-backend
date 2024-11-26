@@ -225,6 +225,23 @@ exports.gearCategories = (req, res) => {
   });
 };
 
+// Get all products from a Brand
+exports.brandAllProducts = (req, res) => {
+  Misc.getBrandAllProducts(req.params.brandUrlName, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No products found for the Brand " + req.params.brandUrlName
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving products for Brand " + req.params.brandUrlName
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Get brand products
 exports.brandProducts = (req, res) => {
   Misc.getBrandProducts(req.params.brandId, req.params.categoryId, (err, data) => {

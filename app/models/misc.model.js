@@ -197,6 +197,21 @@ Misc.getGearCategories = (result) => {
   });
 };
 
+Misc.getBrandAllProducts = (brandUrlName, result) => {
+  sql.query(`SELECT brands_products.id, brands_products.name, CONCAT('https://ik.imagekit.io/mublin/products/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',brands_products.picture) AS picture, brands.id AS brandId, brands.name AS brandName, brands.logo AS brandLogo, brands_categories.id AS categoryId, brands_categories.name_ptbr AS categoryName, brands_products_colors.name AS colorName, brands_products_colors.name_ptbr AS colorNamePTBR FROM brands_products LEFT JOIN brands ON brands_products.id_brand = brands.id LEFT JOIN brands_categories ON brands_products.id_category = brands_categories.id LEFT JOIN brands_products_colors ON brands_products.color = brands_products_colors.id WHERE brands.name_for_url = '${brandUrlName}' GROUP BY brands_products.id ORDER BY brands_products.name ASC`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found any products for this brand
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Misc.getBrandProducts = (brandId, categoryId, result) => {
   sql.query(`SELECT brands_products.id, brands_products.name, CONCAT('https://ik.imagekit.io/mublin/products/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',brands_products.picture) AS picture, brands.id AS brandId, brands.name AS brandName, brands.logo AS brandLogo, brands_categories.id AS categoryId, brands_categories.name_ptbr AS categoryName, brands_products_colors.name AS colorName, brands_products_colors.name_ptbr AS colorNamePTBR FROM brands_products LEFT JOIN brands ON brands_products.id_brand = brands.id LEFT JOIN brands_categories ON brands_products.id_category = brands_categories.id LEFT JOIN brands_products_colors ON brands_products.color = brands_products_colors.id WHERE brands_products.id_brand = ${brandId} AND brands_products.id_category = ${categoryId} AND brands.active = 1 GROUP BY brands_products.id ORDER BY brands_products.name ASC`, (err, res) => {
     if (err) {
