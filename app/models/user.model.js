@@ -410,7 +410,7 @@ User.CheckUsernameAvailability = (username, result) => {
   sql.query(`
     SELECT u.username FROM users AS u WHERE u.username = '${username}' LIMIT 1; 
     SELECT ss.name FROM system_slugs AS ss WHERE ss.name = '${username}' LIMIT 1; 
-    SELECT b.name_for_url FROM brands AS b WHERE b.name_for_url = '${username}' LIMIT 1; 
+    SELECT b.slug FROM brands AS b WHERE b.slug = '${username}' LIMIT 1; 
   `, (err, results) => {
     if (err) {
       console.log("error: ", err);
