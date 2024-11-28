@@ -13,4 +13,10 @@ module.exports = app => {
 
   // Retrieve suggested users for explore
   app.get("/search/explore/suggestedUsers", checkToken, search.findUsersBySuggestion);
+
+  // Retrieve featured users
+  app.get("/search/explore/featuredUsers", checkToken, search.getRandomFeaturedUsers);
+
+  // Retrieve new recent signed users
+  // app.get("/search/explore/newUsers", checkToken, search.getRandomNewUsers);
 };

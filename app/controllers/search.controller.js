@@ -68,3 +68,20 @@ exports.findUsersBySuggestion = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Find users for suggestion
+exports.getRandomFeaturedUsers = (req, res) => {
+  Search.getRandomFeaturedUsers(req.headers.authorization, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No random featured users found"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving random featured users"
+        });
+      }
+    } else res.send(data);
+  });
+};
