@@ -69,7 +69,7 @@ exports.findUsersBySuggestion = (req, res) => {
   });
 };
 
-// Find users for suggestion
+// Find random featured users
 exports.getRandomFeaturedUsers = (req, res) => {
   Search.getRandomFeaturedUsers(req.headers.authorization, (err, data) => {
     if (err) {
@@ -80,6 +80,23 @@ exports.getRandomFeaturedUsers = (req, res) => {
       } else {
         res.status(500).send({
           message: "Error retrieving random featured users"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// Find new recent signed users
+exports.getNewRecentUsers = (req, res) => {
+  Search.getNewRecentUsers(req.headers.authorization, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No random new users found"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving random new users"
         });
       }
     } else res.send(data);
