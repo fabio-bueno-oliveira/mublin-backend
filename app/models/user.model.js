@@ -198,7 +198,7 @@ User.getAll = result => {
       result(null, err);
       return;
     }
-    console.log("projects: ", res);
+    // console.log("users: ", res);
     result(null, res);
   });
 };

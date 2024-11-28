@@ -21,7 +21,7 @@ module.exports = app => {
   app.get("/userInfo/:userId/availabilityItems", checkToken, users.getInfoAvailabilityItems);
 
   // Retrieve all User
-  app.get("/users", users.findAll);
+  // app.get("/users", users.findAll);
   app.get("/secure/users", checkToken, users.findAll);
 
   // Retrieve a single User with userId
