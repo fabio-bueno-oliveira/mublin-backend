@@ -332,13 +332,16 @@ Profile.gear = (username, result) => {
 
 Profile.gearSetups = (username, result) => {
   sql.query(`
-  SELECT users_gear_setup.id, users_gear_setup.name, DATE_FORMAT(users_gear_setup.created,'%Y-%m-%d %H:%i:%s') AS created, users_gear_setup.image FROM users_gear_setup WHERE users_gear_setup.id_user = (SELECT users.id FROM users WHERE users.username = '${username}') ORDER BY users_gear_setup.id ASC`, (err, res) => {
+    SELECT ugs.id, ugs.name, DATE_FORMAT(ugs.created,'%Y-%m-%d %H:%i:%s') AS created, ugs.image FROM users_gear_setup AS ugs WHERE ugs.id_user = (SELECT users.id FROM users WHERE users.username = '${username}') ORDER BY ugs.id ASC;
+
+    SELECT id_product AS productId, id_setup AS setupId FROM users_gear_setup_items WHERE id_user = (SELECT users.id FROM users WHERE users.username = '${username}') ORDER BY id_product ASC
+  `, (err, results) => {
     if (err) {
       result(err, null);
       return;
     }
-    if (res.length) {
-      result(null, res);
+    if (results.length) {
+      result(null, results);
       return;
     }
     // not found setups for the profile username
@@ -347,8 +350,7 @@ Profile.gearSetups = (username, result) => {
 };
 
 Profile.gearSetupProducts = (username, setupId, result) => {
-  sql.query(`
-  SELECT id_product AS productId FROM users_gear_setup_items WHERE id_setup = ${setupId} ORDER BY id_product ASC`, (err, res) => {
+  sql.query(`SELECT id_product AS productId FROM users_gear_setup_items WHERE id_setup = ${setupId} ORDER BY id_product ASC`, (err, res) => {
     if (err) {
       result(err, null);
       return;
