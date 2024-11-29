@@ -341,7 +341,7 @@ Profile.gearSetups = (username, result) => {
       return;
     }
     if (results.length) {
-      result(null, results);
+      result(null, { total: results[0].length, success: true, result: results });
       return;
     }
     // not found setups for the profile username
