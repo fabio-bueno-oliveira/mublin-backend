@@ -46,7 +46,7 @@ Search.findProjectsByKeyword = (loggedUserId, keyword, userCity, result) => {
       return;
     }
     if (res.length) {
-      result(null, res);
+      result(null, { total: res.length, success: true, result: res });
       return;
     }
     result({ kind: "not_found" }, null);
