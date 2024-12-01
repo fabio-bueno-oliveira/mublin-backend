@@ -332,16 +332,18 @@ Profile.gear = (username, result) => {
 
 Profile.gearSetups = (username, result) => {
   sql.query(`
-    SELECT ugs.id, ugs.name, DATE_FORMAT(ugs.created,'%Y-%m-%d %H:%i:%s') AS created, ugs.image FROM users_gear_setup AS ugs WHERE ugs.id_user = (SELECT users.id FROM users WHERE users.username = '${username}') ORDER BY ugs.id ASC;
+    SELECT ugs.id, ugs.name FROM users_gear_setup AS ugs WHERE ugs.id_user = (SELECT users.id FROM users WHERE users.username = '${username}') ORDER BY ugs.id ASC;
 
-    SELECT id_product AS productId, id_setup AS setupId FROM users_gear_setup_items WHERE id_user = (SELECT users.id FROM users WHERE users.username = '${username}') ORDER BY id_product ASC
+    SELECT id_product AS id, id_setup AS setupId FROM users_gear_setup_items WHERE id_user = (SELECT users.id FROM users WHERE users.username = '${username}') ORDER BY id_product ASC
   `, (err, results) => {
     if (err) {
       result(err, null);
       return;
     }
     if (results.length) {
-      result(null, { total: results[0].length, success: true, result: results });
+      result(null, { 
+        total: results[0].length, success: true, setups: results[0], products: results[1] 
+      });
       return;
     }
     // not found setups for the profile username
