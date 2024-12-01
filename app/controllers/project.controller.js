@@ -27,6 +27,7 @@ exports.create = (req, res) => {
     bio: req.body.bio,
     type: req.body.type,
     kind: req.body.kind,
+    activity_status: req.body.activity_status,
     public: req.body.public,
     id_user_creator_fk: req.body.id_user_creator_fk
   });

@@ -14,6 +14,7 @@ const Project = function(project) {
   this.bio = project.bio;
   this.type = project.type;
   this.kind = project.kind;
+  this.activity_status = project.activity_status;
   this.public = project.public;
   this.id_user_creator_fk = project.id_user_creator_fk;
 };
