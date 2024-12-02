@@ -181,6 +181,30 @@ exports.checkFollow = (req, res) => {
   });
 };
 
+// Update inspiration status on followed user profile
+exports.updateInspiration = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  Profile.updateInspiration(req.headers.authorization, req.body.id, req.body.followedId, req.body.option, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found following infos with id ${req.body.profileId}`
+          });
+        } else {
+          res.status(500).send({
+            message: `Error updating following infos with id ${req.body.profileId}`
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Find profile posts
 exports.posts = (req, res) => {
   Profile.posts(req.params.username, (err, data) => {

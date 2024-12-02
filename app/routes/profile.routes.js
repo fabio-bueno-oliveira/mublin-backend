@@ -32,6 +32,9 @@ module.exports = app => {
   // Check if logged user follows the profile
   app.get("/profile/:username/checkFollow", checkToken, profile.checkFollow);
 
+  // Update followed inspiration status
+  app.put("/profile/:username/updateInspiration", checkToken, profile.updateInspiration);
+
   // Retrieve profile posts (by username)
   app.get("/profile/:username/posts", checkToken, profile.posts);
 

@@ -196,6 +196,23 @@ Profile.checkFollow = (loggedID, username, result) => {
   });
 };
 
+Profile.updateInspiration = (loggedID, id, followedId, option, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`UPDATE users_followers SET inspiration = '${option}' WHERE id = ${id} AND id_follower = ${x.result.id} AND id_followed = ${followedId}`, (err, res) => {
+      if (err) {
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        // not found user with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { id: id, success: true, message: "Inspiration status updated successfully!" });
+    }
+  );
+};
+
 Profile.posts = (username, result) => {
   sql.query(
     // `SELECT feed.id, UNIX_TIMESTAMP(feed.created) AS created, feed_types.text_ptbr AS action, feed.extra_text AS extraText, feed.image, feed_types.category, IF(feed_types.category='project',projects.name, '') AS relatedProjectName, IF(feed_types.category='project',projects.username, '') AS relatedProjectUsername, IF(feed_types.category='project',CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-200,w-200,c-maintain_ratio/',projects.picture), '') AS relatedProjectPicture, IF(feed_types.category='project',projects_types.name_ptbr, '') AS relatedProjectType, IF(feed_types.category='event',events.id, '') AS relatedEventId, IF(feed_types.category='event',events.title, '') AS relatedEventTitle, COUNT(feed_likes.id) AS likes, (SELECT COUNT(feed_likes.id) FROM feed_likes WHERE feed_likes.id_feed_item = feed.id AND id_user = (SELECT users.id FROM users WHERE users.username = '${username}' LIMIT 1)) AS likedByMe FROM feed LEFT JOIN feed_types ON feed.id_feed_type_fk = feed_types.id LEFT JOIN feed_likes ON feed.id = feed_likes.id_feed_item LEFT JOIN projects ON feed.id_item_fk = projects.id LEFT JOIN events ON feed.id_item_fk = events.id LEFT JOIN projects_types ON projects.type = projects_types.id WHERE feed.id_user_1_fk = (SELECT users.id FROM users WHERE users.username = '${username}' LIMIT 1) AND feed.id_feed_type_fk NOT IN (6,7,9) AND projects.id > 0 OR events.id > 0 GROUP BY feed.id ORDER BY feed.created DESC LIMIT 2`
