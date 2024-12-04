@@ -34,6 +34,7 @@ module.exports = app => {
   app.get("/project/:projectUsername/:projectId/:projectCity/:projectMainGenre/relatedProjects", projects.relatedProjects);
 
   // Retrieve all projects with userId
+  app.get("/user/:userId/projectsv1", checkToken, projects.findAllUserProjects_V1);
   app.get("/user/:userId/projects", checkToken, projects.findAllUserProjects);
   app.get("/user/:userId/projectsBasicInfos", checkToken, projects.findAllUserProjectsBasicInfos);
 

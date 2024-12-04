@@ -125,7 +125,7 @@ Project.relatedProjects = (projectId, projectCity, projectMainGenre, result) => 
   });
 };
 
-Project.findAllByUser = (userId, type, result) => {
+Project.findAllByUser_V1 = (userId, type, result) => {
 
   function filterType (type) {
     switch(type) {
@@ -173,6 +173,56 @@ Project.findAllByUser = (userId, type, result) => {
   SELECT usrsp.confirmed, usrsp.joined_in, usrsp.left_in, usrsp.portfolio, projects.id AS projectid, projects.name, projects.username FROM users_projects AS usrsp LEFT JOIN projects ON usrsp.id_project_fk = projects.id LEFT JOIN projects_types ON projects.type = projects_types.id LEFT JOIN users_projects_relationship ON usrsp.status = users_projects_relationship.id WHERE usrsp.id_user_fk = ${userId} AND usrsp.confirmed IN(0,1,2) AND projects.id IS NOT NULL GROUP BY usrsp.id ORDER BY projects.end_year IS NOT NULL ASC, usrsp.left_in IS NOT NULL ASC, usrsp.confirmed DESC, usrsp.featured DESC, usrsp.joined_in DESC, usrsp.status ASC, projects.name ASC;
   
   SELECT u.id AS userId, u.name AS userName, u.lastname AS userLastname, users_projects.active, users_projects.admin, u.username AS userUsername, u.picture AS userPicture, p.id AS projectId, p.username AS projectUsername, users_projects.confirmed, users_projects.joined_in AS joinedIn, users_projects.left_in AS leftIn, r1.description_ptbr AS role1, r1.icon AS role1icon, r2.description_ptbr AS role2, r2.icon AS role2icon, r3.description_ptbr AS role3, r3.icon AS role3icon, users_projects.leader FROM users_projects LEFT JOIN users AS u ON users_projects.id_user_fk = u.id LEFT JOIN projects AS p ON users_projects.id_project_fk = p.id LEFT JOIN roles AS r1 ON users_projects.main_role_fk = r1.id LEFT JOIN roles AS r2 ON users_projects.second_role_fk = r2.id LEFT JOIN roles AS r3 ON users_projects.third_role_fk = r3.id WHERE users_projects.id_project_fk IN (SELECT projects.id FROM users_projects LEFT JOIN projects ON users_projects.id_project_fk = projects.id LEFT JOIN projects_types ON projects.type = projects_types.id WHERE users_projects.id_user_fk = ${userId} AND users_projects.confirmed IN(0,1,2) AND projects.id IS NOT NULL GROUP BY users_projects.id) ORDER BY u.id = ${userId} DESC, u.name ASC;
+  
+  `, (err, results) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (results.length) {
+      result(null, { totalProjects: results[0].length, success: true, result: results });
+      return;
+    }
+    // not found Project with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+
+Project.findAllByUser = (userId, result) => {
+  sql.query(`SELECT usrsp.id, usrsp.confirmed, usrsp.status, usrsp.active, usrsp.admin, usrsp.featured, usrsp.joined_in, usrsp.left_in AS yearLeftTheProject, usrsp.founder, usrsp.show_on_profile AS showOnProfile, usrsp.touring AS touringWithThisBand, usrsp.main_role_fk, usrsp.portfolio, usrsp.created, prjct.id AS projectid, prjct.name, prjct.username, prjct.type, prjct.picture, prjct.foundation_year AS yearFoundation, prjct.end_year AS yearEnd, prjct.label_show AS labelShow, prjct.label_color AS labelColor, prjct.label_text AS labelText, projects_types.id AS ptid, projects_types.name_ptbr AS ptname, projects_types.icon AS pticon, users_projects_relationship.title_ptbr AS workTitle, users_projects_relationship.icon AS workIcon, r1.description_ptbr AS role1, r1.icon AS role1icon, r2.description_ptbr AS role2, r2.icon AS role2icon, r3.description_ptbr AS role3, r3.icon AS role3icon, g1.name AS genre1, g2.name AS genre2, g3.name AS genre3, events.id AS nextEventId, events.title AS nextEventTitle, events.date_opening AS nextEventDateOpening, events.hour_opening AS nextEventHourOpening, events_invitations.id AS nextEventInvitationId, events_invitations.response AS nextEventInvitationResponse, DATE_FORMAT(events_invitations.created,'%d/%m/%Y às %H:%i:%s') AS nextEventInvitationDate, events_invitations.name AS nextEventInvitationNameWhoInvited, events_invitations.username AS nextEventInvitationUsernameWhoInvited, events_invitations.picture AS nextEventInvitationPictureWhoInvited, events_invitations.id_user_who_invited_fk AS nextEventInvitationUserIdWhoInvited, projects_goals.goal_date AS nextGoalDate, projects_goals.goal_description AS nextGoalDescription, projects_goals.completed AS nextGoalCompleted, projects_goals_user.goal_date AS nextUserGoalDate, projects_goals_user.goal_description AS nextUserGoalDescription, projects_goals_user.completed AS nextUserGoalCompleted, cities.name AS cityName, regions.name AS regionName, regions.uf AS regionUf, countries.name_ptbr AS countryName, project_notes.note AS leaderLastNote, project_notes.note_date AS leaderLastNoteDate, project_notes.authorId AS leaderLastNoteAuthorId, project_notes.username AS leaderLastNoteUsername, project_notes.name AS leaderLastNoteName, project_notes.picture AS leaderLastNotePicture, projects_status.id AS activityStatusId, projects_status.description_ptbr AS activityStatus, projects_status.color AS activityStatusColor, prjct.currentlyOnTour AS projectCurrentlyOnTour 
+
+  FROM users_projects AS usrsp
+  
+  LEFT JOIN projects AS prjct ON usrsp.id_project_fk = prjct.id 
+  LEFT JOIN projects_types ON prjct.type = projects_types.id 
+  LEFT JOIN cities ON prjct.id_city_fk = cities.id 
+  LEFT JOIN regions ON prjct.id_region_fk = regions.id 
+  LEFT JOIN countries ON prjct.id_country_fk = countries.id 
+  LEFT JOIN users_projects_relationship ON usrsp.status = users_projects_relationship.id 
+  LEFT JOIN roles AS r1 ON usrsp.main_role_fk = r1.id 
+  LEFT JOIN roles AS r2 ON usrsp.second_role_fk = r2.id 
+  LEFT JOIN roles AS r3 ON usrsp.third_role_fk = r3.id 
+  LEFT JOIN genres AS g1 ON prjct.id_genre_1_fk = g1.id 
+  LEFT JOIN genres AS g2 ON prjct.id_genre_2_fk = g2.id 
+  LEFT JOIN genres AS g3 ON prjct.id_genre_3_fk = g3.id 
+  LEFT JOIN (SELECT id_project_fk, id, title, DATE_FORMAT(date_opening,'%d/%m/%Y') AS date_opening, hour_opening FROM events WHERE date_opening >= CURDATE() ORDER BY date_opening ASC) AS events ON prjct.id = events.id_project_fk 
+  LEFT JOIN (SELECT evi.id, evi.response, evi.id_event_fk, evi.created, evi.id_user_who_invited_fk, users.name, users.picture, users.username FROM events_invitations AS evi 
+  LEFT JOIN users ON evi.id_user_who_invited_fk = users.id) AS events_invitations ON events.id = events_invitations.id_event_fk 
+  LEFT JOIN (SELECT id_project, DATE_FORMAT(goal_date,'%d/%m/%Y') AS goal_date, goal_description, completed FROM projects_goals WHERE goal_date >= CURDATE() ORDER BY goal_date DESC) AS projects_goals ON prjct.id = projects_goals.id_project 
+  LEFT JOIN (SELECT id_project, id_user, DATE_FORMAT(goal_date,'%d/%m/%Y') AS goal_date, goal_description, completed FROM projects_goals WHERE goal_date >= CURDATE() AND id_user = ${userId} ORDER BY goal_date DESC) AS projects_goals_user ON prjct.id = projects_goals_user.id_project 
+  LEFT JOIN (SELECT id_project, DATE_FORMAT(project_notes.created,'%d/%m/%Y') AS note_date, note, users.id AS authorId, users.name, users.picture, users.username FROM project_notes LEFT JOIN users ON project_notes.id_author = users.id ORDER BY project_notes.created DESC LIMIT 1) AS project_notes ON prjct.id = project_notes.id_project 
+  LEFT JOIN projects_status ON prjct.activity_status = projects_status.id 
+
+  WHERE usrsp.id_user_fk = ${userId} AND usrsp.confirmed IN(0,1,2) AND prjct.id IS NOT NULL 
+  
+  GROUP BY usrsp.id 
+  
+  ORDER BY prjct.end_year IS NOT NULL ASC, usrsp.left_in IS NOT NULL ASC, usrsp.confirmed DESC, usrsp.featured DESC, usrsp.joined_in DESC, usrsp.status ASC, prjct.name ASC, events.date_opening DESC;
+
+  SELECT usrsp.confirmed, usrsp.joined_in, usrsp.left_in, usrsp.portfolio, p.id AS projectid, p.name, p.username FROM users_projects AS usrsp LEFT JOIN projects AS p ON usrsp.id_project_fk = p.id LEFT JOIN projects_types ON p.type = projects_types.id LEFT JOIN users_projects_relationship AS upr ON usrsp.status = upr.id WHERE usrsp.id_user_fk = ${userId} AND usrsp.confirmed IN(0,1,2) AND p.id IS NOT NULL GROUP BY usrsp.id ORDER BY p.end_year IS NOT NULL ASC, usrsp.left_in IS NOT NULL ASC, usrsp.confirmed DESC, usrsp.featured DESC, usrsp.joined_in DESC, usrsp.status ASC, p.name ASC;
+  
+  SELECT u.id AS userId, u.name AS userName, u.lastname AS userLastname, up.active, up.admin, u.username AS userUsername, u.picture AS userPicture, p.id AS projectId, p.username AS projectUsername, up.confirmed, up.joined_in AS joinedIn, up.left_in AS leftIn, r1.description_ptbr AS role1, r1.icon AS role1icon, r2.description_ptbr AS role2, r2.icon AS role2icon, r3.description_ptbr AS role3, r3.icon AS role3icon, up.leader FROM users_projects AS up LEFT JOIN users AS u ON up.id_user_fk = u.id LEFT JOIN projects AS p ON up.id_project_fk = p.id LEFT JOIN roles AS r1 ON up.main_role_fk = r1.id LEFT JOIN roles AS r2 ON up.second_role_fk = r2.id LEFT JOIN roles AS r3 ON up.third_role_fk = r3.id WHERE up.id_project_fk IN (SELECT projects.id FROM users_projects LEFT JOIN projects ON users_projects.id_project_fk = projects.id LEFT JOIN projects_types ON projects.type = projects_types.id WHERE up.id_user_fk = ${userId} AND up.confirmed IN(0,1,2) AND projects.id IS NOT NULL GROUP BY up.id) ORDER BY u.id = ${userId} DESC, u.name ASC;
   
   `, (err, results) => {
     if (err) {
