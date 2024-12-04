@@ -189,6 +189,43 @@ Project.findAllByUser = (userId, type, result) => {
   });
 };
 
+Project.findAllUserProjectsBasicInfos = (userId, result) => {
+  sql.query(`SELECT usrsp.id, usrsp.confirmed, prjct.id AS projectid, prjct.name, prjct.username, projects_types.name_ptbr AS type, upr.title_ptbr AS workTitle, r1.description_ptbr AS role1, r2.description_ptbr AS role2, r3.description_ptbr AS role3, g1.name AS genre1, g2.name AS genre2, g3.name AS genre3, cities.name AS cityName, regions.name AS regionName, regions.uf AS regionUf, countries.name_ptbr AS countryName, projects_status.description_ptbr AS activityStatus  
+
+  FROM users_projects AS usrsp
+  
+  LEFT JOIN projects AS prjct ON usrsp.id_project_fk = prjct.id 
+  LEFT JOIN projects_types ON prjct.type = projects_types.id 
+  LEFT JOIN cities ON prjct.id_city_fk = cities.id 
+  LEFT JOIN regions ON prjct.id_region_fk = regions.id 
+  LEFT JOIN countries ON prjct.id_country_fk = countries.id 
+  LEFT JOIN users_projects_relationship AS upr ON usrsp.status = upr.id 
+  LEFT JOIN roles AS r1 ON usrsp.main_role_fk = r1.id 
+  LEFT JOIN roles AS r2 ON usrsp.second_role_fk = r2.id 
+  LEFT JOIN roles AS r3 ON usrsp.third_role_fk = r3.id 
+  LEFT JOIN genres AS g1 ON prjct.id_genre_1_fk = g1.id 
+  LEFT JOIN genres AS g2 ON prjct.id_genre_2_fk = g2.id 
+  LEFT JOIN genres AS g3 ON prjct.id_genre_3_fk = g3.id 
+  LEFT JOIN projects_status ON prjct.activity_status = projects_status.id 
+
+  WHERE usrsp.id_user_fk = ${userId} AND usrsp.confirmed IN(0,1,2) AND prjct.id IS NOT NULL 
+
+  GROUP BY usrsp.id 
+
+  ORDER BY prjct.end_year IS NOT NULL ASC, usrsp.left_in IS NOT NULL ASC, usrsp.confirmed DESC, usrsp.featured DESC, usrsp.joined_in DESC, usrsp.status ASC, prjct.name ASC`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found Project with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Project.findMainByUser = (userId, result) => {
   sql.query(`SELECT users_projects.id, users_projects.id_user_fk, users_projects.id_project_fk, users_projects.confirmed, users_projects.status, users_projects.joined_in, users_projects.main_role_fk, users_projects.portfolio, users_projects.created, projects.id AS projectid, projects.name, projects.username, projects.type, projects.picture, projects_types.id AS ptid, projects_types.name_ptbr AS ptname, projects_types.icon AS pticon, users_projects_relationship.title_ptbr AS workTitle, users_projects_relationship.icon AS workIcon FROM users_projects LEFT JOIN projects ON users_projects.id_project_fk = projects.id LEFT JOIN projects_types ON projects.type = projects_types.id LEFT JOIN users_projects_relationship ON users_projects.status = users_projects_relationship.id WHERE users_projects.id_user_fk = ${userId} AND users_projects.confirmed IN(0,1) AND users_projects.portfolio = 0 ORDER BY users_projects.status ASC`, (err, res) => {
     if (err) {

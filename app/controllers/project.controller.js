@@ -194,6 +194,23 @@ exports.findAllUserProjects = (req, res) => {
   });
 };
 
+// Find all Projects from a user with a userId
+exports.findAllUserProjectsBasicInfos = (req, res) => {
+  Project.findAllUserProjectsBasicInfos(req.params.userId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No projects found for user id ${req.params.userId}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving projects from user id " + req.params.userId
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Find main Projects from a user with a userId
 exports.findMainUserProjects = (req, res) => {
   Project.findMainByUser(req.params.userId, (err, data) => {
