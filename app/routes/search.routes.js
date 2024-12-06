@@ -19,4 +19,7 @@ module.exports = app => {
 
   // Retrieve new recent signed users
   app.get("/search/explore/newUsers", checkToken, search.getNewRecentUsers);
+
+  // Retrieve home featured users
+  app.get("/home/featuredUsers", search.getHomeFeaturedUsers);
 };

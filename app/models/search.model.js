@@ -101,4 +101,16 @@ Search.getNewRecentUsers = (loggedUserId, result) => {
   });
 };
 
+Search.getHomeFeaturedUsers = result => {
+  sql.query(`SELECT u.id, u.name, u.lastname, u.username, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',u.id,'/',u.picture) AS picture, u.verified, u.legend_badge AS legend, c.name AS city, r.name AS region, r.uf, rl.description_ptbr AS role FROM users AS u LEFT JOIN cities AS c ON u.id_city_fk = c.id LEFT JOIN regions AS r ON u.id_region_fk = r.id LEFT JOIN users_roles AS ur ON u.id = ur.id_user_fk LEFT JOIN roles AS rl ON ur.id_role_fk = rl.id WHERE u.status = 1 AND u.public = 1 GROUP BY u.username ORDER BY ur.main_activity DESC, u.legend_badge DESC, u.verified DESC, RAND() LIMIT 8;`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    // console.log("Home Featured Users: ", res);
+    result(null, res);
+  });
+};
+
 module.exports = Search;
