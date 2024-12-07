@@ -120,7 +120,11 @@ Profile.followers = (username, result) => {
       result(null, err);
       return;
     }
-    result(null, { total: res.length, success: true, result: res });
+    if (res.length) {
+      result(null, { total: res.length, success: true, result: res });
+      return;
+    }
+    result({ kind: "not_found" }, null);
   });
 };
 
@@ -132,7 +136,11 @@ Profile.following = (username, result) => {
       result(null, err);
       return;
     }
-    result(null, { total: res.length, success: true, result: res });
+    if (res.length) {
+      result(null, { total: res.length, success: true, result: res });
+      return;
+    }
+    result({ kind: "not_found" }, null);
   });
 };
 
@@ -227,7 +235,13 @@ Profile.strengths = (username, result) => {
       result(err, null);
       return;
     }
-    result(null, { total: res.length, success: true, result: res });
+    if (res.length) {
+      // result(null, res);
+      result(null, { total: res.length, success: true, result: res });
+      return;
+    }
+    // not found strengths for the profile username
+    result({ kind: "not_found" }, null);
   });
 };
 
