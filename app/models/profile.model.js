@@ -121,8 +121,7 @@ Profile.followers = (username, result) => {
       return;
     }
     if (res.length) {
-      //console.log("result: ", res);
-      result(null, res);
+      result(null, { total: res.length, success: true, result: res });
       return;
     }
     result(null, res);
@@ -138,8 +137,7 @@ Profile.following = (username, result) => {
       return;
     }
     if (res.length) {
-      //console.log("result: ", res);
-      result(null, res);
+      result(null, { total: res.length, success: true, result: res });
       return;
     }
     result(null, res);
