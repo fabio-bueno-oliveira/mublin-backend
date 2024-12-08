@@ -286,7 +286,7 @@ User.findAllByKeyword = (keyword, result) => {
     ON users.id = troles.id_user_fk
     WHERE name LIKE '%${keyword}%' OR lastname LIKE '%${keyword}%' OR troles.rolename LIKE '%${keyword}%' OR troles.roledesc LIKE '%${keyword}%' GROUP BY users.id HAVING status = 1 UNION 
 
-    SELECT projects.id, projects.name AS title, projects.username AS extra, projects.public AS extra2, projects.foundation_year AS extra3, '' AS price, projects_types.name_ptbr AS description, IF(projects.picture IS NOT NULL,CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-200,w-200,c-maintain_ratio/',projects.id,'/',projects.picture),'') AS image, 'Projeto' as category FROM projects LEFT JOIN projects_types ON projects.type = projects_types.id WHERE projects.name LIKE '%${keyword}%' OR projects.username LIKE '%${keyword}%' HAVING public = 1 UNION 
+    SELECT p.id, p.name AS title, p.username AS extra, p.public AS extra2, p.foundation_year AS extra3, '' AS price, projects_types.name_ptbr AS description, IF(p.picture IS NOT NULL,CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-200,w-200,c-maintain_ratio/',p.id,'/',p.picture),'') AS image, 'Projeto' as category FROM projects AS p LEFT JOIN projects_types ON p.type = projects_types.id WHERE p.name LIKE '%${keyword}%' OR p.username LIKE '%${keyword}%' HAVING p.public = 1 UNION 
 
     SELECT events.id, events.title, events.description AS extra, events.date_opening AS extra2, events.showable_on_site AS extra3, DATE_FORMAT(events.date_opening,"%d/%m/%Y") AS price, CONCAT('Evento de ',tprojects.name) AS description, events.picture AS image, 'Evento' as category FROM events LEFT JOIN 
     (SELECT projects.id, projects.name 
@@ -300,7 +300,7 @@ User.findAllByKeyword = (keyword, result) => {
       return;
     }
     if (res.length) {
-      console.log("result: ", res);
+      // console.log("result: ", res);
       result(null, res);
       return;
     }

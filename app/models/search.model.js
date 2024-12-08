@@ -1,10 +1,25 @@
 const sql = require("./db.js");
-const { sign } = require("jsonwebtoken");
+// const { sign } = require("jsonwebtoken");
 const jwt = require("jsonwebtoken");
 
 // constructor
 const Search = function(search) {
   //this.created = user.created;
+};
+
+Search.saveSearch = (loggedID, query, source, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`INSERT INTO search_history (id_user, query, source) VALUES (${x.result.id}, '${query}', '${source}')`, (err, res) => {
+    if (err) {
+      console.log("error saving log: ", err);
+      result(err, null);
+      return;
+    }
+
+    // console.log("Query saved: ", { id: res.insertId, userId: x.result.id, query: query });
+    // result(null, { id: res.insertId, userId: x.result.id, query: query });
+    result(null, { success: true });
+  });
 };
 
 Search.findUsersByKeyword = (keyword, userCity, result) => {
@@ -47,6 +62,23 @@ Search.findProjectsByKeyword = (loggedUserId, keyword, userCity, result) => {
     }
     if (res.length) {
       result(null, { total: res.length, success: true, result: res });
+      return;
+    }
+    result({ kind: "not_found" }, null);
+  });
+};
+
+Search.getUserLastSearches = (loggedUserId, result) => {
+  let x = jwt.verify(loggedUserId.slice(7), process.env.JWT_SECRET)
+  sql.query(`SELECT query FROM search_history WHERE id_user = ${x.result.id} GROUP BY query ORDER BY createdAt DESC LIMIT 5`, (err, res) => {
+    if (err) {
+      // console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      // result(null, res.map((i) => i.query));
       return;
     }
     result({ kind: "not_found" }, null);

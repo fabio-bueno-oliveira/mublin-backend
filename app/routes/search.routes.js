@@ -11,6 +11,12 @@ module.exports = app => {
   // Retrieve projects with keyword
   app.get("/search/projects/:keyword", checkToken, search.findProjectsByKeyword);
 
+  // Save user search query
+  app.post("/search/saveSearch", checkToken, search.saveSearch);
+
+  // Retrieve user last searches
+  app.get("/search/queries/userLastSearches", checkToken, search.getUserLastSearches);
+
   // Retrieve suggested users for explore
   app.get("/search/explore/suggestedUsers", checkToken, search.findUsersBySuggestion);
 

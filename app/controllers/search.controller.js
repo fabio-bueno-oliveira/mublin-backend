@@ -1,5 +1,28 @@
 const Search = require("../models/search.model.js");
-const jwt = require("jsonwebtoken");
+// const jwt = require("jsonwebtoken");
+
+// Save user search query history
+exports.saveSearch = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  Search.saveSearch(req.headers.authorization, req.body.query, req.body.source, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: "User not found."
+          });
+        } else {
+          res.status(500).send({
+            message: "Error saving query."
+          });
+        }
+    } else res.send(data);
+  });
+};
 
 // Find all users with a keyword
 exports.findUsersByKeyword = (req, res) => {
@@ -46,6 +69,23 @@ exports.findProjectsByKeyword = (req, res) => {
       } else {
         res.status(500).send({
           message: "Error retrieving projects with keyword " + req.params.keyword
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// Find user last searches
+exports.getUserLastSearches = (req, res) => {
+  Search.getUserLastSearches(req.headers.authorization, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No searches found from user"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving searches from user"
         });
       }
     } else res.send(data);
