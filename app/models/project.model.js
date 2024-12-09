@@ -88,23 +88,23 @@ Project.findById = (projectId, result) => {
 
 Project.findByUsername = (projectUsername, result) => {
   sql.query(`
-  SELECT projects.id, projects.name, projects.old_name AS oldName, projects.username, projects.picture, projects.created, projects.foundation_year AS foundationYear, projects.end_year AS endDate, projects.bio, projects.purpose, projects.spotify_uri AS spotifyUri, projects.type AS typeId, projects_types.name_ptbr AS typeName, genre1.name AS genre1, genre2.name AS genre2, genre3.name AS genre3, countries.name AS country, regions.name AS region, cities.name AS city, label_show AS labelShow, label_text AS labelText, label_color AS labelColor, public 
-  FROM projects 
-  LEFT JOIN projects_types ON projects.type = projects_types.id 
-  LEFT JOIN genres AS genre1 ON projects.id_genre_1_fk = genre1.id 
-  LEFT JOIN genres AS genre2 ON projects.id_genre_2_fk = genre2.id 
-  LEFT JOIN genres AS genre3 ON projects.id_genre_3_fk = genre3.id 
-  LEFT JOIN countries ON projects.id_country_fk = countries.id 
-  LEFT JOIN regions ON projects.id_region_fk = regions.id 
-  LEFT JOIN cities ON projects.id_city_fk = cities.id 
-  WHERE projects.username = '${projectUsername}'`, (err, res) => {
+  SELECT p.id, p.name, p.old_name AS oldName, p.username, p.picture, p.created, p.foundation_year AS foundationYear, p.end_year AS endDate, p.bio, p.purpose, p.spotify_uri AS spotifyUri, p.type AS typeId, p.admin_note AS adminNote, p.currentlyOnTour, projects_types.name_ptbr AS typeName, genre1.name AS genre1, genre2.name AS genre2, genre3.name AS genre3, countries.name AS country, regions.name AS region, cities.name AS city, label_show AS labelShow, label_text AS labelText, label_color AS labelColor, public 
+  FROM projects AS p 
+  LEFT JOIN projects_types ON p.type = projects_types.id 
+  LEFT JOIN genres AS genre1 ON p.id_genre_1_fk = genre1.id 
+  LEFT JOIN genres AS genre2 ON p.id_genre_2_fk = genre2.id 
+  LEFT JOIN genres AS genre3 ON p.id_genre_3_fk = genre3.id 
+  LEFT JOIN countries ON p.id_country_fk = countries.id 
+  LEFT JOIN regions ON p.id_region_fk = regions.id 
+  LEFT JOIN cities ON p.id_city_fk = cities.id 
+  WHERE p.username = '${projectUsername}' LIMIT 1`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }
     if (res.length) {
-      console.log("found project: ", res[0]);
+      // console.log("found project: ", res[0]);
       result(null, res[0]);
       return;
     }
