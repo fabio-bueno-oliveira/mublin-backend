@@ -88,7 +88,7 @@ Project.findById = (projectId, result) => {
 
 Project.findByUsername = (projectUsername, result) => {
   sql.query(`
-  SELECT p.id, p.name, p.old_name AS oldName, p.username, p.picture, p.created, p.foundation_year AS foundationYear, p.end_year AS endDate, p.bio, p.purpose, p.spotify_uri AS spotifyUri, p.type AS typeId, p.admin_note AS adminNote, p.currentlyOnTour, projects_types.name_ptbr AS typeName, genre1.name AS genre1, genre2.name AS genre2, genre3.name AS genre3, countries.name AS country, regions.name AS region, cities.name AS city, label_show AS labelShow, label_text AS labelText, label_color AS labelColor, public 
+  SELECT p.id, p.name, p.old_name AS oldName, p.username, p.picture, p.created, p.foundation_year AS foundationYear, p.end_year AS endDate, p.bio, p.purpose, p.spotify_uri AS spotifyUri, p.type AS typeId, p.kind, p.admin_note AS adminNote, p.currentlyOnTour, projects_types.name_ptbr AS typeName, genre1.name AS genre1, genre2.name AS genre2, genre3.name AS genre3, countries.name AS country, regions.name AS region, cities.name AS city, label_show AS labelShow, label_text AS labelText, label_color AS labelColor, public 
   FROM projects AS p 
   LEFT JOIN projects_types ON p.type = projects_types.id 
   LEFT JOIN genres AS genre1 ON p.id_genre_1_fk = genre1.id 
