@@ -966,7 +966,7 @@ User.forgotPassword = (email, result) => {
         from: process.env.SMTP_USER_NAME,
         to: email,
         subject: '[Mublin] Definir nova senha',
-        html: '<h1>Mublin</h1><p>Olá! Foi solicitada a recuperação de sua senha através do mublin.com.</p><p><a href="https://mublin.com/redefine-password?hash='+md5(dateTime+process.env.FORGOT_EMAIL_KEY+email)+'&email='+email+'" target="_blank">Clique aqui para redefinir sua senha</a></p>'
+        html: '<h1>Mublin</h1><p>Olá! Foi solicitada a recuperação de sua senha através do mublin.com.</p><p><a href="https://mublin.com/login/redefine-password?hash='+md5(dateTime+process.env.FORGOT_EMAIL_KEY+email)+'&email='+email+'" target="_blank">Clique aqui para redefinir sua senha</a></p>'
       };
 
       transporter.sendMail(mailOptions, function(error, info){
