@@ -102,6 +102,23 @@ exports.feedTotalLikes = (req, res) => {
   });
 };
 
+// get total likes for feed item
+exports.getFeedLikes = (req, res) => {
+  Notification.getFeedLikes(req.params.feedId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "Not feed likes for this item"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error listing feed likes for this item"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // like feed item
 exports.feedLike = (req, res) => {
   Notification.feedLike(req.headers.authorization, req.params.feedId, (err, data) => {
