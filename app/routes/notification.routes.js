@@ -17,6 +17,9 @@ module.exports = app => {
   // Retrieve simple feed (only users posts)
   app.get("/simpleFeed", checkToken, notifications.simpleFeed);
 
+  // Retrieve total likes for feed items
+  app.get("/feedTotalLikes", checkToken, notifications.feedTotalLikes);
+
   // Like feed item
   app.post("/feed/:feedId/like", checkToken, notifications.feedLike);
 
