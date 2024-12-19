@@ -128,7 +128,7 @@ Notification.feedTotalLikes = (loggedID, result) => {
 };
 
 Notification.getFeedLikes = (feedId, result) => {
-  sql.query(`SELECT fl.id, fl.id_feed_item AS idItem, DATE_FORMAT(fl.created,'%d/%m/%Y às %H:%i:%s') AS created, u.name, u.lastname, u.picture, u.username, u.verified, u.legend_badge, roles.description_ptbr FROM feed_likes AS fl LEFT JOIN users AS u ON fl.id_user = u.id LEFT JOIN users_roles ON users_roles.id_user_fk = u.id LEFT JOIN roles ON users_roles.id_role_fk = roles.id WHERE fl.id_feed_item = ${feedId} AND u.status = 1 GROUP BY fl.id_user ORDER BY fl.created DESC, users_roles.main_activity DESC`, (err, res) => {
+  sql.query(`SELECT fl.id, fl.id_feed_item AS idItem, DATE_FORMAT(fl.created,'%d/%m/%Y às %H:%i:%s') AS created, u.name, u.lastname, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-100,w-100,c-maintain_ratio/',u.id,'/',u.picture) AS picture, u.username, u.verified, u.legend_badge, roles.description_ptbr FROM feed_likes AS fl LEFT JOIN users AS u ON fl.id_user = u.id LEFT JOIN users_roles ON users_roles.id_user_fk = u.id LEFT JOIN roles ON users_roles.id_role_fk = roles.id WHERE fl.id_feed_item = ${feedId} AND u.status = 1 GROUP BY fl.id_user ORDER BY fl.created DESC, users_roles.main_activity DESC`, (err, res) => {
     if (err) {
       result(err, null);
       return;
