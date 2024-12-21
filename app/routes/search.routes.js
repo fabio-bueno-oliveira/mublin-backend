@@ -23,6 +23,9 @@ module.exports = app => {
   // Retrieve random featured users
   app.get("/search/explore/featuredUsers", checkToken, search.getRandomFeaturedUsers);
 
+  // Retrieve random featured projects
+  app.get("/search/explore/featuredProjects", checkToken, search.getRandomFeaturedProjects);
+
   // Retrieve new recent signed users
   app.get("/search/explore/newUsers", checkToken, search.getNewRecentUsers);
 

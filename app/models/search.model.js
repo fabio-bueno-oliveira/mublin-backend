@@ -117,6 +117,22 @@ Search.getRandomFeaturedUsers = (loggedUserId, result) => {
   });
 };
 
+Search.getRandomFeaturedProjects = (loggedUserId, result) => {
+  let x = jwt.verify(loggedUserId.slice(7), process.env.JWT_SECRET)
+  sql.query(`SELECT p.id, p.name, p.username, CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-200,w-200,c-maintain_ratio/',p.id,'/',p.picture) AS picture, p.currentlyOnTour, g1.name_ptbr AS genre1, g2.name_ptbr AS genre2, c.name AS city, r.name AS region, r.uf, up.id_user_fk FROM projects AS p LEFT JOIN cities AS c ON p.id_city_fk = c.id LEFT JOIN regions AS r ON p.id_region_fk = r.id LEFT JOIN genres AS g1 ON p.id_genre_1_fk = g1.id LEFT JOIN genres AS g2 ON p.id_genre_2_fk = g2.id LEFT JOIN users_projects AS up ON p.id = up.id_project_fk WHERE p.public = 1 AND p.end_year IS NULL AND up.id_user_fk <> ${x.result.id} ORDER BY RAND() LIMIT 3;`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Search.getNewRecentUsers = (loggedUserId, result) => {
   let x = jwt.verify(loggedUserId.slice(7), process.env.JWT_SECRET)
   sql.query(`SELECT u.id, u.name, u.lastname, u.username, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',u.id,'/',u.picture) AS picture, u.verified, u.legend_badge AS legend, c.name AS city, r.name AS region, r.uf, rl.description_ptbr AS role FROM users AS u LEFT JOIN cities AS c ON u.id_city_fk = c.id LEFT JOIN regions AS r ON u.id_region_fk = r.id LEFT JOIN users_roles AS ur ON u.id = ur.id_user_fk LEFT JOIN roles AS rl ON ur.id_role_fk = rl.id WHERE u.status = 1 AND u.public = 1 AND u.id <> ${x.result.id} GROUP BY u.username ORDER BY u.created DESC LIMIT 3;`, (err, res) => {

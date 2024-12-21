@@ -126,6 +126,23 @@ exports.getRandomFeaturedUsers = (req, res) => {
   });
 };
 
+// Find random featured projects
+exports.getRandomFeaturedProjects = (req, res) => {
+  Search.getRandomFeaturedProjects(req.headers.authorization, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No random featured projects found"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving random featured projects"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Find new recent signed users
 exports.getNewRecentUsers = (req, res) => {
   Search.getNewRecentUsers(req.headers.authorization, (err, data) => {
