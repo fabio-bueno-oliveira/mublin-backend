@@ -113,7 +113,7 @@ Profile.genres = (username, result) => {
 };
 
 Profile.followers = (username, result) => {
-  sql.query(`SELECT uf.id, uf.id_follower AS followerId, uf.id_followed AS followedId, u.id, u.name, u.lastname, u.username, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',u.id,'/',u.picture) AS picture, u.verified FROM users_followers AS uf LEFT JOIN users AS u ON uf.id_follower = u.id WHERE uf.id_followed = (SELECT users.id FROM users WHERE users.username = '${username}') AND u.status = 1`, 
+  sql.query(`SELECT uf.id, uf.id_follower AS followerId, uf.id_followed AS followedId, u.id, u.name, u.lastname, u.username, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',u.id,'/',u.picture) AS picture, u.verified, u.legend_badge FROM users_followers AS uf LEFT JOIN users AS u ON uf.id_follower = u.id WHERE uf.id_followed = (SELECT users.id FROM users WHERE users.username = '${username}') AND u.status = 1`, 
   (err, res) => {
     if (err) {
       //console.log("error: ", err);
@@ -129,7 +129,7 @@ Profile.followers = (username, result) => {
 };
 
 Profile.following = (username, result) => {
-  sql.query(`SELECT users_followers.id, users_followers.id_follower AS followerId, users_followers.id_followed AS followedId, users.id, users.name, users.lastname, users.username, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',users.id,'/',users.picture) AS picture FROM users_followers LEFT JOIN users ON users_followers.id_followed = users.id WHERE users_followers.id_follower = (SELECT users.id FROM users WHERE users.username = '${username}') AND users.status = 1`, 
+  sql.query(`SELECT users_followers.id, users_followers.id_follower AS followerId, users_followers.id_followed AS followedId, u.id, u.name, u.lastname, u.username, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',u.id,'/',u.picture) AS picture, u.verified, u.legend_badge FROM users_followers LEFT JOIN users AS u ON users_followers.id_followed = u.id WHERE users_followers.id_follower = (SELECT users.id FROM users WHERE users.username = '${username}') AND u.status = 1`, 
   (err, res) => {
     if (err) {
       //console.log("error: ", err);
