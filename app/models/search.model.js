@@ -119,7 +119,7 @@ Search.getRandomFeaturedUsers = (loggedUserId, result) => {
 
 Search.getRandomFeaturedProjects = (loggedUserId, result) => {
   let x = jwt.verify(loggedUserId.slice(7), process.env.JWT_SECRET)
-  sql.query(`SELECT p.id, p.name, p.username, CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-200,w-200,c-maintain_ratio/',p.picture) AS picture, p.currentlyOnTour, g1.name_ptbr AS genre1, g2.name_ptbr AS genre2, c.name AS city, r.name AS region, r.uf, pt.name_ptbr AS type FROM projects AS p LEFT JOIN cities AS c ON p.id_city_fk = c.id LEFT JOIN regions AS r ON p.id_region_fk = r.id LEFT JOIN genres AS g1 ON p.id_genre_1_fk = g1.id LEFT JOIN genres AS g2 ON p.id_genre_2_fk = g2.id LEFT JOIN users_projects AS up ON p.id = up.id_project_fk LEFT JOIN projects_types AS pt ON p.type = pt.id WHERE p.public = 1 AND p.end_year IS NULL AND up.id_user_fk <> ${x.result.id} ORDER BY RAND() LIMIT 3;`, (err, res) => {
+  sql.query(`SELECT p.id, p.name, p.username, CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-165,w-165,c-maintain_ratio/',p.picture) AS picture, p.currentlyOnTour, g1.name_ptbr AS genre1, g2.name_ptbr AS genre2, c.name AS city, r.name AS region, r.uf, pt.name_ptbr AS type FROM projects AS p LEFT JOIN cities AS c ON p.id_city_fk = c.id LEFT JOIN regions AS r ON p.id_region_fk = r.id LEFT JOIN genres AS g1 ON p.id_genre_1_fk = g1.id LEFT JOIN genres AS g2 ON p.id_genre_2_fk = g2.id LEFT JOIN users_projects AS up ON p.id = up.id_project_fk LEFT JOIN projects_types AS pt ON p.type = pt.id WHERE p.public = 1 AND p.end_year IS NULL AND up.id_user_fk <> ${x.result.id} ORDER BY RAND() LIMIT 3;`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
