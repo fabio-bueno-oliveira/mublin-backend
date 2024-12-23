@@ -75,9 +75,9 @@ User.create = (newUser, result) => {
 
 User.loginUserByEmail = (email, result) => {
   if (email.indexOf('@') > -1) {
-    var loginQuery = `SELECT id, email, username, password, status, first_access FROM users WHERE email = '${email}'`
+    var loginQuery = `SELECT u.id, u.password, u.status, u.name, u.lastname, u.username, u.bio, u.gender, u.verified, u.id_country_fk AS countryId, countries.name_ptbr AS country, u.id_region_fk AS region, r.name AS regionName, u.id_city_fk AS city, c.name AS cityName, u.email, u.picture, IF(u.payment_plan=1,'Free', 'Pro') AS plan, u.first_access, u.public, u.instagram, u.website, u.phone_mobile AS phone, u.phone_mobile_public AS phoneIsPublic, u.status, u.legend_badge, u.availability_status, u.availability_focus, u.level, u.previously_registered FROM users AS u LEFT JOIN countries ON u.id_country_fk = countries.id LEFT JOIN cities AS c ON u.id_city_fk = c.id LEFT JOIN regions AS r ON u.id_region_fk = r.id WHERE u.email = '${email}' LIMIT 1`
   } else {
-    var loginQuery = `SELECT id, email, username, password, status, first_access FROM users WHERE username = '${email}'`
+    var loginQuery = `SELECT u.id, u.password, u.status, u.name, u.lastname, u.username, u.bio, u.gender, u.verified, u.id_country_fk AS countryId, countries.name_ptbr AS country, u.id_region_fk AS region, r.name AS regionName, u.id_city_fk AS city, c.name AS cityName, u.email, u.picture, IF(u.payment_plan=1,'Free', 'Pro') AS plan, u.first_access, u.public, u.instagram, u.website, u.phone_mobile AS phone, u.phone_mobile_public AS phoneIsPublic, u.status, u.legend_badge, u.availability_status, u.availability_focus, u.level, u.previously_registered FROM users AS u LEFT JOIN countries ON u.id_country_fk = countries.id LEFT JOIN cities AS c ON u.id_city_fk = c.id LEFT JOIN regions AS r ON u.id_region_fk = r.id WHERE u.username = '${email}' LIMIT 1`
   }
   sql.query(loginQuery, (err, res) => {
     if (err) {
@@ -104,7 +104,7 @@ User.log = (usuId, token, result) => {
       return;
     }
 
-    console.log("Log saved: ", { id: res.insertId, userId: usuId });
+    // console.log("Log saved: ", { id: res.insertId, userId: usuId });
     result(null, { id: res.insertId, userId: usuId });
   });
 };

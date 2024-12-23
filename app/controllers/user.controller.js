@@ -78,10 +78,35 @@ exports.loginUser = (req, res) => {
       });
       return res.json({
         success: 1,
+        token: jsontoken,
+        message: "login successfully",
         id: results.id,
         firstAccess: results.first_access,
-        message: "login successfully",
-        token: jsontoken
+        status: results.status,
+        name: results.name,
+        lastname: results.lastname,
+        username: results.username,
+        email: results.email,
+        bio: results.bio,
+        gender: results.gender,
+        verified: results.verified,
+        legend_badge: results.legend_badge,
+        countryId: results.countryId,
+        country: results.country,
+        region: results.region,
+        regionName: results.regionName,
+        city: results.city,
+        cityName: results.cityName,
+        picture: results.picture,
+        plan: results.plan,
+        public: results.public,
+        instagram: results.instagram,
+        website: results.website,
+        phone: results.phone,
+        availability_status: results.availability_status,
+        availability_focus: results.availability_focus,
+        level: results.level,
+        previously_registered: results.previously_registered
       });
     } else {
       return res.status(401).send({
