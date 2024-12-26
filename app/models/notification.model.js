@@ -143,6 +143,22 @@ Notification.getFeedLikes = (feedId, result) => {
   });
 };
 
+Notification.feedPostNewGear = (loggedID, id_item_fk, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`INSERT INTO feed (id_item_fk, id_user_1_fk, id_feed_type_fk) VALUES (${id_item_fk}, ${x.result.id}, 10)`, (err, res) => {
+      if (err) {
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { feedId: res.insertId, like: true, success: true });
+    }
+  );
+};
+
 Notification.feedLike = (loggedID, feedId, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   sql.query(`INSERT INTO feed_likes (id_feed_item, id_user) VALUES (${feedId}, ${x.result.id})`, (err, res) => {

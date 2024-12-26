@@ -119,6 +119,26 @@ exports.getFeedLikes = (req, res) => {
   });
 };
 
+// post new gear added to feed
+exports.feedPostNewGear = (req, res) => {
+  // Validate request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  // Save feed post in database
+  Notification.feedPostNewGear(req.headers.authorization, req.body.id_item_fk, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while posting to feed."
+      });
+    else res.send(data);
+  });
+};
+
 // like feed item
 exports.feedLike = (req, res) => {
   Notification.feedLike(req.headers.authorization, req.params.feedId, (err, data) => {

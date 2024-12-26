@@ -23,6 +23,9 @@ module.exports = app => {
   // Retrieve feed item likes
   app.get("/:feedId/feedLikes", checkToken, notifications.getFeedLikes);
 
+  // Post new gear added to feed
+  app.post("/feed/newFeedPostGear", checkToken, notifications.feedPostNewGear);
+
   // Like feed item
   app.post("/feed/:feedId/like", checkToken, notifications.feedLike);
 
