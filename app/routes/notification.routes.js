@@ -17,6 +17,9 @@ module.exports = app => {
   // Retrieve simple feed (only users posts)
   app.get("/simpleFeed", checkToken, notifications.simpleFeed);
 
+  // Delete feed item
+  app.delete("/feed/:feedId/deleteFeedItem", checkToken, notifications.deleteFeedItem);
+
   // Retrieve total likes for feed items
   app.get("/feedTotalLikes", checkToken, notifications.feedTotalLikes);
 

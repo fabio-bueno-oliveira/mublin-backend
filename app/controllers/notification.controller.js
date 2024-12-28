@@ -85,6 +85,23 @@ exports.simpleFeed = (req, res) => {
   });
 };
 
+// delete feed item
+exports.deleteFeedItem = (req, res) => {
+  Notification.deleteFeedItem(req.headers.authorization, req.params.feedId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "Not found feed item"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error deleting feed item"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // get total likes for feed items
 exports.feedTotalLikes = (req, res) => {
   Notification.feedTotalLikes(req.headers.authorization, (err, data) => {

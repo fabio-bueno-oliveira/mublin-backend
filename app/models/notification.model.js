@@ -111,6 +111,22 @@ Notification.simpleFeed = (loggedID, result) => {
   });
 };
 
+Notification.deleteFeedItem = (loggedID, feedId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`DELETE FROM feed WHERE id = ${feedId} AND id_user_1_fk = ${x.result.id}`, 
+  (err, res) => {
+    if (err) {
+      result(null, err);
+      return;
+    }
+    if (res.affectedRows == 0) {
+      result({ kind: "not_found" }, null);
+      return;
+    }
+    result(null, res);
+  });
+};
+
 Notification.feedTotalLikes = (loggedID, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   sql.query(`SELECT feed.id AS feedId, COUNT(feed_likes.id) AS likes, feed_types.show_only_as_notification, feed.status, (SELECT COUNT(feed_likes.id) FROM feed_likes WHERE feed_likes.id_feed_item = feed.id AND feed_likes.id_user = ${x.result.id} LIMIT 1) AS likedByMe FROM feed LEFT JOIN feed_likes ON feed.id = feed_likes.id_feed_item LEFT JOIN users ON feed.id_user_1_fk = users.id LEFT JOIN feed_types ON feed.id_feed_type_fk = feed_types.id WHERE feed.id_item_fk IN (SELECT project_fans.id_fan_fk FROM project_fans WHERE project_fans.id_fan_fk = ${x.result.id}) OR feed.id_item_fk IN (SELECT users_projects.id_project_fk FROM users_projects WHERE users_projects.id_user_fk = ${x.result.id}) OR feed.id_user_1_fk IN (SELECT users_followers.id_followed FROM users_followers WHERE users_followers.id_follower = ${x.result.id}) OR feed.id_user_1_fk = ${x.result.id} AND users.id IS NOT NULL AND users.status = 1 GROUP BY feed.id HAVING feed_types.show_only_as_notification = 0 AND feed.status = 1 LIMIT 60`, (err, res) => {
