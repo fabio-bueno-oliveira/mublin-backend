@@ -85,6 +85,26 @@ exports.simpleFeed = (req, res) => {
   });
 };
 
+// new post
+exports.newPost = (req, res) => {
+  // Validate request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  // Save post in database
+  Notification.newPost(req.headers.authorization, req.body.id_item_fk, req.body.related_item_type, req.body.id_feed_type_fk, req.body.extra_text, req.body.image, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while posting to feed."
+      });
+    else res.send(data);
+  });
+};
+
 // delete feed item
 exports.deleteFeedItem = (req, res) => {
   Notification.deleteFeedItem(req.headers.authorization, req.params.feedId, (err, data) => {
