@@ -123,6 +123,23 @@ exports.productOwners = (req, res) => {
   });
 };
 
+// Get instruments tuning types
+exports.tuning = (req, res) => {
+  Misc.getTunings((err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No tuning types found"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving tuning types"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Get brand info
 exports.brandInfo = (req, res) => {
   Misc.getBrandInfo(req.params.brandUrlName, (err, data) => {

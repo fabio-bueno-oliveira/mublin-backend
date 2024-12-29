@@ -107,6 +107,21 @@ Misc.getProductOwners = (productId, result) => {
   });
 };
 
+Misc.getTunings = (result) => {
+  sql.query(`SELECT t.id, t.name AS nameEN, t.name_ptbr AS namePTBR, t.description, t.instrument_type AS instrumentType FROM instrument_tunings AS t ORDER BY t.id ASC`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found any brands
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Misc.getBrandInfo = (brandUrlName, result) => {
   sql.query(`SELECT b.id, b.name, b.slug, b.description, CONCAT('https://ik.imagekit.io/mublin/products/brands/tr:h-140,w-140,cm-pad_resize,bg-FFFFFF/',b.logo) AS logo, b.id_related_brand AS relatedBrandId, b.website, rb.name AS relatedBrandName, rb.slug AS relatedBrandUrl, CONCAT('https://ik.imagekit.io/mublin/products/brands/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',rb.logo) AS relatedBrandLogo FROM brands AS b LEFT JOIN brands AS rb ON b.id_related_brand = rb.id WHERE b.slug = '${brandUrlName}' LIMIT 1`, (err, res) => {
     if (err) {

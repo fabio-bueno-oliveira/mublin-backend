@@ -930,7 +930,7 @@ exports.updateGearItem = (req, res) => {
     });
   }
 
-  User.updateGearItem(req.headers.authorization, req.body.id, req.body.productId, req.body.featured, req.body.for_sale, req.body.price, req.body.currently_using, (err, data) => {
+  User.updateGearItem(req.headers.authorization, req.body.id, req.body.productId, req.body.featured, req.body.for_sale, req.body.price, req.body.currently_using, req.body.tuning, req.body.owner_comments, (err, data) => {
     if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({

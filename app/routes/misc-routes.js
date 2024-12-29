@@ -29,6 +29,9 @@ module.exports = app => {
   // Retrieve product info
   app.get("/gear/product/:productId/productOwners", misc.productOwners);
 
+  // Retrieve instrument tunings
+  app.get("/gear/tuning", misc.tuning);
+
   // Retrieve Brand info
   app.get("/gear/brand/:brandUrlName", misc.brandInfo);
 
