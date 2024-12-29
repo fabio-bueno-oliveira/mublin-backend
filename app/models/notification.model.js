@@ -180,7 +180,7 @@ Notification.getFeedLikes = (feedId, result) => {
 
 Notification.feedPostNewGear = (loggedID, id_item_fk, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
-  sql.query(`INSERT INTO feed (id_item_fk, id_user_1_fk, id_feed_type_fk) VALUES (${id_item_fk}, ${x.result.id}, 10)`, (err, res) => {
+  sql.query(`INSERT INTO feed (id_item_fk, id_user_1_fk, related_item_type, id_feed_type_fk) VALUES (${id_item_fk}, ${x.result.id}, 'gear', 10)`, (err, res) => {
       if (err) {
         result(null, err);
         return;
