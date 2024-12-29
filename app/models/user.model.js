@@ -917,7 +917,7 @@ User.addGearItem = (loggedID, productId, featured, for_sale, price, currently_us
 
 User.updateGearItem = (loggedID, itemId, productId, featured, for_sale, price, currently_using, tuning, owner_comments, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
-  sql.query(`UPDATE users_gear SET featured = ${featured}, for_sale = ${for_sale}, price = ${price}, currently_using = ${currently_using}, tuning = ${tuning}, owner_comments = ${owner_comments} WHERE id = ${itemId} AND id_product = ${productId} AND id_user = ${x.result.id}`, (err, res) => {
+  sql.query(`UPDATE users_gear SET featured = ${featured}, for_sale = ${for_sale}, price = ${price}, currently_using = ${currently_using}, tuning = ${tuning}, owner_comments = '${owner_comments}' WHERE id = ${itemId} AND id_product = ${productId} AND id_user = ${x.result.id}`, (err, res) => {
       if (err) {
         result(null, err);
         return;
