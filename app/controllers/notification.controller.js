@@ -95,7 +95,7 @@ exports.newPost = (req, res) => {
   }
 
   // Save post in database
-  Notification.newPost(req.headers.authorization, req.body.id_item_fk, req.body.related_item_type, req.body.id_feed_type_fk, req.body.extra_text, req.body.video_url, req.body.image, (err, data) => {
+  Notification.newPost(req.headers.authorization, req.body.id_item_fk, req.body.related_item_type, req.body.id_feed_type_fk, req.body.extra_text, req.body.image, req.body.video_url, (err, data) => {
     if (err)
       res.status(500).send({
         message:
