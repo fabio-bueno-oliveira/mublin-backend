@@ -116,7 +116,7 @@ Notification.simpleFeed = (loggedID, result) => {
 
 Notification.newPost = (loggedID, id_item_fk, related_item_type, id_feed_type_fk, extra_text, image, video_url, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
-  sql.query(`INSERT INTO feed (id_user_1_fk, id_item_fk, related_item_type, id_feed_type_fk, extra_text, image, video_url) VALUES (${x.result.id}, '${id_item_fk}', '${related_item_type}', ${id_feed_type_fk}, '${extra_text}' '${image}', '${video_url}')`, (err, res) => {
+  sql.query(`INSERT INTO feed (id_user_1_fk, id_item_fk, related_item_type, id_feed_type_fk, extra_text, image, video_url) VALUES (${x.result.id}, '${id_item_fk}', '${related_item_type}', ${id_feed_type_fk}, '${extra_text}', '${image}', '${video_url}')`, (err, res) => {
       if (err) {
         result(null, err);
         return;
