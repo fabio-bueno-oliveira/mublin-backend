@@ -83,6 +83,7 @@ exports.loginUser = (req, res) => {
         id: results.id,
         firstAccess: results.first_access,
         userInfo: {
+          id: results.id,
           status: results.status,
           name: results.name,
           lastname: results.lastname,
