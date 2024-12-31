@@ -65,7 +65,7 @@ exports.loginUser = (req, res) => {
     const result = compareSync(body.password, results.password);
     if (result) {
       results.password = undefined;
-      const jsontoken = sign({ result: { id: results.id, name: results.name, lastname: results.lastname, plan: results.plan, status: results.status, level: results.level } }, process.env.JWT_SECRET, {
+      const jsontoken = sign({ result: { id: results.id, name: results.name, lastname: results.lastname, email: results.email, plan: results.plan, status: results.status, level: results.level } }, process.env.JWT_SECRET, {
         expiresIn: "30 days" 
       });
       User.log(results.id, jsontoken, (err, data) => {
