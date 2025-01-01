@@ -118,7 +118,7 @@ exports.following = (req, res) => {
   Profile.following(req.params.username, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
-        res.status(404).send({
+        res.status(204).send({
           message: `${req.params.username} is not following anyone`
         });
       } else {
@@ -455,7 +455,7 @@ exports.partners = (req, res) => {
   Profile.partners(req.params.username, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
-        res.status(404).send({
+        res.status(204).send({
           message: "No partners found with username " + req.params.username
         });
       } else {
