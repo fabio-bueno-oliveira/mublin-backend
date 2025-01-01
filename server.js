@@ -47,6 +47,7 @@ require("./app/routes/search.routes.js")(app);
 require("./app/routes/notification.routes.js")(app);
 require("./app/routes/location.routes.js")(app);
 require("./app/routes/misc-routes.js")(app)
+require("./app/routes/payment.routes.js")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 4000;
