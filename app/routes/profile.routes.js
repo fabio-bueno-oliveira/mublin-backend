@@ -79,4 +79,7 @@ module.exports = app => {
 
   // Retrieve profile partners
   app.get("/profile/:username/partners", checkToken, profile.partners);
+
+  // Retrieve other users related to the profile user
+  app.get("/profile/:username/relatedUsers", checkToken, profile.relatedUsers);
 };

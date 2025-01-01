@@ -513,4 +513,22 @@ Profile.partners = (username, result) => {
   });
 };
 
+Profile.relatedUsers = (username, result) => {
+  sql.query(`SELECT users.id, users.name, users.lastname, users.username, users.picture, users.verified, users.legend_badge AS legendBadge FROM users_projects LEFT JOIN users ON users_projects.id_user_fk = users.id LEFT JOIN users_roles ON users.id = users_roles.id_user_fk WHERE (users_projects.id_project_fk IN (SELECT users_projects.id_project_fk FROM users_projects WHERE users_projects.id_user_fk = (SELECT users.id FROM users WHERE users.username = '${username}' LIMIT 1)) OR users_roles.id_role_fk IN (SELECT id_role_fk FROM users_roles WHERE id_user_fk = (SELECT users.id FROM users WHERE users.username = '${username}' LIMIT 1) AND main_activity = 1) OR users.id IN (SELECT id_followed FROM users_followers WHERE id_follower = (SELECT users.id FROM users WHERE users.username = '${username}' LIMIT 1)) OR users.social_notability IN(1,2)) AND users_projects.id_user_fk <> (SELECT users.id FROM users WHERE users.username = '${username}' LIMIT 1) AND users.status = 1 AND users.public = 1 GROUP BY users.id ORDER BY RAND(), users.social_notability DESC, users.legend_badge DESC LIMIT 6`, (err, res) => {
+    if (err) {
+      //console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      //console.log("result: ", res);
+      result(null, { total: res.length, success: true, result: res });
+      // result(null, res);
+      return;
+    }
+    // not found partners with the profile username
+    result({ kind: "not_found" }, null);
+  });
+};
+
 module.exports = Profile;

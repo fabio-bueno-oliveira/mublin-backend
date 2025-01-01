@@ -466,3 +466,20 @@ exports.partners = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Find profile related other users
+exports.relatedUsers = (req, res) => {
+  Profile.relatedUsers(req.params.username, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No related users found with username " + req.params.username
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving related users for username " + req.params.username
+        });
+      }
+    } else res.send(data);
+  });
+};
