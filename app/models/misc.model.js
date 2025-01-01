@@ -92,6 +92,21 @@ Misc.getProductInfo = (productId, result) => {
   });
 };
 
+Misc.getProductExtraColors = (productId, result) => {
+  sql.query(`SELECT bpc.id_product AS productId, bpc.image, colors.id AS colorId, colors.name AS colorName, colors.name_ptbr AS colorNamePTBR FROM brands_products_colors AS bpc LEFT JOIN colors ON bpc.id_color = colors.id WHERE id_product = ${productId} ORDER BY bpc.id ASC`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res);
+      return;
+    }
+    // not found product with the productId
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Misc.getProductOwners = (productId, result) => {
   sql.query(`SELECT users.id, users.name, users.lastname, users.username, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',users.id,'/',users.picture) AS picture, countries.name AS country, regions.name AS region, cities.name AS city, ug.featured, ug.currently_using AS currentlyUsing, ug.for_sale AS forSale, ug.price AS price, ug.photo, ug.id_product AS productId, DATE_FORMAT(ug.created,'%d/%m/%Y %H:%i:%s') AS created, ug.owner_comments	AS ownerComments, it.name_ptbr AS tuning, it.description AS tuningDescription FROM users_gear AS ug LEFT JOIN instrument_tunings AS it ON ug.tuning = it.id LEFT JOIN users ON ug.id_user = users.id LEFT JOIN countries ON users.id_country_fk = countries.id LEFT JOIN regions ON users.id_region_fk = regions.id LEFT JOIN cities ON users.id_city_fk = cities.id WHERE ug.id_product = ${productId} ORDER BY ug.created DESC`, (err, res) => {
     if (err) {
@@ -213,7 +228,7 @@ Misc.getGearCategories = (result) => {
 };
 
 Misc.getBrandAllProducts = (brandUrlName, result) => {
-  sql.query(`SELECT bp.id, bp.name, CONCAT('https://ik.imagekit.io/mublin/products/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',bp.picture) AS picture, brands.id AS brandId, brands.name AS brandName, brands.logo AS brandLogo, brands_categories.id AS categoryId, brands_categories.name_ptbr AS categoryName, brands_products_colors.name AS colorName, brands_products_colors.name_ptbr AS colorNamePTBR FROM brands_products AS bp LEFT JOIN brands ON bp.id_brand = brands.id LEFT JOIN brands_categories ON bp.id_category = brands_categories.id LEFT JOIN brands_products_colors ON bp.color = brands_products_colors.id WHERE brands.slug = '${brandUrlName}' GROUP BY bp.id ORDER BY bp.name ASC`, (err, res) => {
+  sql.query(`SELECT bp.id, bp.name, CONCAT('https://ik.imagekit.io/mublin/products/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',bp.picture) AS picture, brands.id AS brandId, brands.name AS brandName, brands.logo AS brandLogo, brands_categories.id AS categoryId, brands_categories.name_ptbr AS categoryName, colors.name AS colorName, colors.name_ptbr AS colorNamePTBR FROM brands_products AS bp LEFT JOIN brands ON bp.id_brand = brands.id LEFT JOIN brands_categories ON bp.id_category = brands_categories.id LEFT JOIN colors ON bp.color = colors.id WHERE brands.slug = '${brandUrlName}' GROUP BY bp.id ORDER BY bp.name ASC`, (err, res) => {
     if (err) {
       result(err, null);
       return;
@@ -228,7 +243,7 @@ Misc.getBrandAllProducts = (brandUrlName, result) => {
 };
 
 Misc.getBrandProducts = (brandId, categoryId, result) => {
-  sql.query(`SELECT brands_products.id, brands_products.name, CONCAT('https://ik.imagekit.io/mublin/products/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',brands_products.picture) AS picture, brands.id AS brandId, brands.name AS brandName, brands.logo AS brandLogo, brands_categories.id AS categoryId, brands_categories.name_ptbr AS categoryName, brands_products_colors.name AS colorName, brands_products_colors.name_ptbr AS colorNamePTBR FROM brands_products LEFT JOIN brands ON brands_products.id_brand = brands.id LEFT JOIN brands_categories ON brands_products.id_category = brands_categories.id LEFT JOIN brands_products_colors ON brands_products.color = brands_products_colors.id WHERE brands_products.id_brand = ${brandId} AND brands_products.id_category = ${categoryId} AND brands.active = 1 GROUP BY brands_products.id ORDER BY brands_products.name ASC`, (err, res) => {
+  sql.query(`SELECT brands_products.id, brands_products.name, CONCAT('https://ik.imagekit.io/mublin/products/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',brands_products.picture) AS picture, brands.id AS brandId, brands.name AS brandName, brands.logo AS brandLogo, brands_categories.id AS categoryId, brands_categories.name_ptbr AS categoryName, colors.name AS colorName, colors.name_ptbr AS colorNamePTBR FROM brands_products LEFT JOIN brands ON brands_products.id_brand = brands.id LEFT JOIN brands_categories ON brands_products.id_category = brands_categories.id LEFT JOIN colors ON brands_products.color = colors.id WHERE brands_products.id_brand = ${brandId} AND brands_products.id_category = ${categoryId} AND brands.active = 1 GROUP BY brands_products.id ORDER BY brands_products.name ASC`, (err, res) => {
     if (err) {
       result(err, null);
       return;
@@ -267,7 +282,7 @@ Misc.submitNewGearBrand = (name, logo, id_user_creator, result) => {
 };
 
 Misc.getProductColors = (result) => {
-  sql.query(`SELECT brands_products_colors.id, brands_products_colors.name, brands_products_colors.name_ptbr FROM brands_products_colors ORDER BY brands_products_colors.name ASC`, (err, res) => {
+  sql.query(`SELECT colors.id, colors.name, colors.name_ptbr, colors.type FROM colors ORDER BY colors.type ASC, colors.name_ptbr ASC`, (err, res) => {
     if (err) {
       result(err, null);
       return;
