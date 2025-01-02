@@ -350,7 +350,15 @@ Profile.gear = (username, result) => {
     }
     if (results[0].length) {
       result(null, { 
-        totalProducts: results[0].length, totalCategories: results[1].length, success: true, products: results[0], categories: results[1] 
+        success: true,
+        products: {
+          total: results[0].length,
+          list: results[0]
+        },
+        categories: {
+          total: results[1].length,
+          list: results[1]
+        }
       });
       return;
     }
