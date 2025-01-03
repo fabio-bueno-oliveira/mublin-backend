@@ -256,6 +256,23 @@ exports.strengthsByTotalVotes = (req, res) => {
   });
 };
 
+// Find profile recent strength votes by other users
+exports.strengthsRecentVotes = (req, res) => {
+  Profile.strengthsRecentVotes(req.params.username, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No votes found with username " + req.params.username
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving votes for username " + req.params.username
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Find profile strengths
 exports.strengthsRaw = (req, res) => {
   Profile.strengthsRaw(req.params.username, (err, data) => {

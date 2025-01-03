@@ -44,6 +44,9 @@ module.exports = app => {
   // Retrieve profile strengths grouped by total votes (by username)
   app.get("/profile/:username/strengthsTotalVotes", checkToken, profile.strengthsByTotalVotes);
 
+  // Retrieve profile list of recent other users strengths votes (by username)
+  app.get("/profile/:username/strengthsRecentVotes", checkToken, profile.strengthsRecentVotes);
+
   // Retrieve profile strengths raw list (by username)
   app.get("/profile/:username/strengthsRaw", checkToken, profile.strengthsRaw);
 

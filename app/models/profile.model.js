@@ -273,6 +273,21 @@ Profile.strengthsTotalVotes = (username, result) => {
   });
 };
 
+Profile.strengthsRecentVotes = (username, result) => {
+  sql.query(`SELECT us.id_strength AS strengthId, strengths.title_ptbr AS strength, strengths.icon, us.id_user_from AS userId, users.name, users.lastname, users.verified, users.legend_badge AS legend, users.username, users.picture, DATE_FORMAT(us.created,'%d/%m/%Y %H:%i:%s') AS created FROM users_strengths AS us LEFT JOIN strengths ON us.id_strength = strengths.id LEFT JOIN users ON us.id_user_from = users.id WHERE us.id_user_to = (SELECT users.id FROM users WHERE users.username = '${username}') AND users.status = 1 AND users.name IS NOT NULL ORDER BY us.created DESC LIMIT 100`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, { total: res.length, success: true, result: res });
+      return;
+    }
+    // not found votes for the profile username
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Profile.strengthsRaw = (username, result) => {
   sql.query(`SELECT users_strengths.id, users_strengths.id_user_to AS idUserTo, users_strengths.id_user_from AS idUserFrom, users_strengths.id_strength AS strengthId, strengths.icon, strengths.title_ptbr AS strengthTitle, DATE_FORMAT(users_strengths.created,'%d/%m/%Y %H:%i:%s') AS created FROM users_strengths LEFT JOIN strengths ON users_strengths.id_strength = strengths.id WHERE users_strengths.id_user_to = (SELECT users.id FROM users WHERE users.username = '${username}') GROUP BY users_strengths.id ORDER BY users_strengths.created DESC`, (err, res) => {
     if (err) {
