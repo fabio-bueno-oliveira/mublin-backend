@@ -240,7 +240,7 @@ Project.findAllByUser = (userId, result) => {
 };
 
 Project.findAllUserProjectsBasicInfos = (userId, result) => {
-  sql.query(`SELECT usrsp.id, usrsp.confirmed, prjct.id AS projectid, prjct.name, prjct.username, projects_types.name_ptbr AS type, upr.title_ptbr AS workTitle, r1.description_ptbr AS role1, r2.description_ptbr AS role2, r3.description_ptbr AS role3, g1.name AS genre1, g2.name AS genre2, g3.name AS genre3, cities.name AS cityName, regions.name AS regionName, regions.uf AS regionUf, countries.name_ptbr AS countryName, projects_status.description_ptbr AS activityStatus  
+  sql.query(`SELECT usrsp.id, usrsp.confirmed, prjct.id AS projectid, prjct.name, prjct.username, prjct.picture, projects_types.name_ptbr AS type, upr.title_ptbr AS workTitle, r1.description_ptbr AS role1, r2.description_ptbr AS role2, r3.description_ptbr AS role3, g1.name AS genre1, g2.name AS genre2, g3.name AS genre3, cities.name AS cityName, regions.name AS regionName, regions.uf AS regionUf, countries.name_ptbr AS countryName, projects_status.description_ptbr AS activityStatus  
 
   FROM users_projects AS usrsp
   
