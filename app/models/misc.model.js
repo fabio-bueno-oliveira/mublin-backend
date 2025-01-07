@@ -78,7 +78,7 @@ Misc.getAvailabilityFocuses = result => {
 };
 
 Misc.getProductInfo = (productId, result) => {
-  sql.query(`SELECT bp.id, bp.name, CONCAT('https://ik.imagekit.io/mublin/products/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',bp.picture) AS picture, CONCAT('https://ik.imagekit.io/mublin/products/tr:w-600/',bp.picture) AS largePicture, b.id AS brandId, b.name AS brandName, b.slug AS brandSlug, b.logo AS brandLogo, bc.id AS categoryId, bc.name_ptbr AS categoryName, colors.id AS colorId, colors.name AS colorName, colors.name_ptbr AS colorNamePTBR FROM brands_products AS bp LEFT JOIN brands AS b ON bp.id_brand = b.id LEFT JOIN brands_categories AS bc ON bp.id_category = bc.id LEFT JOIN colors ON bp.color = colors.id WHERE bp.id = ${productId} LIMIT 2`, (err, res) => {
+  sql.query(`SELECT bp.id, bp.name, CONCAT('https://ik.imagekit.io/mublin/products/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',bp.picture) AS picture, CONCAT('https://ik.imagekit.io/mublin/products/',bp.picture) AS largePicture, b.id AS brandId, b.name AS brandName, b.slug AS brandSlug, b.logo AS brandLogo, bc.id AS categoryId, bc.name_ptbr AS categoryName, colors.id AS colorId, colors.name AS colorName, colors.name_ptbr AS colorNamePTBR FROM brands_products AS bp LEFT JOIN brands AS b ON bp.id_brand = b.id LEFT JOIN brands_categories AS bc ON bp.id_category = bc.id LEFT JOIN colors ON bp.color = colors.id WHERE bp.id = ${productId} LIMIT 2`, (err, res) => {
     if (err) {
       result(err, null);
       return;
