@@ -23,9 +23,6 @@ module.exports = app => {
   // Delete feed item
   app.delete("/feed/:feedId/deleteFeedItem", checkToken, notifications.deleteFeedItem);
 
-  // Retrieve total likes for feed items
-  app.get("/feedTotalLikes", checkToken, notifications.feedTotalLikes);
-
   // Retrieve feed item likes
   app.get("/:feedId/feedLikes", checkToken, notifications.getFeedLikes);
 

@@ -207,7 +207,7 @@ exports.updateInspiration = (req, res) => {
 
 // Find profile posts
 exports.posts = (req, res) => {
-  Profile.posts(req.params.username, (err, data) => {
+  Profile.posts(req.headers.authorization, req.params.username, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({

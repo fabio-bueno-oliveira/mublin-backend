@@ -144,22 +144,6 @@ Notification.deleteFeedItem = (loggedID, feedId, result) => {
   });
 };
 
-Notification.feedTotalLikes = (loggedID, result) => {
-  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
-  sql.query(`SELECT feed.id AS feedId, COUNT(feed_likes.id) AS likes, feed_types.show_only_as_notification, feed.status, (SELECT COUNT(feed_likes.id) FROM feed_likes WHERE feed_likes.id_feed_item = feed.id AND feed_likes.id_user = ${x.result.id} LIMIT 1) AS likedByMe FROM feed LEFT JOIN feed_likes ON feed.id = feed_likes.id_feed_item LEFT JOIN users ON feed.id_user_1_fk = users.id LEFT JOIN feed_types ON feed.id_feed_type_fk = feed_types.id WHERE feed.show_as_suggested = 1 OR feed.id_item_fk IN (SELECT project_fans.id_fan_fk FROM project_fans WHERE project_fans.id_fan_fk = ${x.result.id}) OR feed.id_item_fk IN (SELECT users_projects.id_project_fk FROM users_projects WHERE users_projects.id_user_fk = ${x.result.id}) OR feed.id_user_1_fk IN (SELECT users_followers.id_followed FROM users_followers WHERE users_followers.id_follower = ${x.result.id}) OR feed.id_user_1_fk = ${x.result.id} AND users.id IS NOT NULL AND users.status = 1 GROUP BY feed.id HAVING feed_types.show_only_as_notification = 0 AND feed.status = 1 LIMIT 60`, (err, res) => {
-    if (err) {
-      result(err, null);
-      return;
-    }
-    if (res.length) {
-      result(null, res);
-      return;
-    }
-    // no feed likes found for logged user feed
-    result({ kind: "not_found" }, null);
-  });
-};
-
 Notification.getFeedLikes = (feedId, result) => {
   sql.query(`SELECT fl.id, fl.id_feed_item AS idItem, DATE_FORMAT(fl.created,'%d/%m/%Y às %H:%i:%s') AS created, u.name, u.lastname, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-100,w-100,c-maintain_ratio/',u.id,'/',u.picture) AS picture, u.username, u.verified, u.legend_badge, roles.description_ptbr FROM feed_likes AS fl LEFT JOIN users AS u ON fl.id_user = u.id LEFT JOIN users_roles ON users_roles.id_user_fk = u.id LEFT JOIN roles ON users_roles.id_role_fk = roles.id WHERE fl.id_feed_item = ${feedId} AND u.status = 1 GROUP BY fl.id_user ORDER BY fl.created DESC, users_roles.main_activity DESC`, (err, res) => {
     if (err) {

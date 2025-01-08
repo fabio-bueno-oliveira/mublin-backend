@@ -122,23 +122,6 @@ exports.deleteFeedItem = (req, res) => {
   });
 };
 
-// get total likes for feed items
-exports.feedTotalLikes = (req, res) => {
-  Notification.feedTotalLikes(req.headers.authorization, (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: "Not feed likes for logged user."
-        });
-      } else {
-        res.status(500).send({
-          message: "Error listing feed likes for logged user."
-        });
-      }
-    } else res.send(data);
-  });
-};
-
 // get total likes for feed item
 exports.getFeedLikes = (req, res) => {
   Notification.getFeedLikes(req.params.feedId, (err, data) => {
