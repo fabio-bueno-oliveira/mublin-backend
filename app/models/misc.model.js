@@ -228,7 +228,7 @@ Misc.getGearCategories = (result) => {
 };
 
 Misc.getBrandAllProducts = (brandUrlName, result) => {
-  sql.query(`SELECT p.id, p.name, CONCAT('https://ik.imagekit.io/mublin/products/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',p.picture) AS picture, brands.id AS brandId, brands.name AS brandName, brands.logo AS brandLogo, products_categories.id AS categoryId, products_categories.name_ptbr AS categoryName, colors.name AS colorName, colors.name_ptbr AS colorNamePTBR FROM products AS p LEFT JOIN brands ON p.id_brand = brands.id LEFT JOIN products_categories ON p.id_category = products_categories.id LEFT JOIN colors ON p.color = colors.id WHERE brands.slug = '${brandUrlName}' GROUP BY p.id ORDER BY p.name ASC`, (err, res) => {
+  sql.query(`SELECT p.id, (SELECT COUNT(id) FROM users_gear WHERE id_product = p.id) AS totalOwners, p.name, CONCAT('https://ik.imagekit.io/mublin/products/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',p.picture) AS picture, brands.id AS brandId, brands.name AS brandName, brands.logo AS brandLogo, products_categories.id AS categoryId, products_categories.name_ptbr AS categoryName, colors.name AS colorName, colors.name_ptbr AS colorNamePTBR FROM products AS p LEFT JOIN brands ON p.id_brand = brands.id LEFT JOIN products_categories ON p.id_category = products_categories.id LEFT JOIN colors ON p.color = colors.id WHERE brands.slug = '${brandUrlName}' GROUP BY p.id ORDER BY p.name ASC`, (err, res) => {
     if (err) {
       result(err, null);
       return;
