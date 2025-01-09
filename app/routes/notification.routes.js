@@ -38,6 +38,12 @@ module.exports = app => {
   // Retrieve feed comments
   app.get("/feed/:feedId/feedComments", checkToken, notifications.feedComments);
 
+  // Post feed comment
+  app.post("/feed/:feedId/postComment", checkToken, notifications.postComment);
+
+  // Delete feed comment
+  app.delete("/feed/:commentId/deletePostComment", checkToken, notifications.deletePostComment);
+
   // Retrieve user notifications
   app.get("/notifications", checkToken, notifications.notifications);
 

@@ -210,6 +210,43 @@ exports.feedComments = (req, res) => {
   });
 };
 
+// new comment
+exports.postComment = (req, res) => {
+  // Validate request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  // Save comment in database
+  Notification.postComment(req.headers.authorization, req.params.feedId, req.body.text, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while posting comment."
+      });
+    else res.send(data);
+  });
+};
+
+// delete feed comment
+exports.deletePostComment = (req, res) => {
+  Notification.deletePostComment(req.headers.authorization, req.params.commentId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "Not found comment item"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error unlinking comment item."
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // get user all notitications
 exports.notifications = (req, res) => {
   Notification.notifications(req.headers.authorization, (err, data) => {
