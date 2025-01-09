@@ -193,6 +193,23 @@ exports.feedUnlike = (req, res) => {
   });
 };
 
+// get feed comments
+exports.feedComments = (req, res) => {
+  Notification.feedComments(req.params.feedId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "Not feed comments for this post."
+        });
+      } else {
+        res.status(500).send({
+          message: "Error listing feed comments for referenced post id"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // get user all notitications
 exports.notifications = (req, res) => {
   Notification.notifications(req.headers.authorization, (err, data) => {

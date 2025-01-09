@@ -35,6 +35,9 @@ module.exports = app => {
   // Unlike feed item
   app.delete("/feed/:feedId/unlike", checkToken, notifications.feedUnlike);
 
+  // Retrieve feed comments
+  app.get("/feed/:feedId/feedComments", checkToken, notifications.feedComments);
+
   // Retrieve user notifications
   app.get("/notifications", checkToken, notifications.notifications);
 
