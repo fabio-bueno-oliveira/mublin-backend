@@ -209,7 +209,7 @@ Notification.feedUnlike = (loggedID, feedId, result) => {
 };
 
 Notification.feedComments = (feedId, result) => {
-  sql.query(`SELECT comment.id, DATE_FORMAT(comment.createdAt,'%d/%m/%Y às %H:%i:%s') AS created, comment.text, users.id AS userId, users.name, users.lastname, users.picture, users.username, roles.description_ptbr AS role FROM feed_comments AS comment LEFT JOIN users ON comment.id_user = users.id LEFT JOIN users_roles ON users_roles.id_user_fk = users.id LEFT JOIN roles ON roles.id = users_roles.id_role_fk WHERE comment.id_feed_item = ${feedId} ORDER BY comment.createdAt DESC`, (err, res) => {
+  sql.query(`SELECT comment.id, DATE_FORMAT(comment.createdAt,'%d/%m/%Y às %H:%i:%s') AS created, comment.text, users.id AS userId, users.name, users.lastname, users.picture, users.username, users.verified, users.legend_badge, roles.description_ptbr AS role FROM feed_comments AS comment LEFT JOIN users ON comment.id_user = users.id LEFT JOIN users_roles ON users_roles.id_user_fk = users.id LEFT JOIN roles ON roles.id = users_roles.id_role_fk WHERE comment.id_feed_item = ${feedId} ORDER BY comment.createdAt DESC`, (err, res) => {
     if (err) {
       result(err, null);
       return;
