@@ -64,6 +64,23 @@ exports.findProjectsByKeyword = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
+          message: "No projects found with keyword " + req.params.keyword
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving projects with keyword " + req.params.keyword
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// Find all gear with a keyword
+exports.findGearByKeyword = (req, res) => {
+  Search.findGearByKeyword(req.params.keyword, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
           message: "No projects found with keyword" + req.params.keyword
         });
       } else {

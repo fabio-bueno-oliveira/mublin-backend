@@ -68,6 +68,21 @@ Search.findProjectsByKeyword = (loggedUserId, keyword, userCity, result) => {
   });
 };
 
+Search.findGearByKeyword = (keyword, result) => {
+  sql.query(`SELECT p.id AS productId, p.name AS productName, p.picture AS productPicture, b.name AS brand, b.slug AS brandSlug, b.logo AS brandLogo, c.name_ptbr AS colorPTBR, c.name AS color, pc.name_ptbr, pc.macro_category FROM products AS p LEFT JOIN brands AS b ON p.id_brand = b.id LEFT JOIN colors AS c ON p.color = c.id LEFT JOIN products_categories AS pc ON p.id_category = pc.id WHERE p.name LIKE '%${keyword}%' OR b.name LIKE '%${keyword}%' OR pc.name_ptbr LIKE '%${keyword}%' ORDER BY p.name ASC, b.name ASC LIMIT 50`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, { total: res.length, success: true, result: res });
+      return;
+    }
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Search.getUserLastSearches = (loggedUserId, result) => {
   let x = jwt.verify(loggedUserId.slice(7), process.env.JWT_SECRET)
   sql.query(`SELECT query FROM search_history WHERE id_user = ${x.result.id} GROUP BY query ORDER BY createdAt DESC LIMIT 5`, (err, res) => {
