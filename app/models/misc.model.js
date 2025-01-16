@@ -243,7 +243,7 @@ Misc.getBrandAllProducts = (brandUrlName, result) => {
 };
 
 Misc.getBrandProducts = (brandId, categoryId, result) => {
-  sql.query(`SELECT products.id, products.name, CONCAT('https://ik.imagekit.io/mublin/products/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',products.picture) AS picture, brands.id AS brandId, brands.name AS brandName, brands.logo AS brandLogo, products_categories.id AS categoryId, products_categories.name_ptbr AS categoryName, colors.name AS colorName, colors.name_ptbr AS colorNamePTBR FROM products LEFT JOIN brands ON products.id_brand = brands.id LEFT JOIN products_categories ON products.id_category = products_categories.id LEFT JOIN colors ON products.color = colors.id WHERE products.id_brand = ${brandId} AND products.id_category = ${categoryId} AND brands.active = 1 GROUP BY products.id ORDER BY products.name ASC`, (err, res) => {
+  sql.query(`SELECT products.id, products.name, CONCAT('https://ik.imagekit.io/mublin/products/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',products.picture) AS picture, products.can_be_subproduct, brands.id AS brandId, brands.name AS brandName, brands.logo AS brandLogo, products_categories.id AS categoryId, products_categories.name_ptbr AS categoryName, colors.name AS colorName, colors.name_ptbr AS colorNamePTBR FROM products LEFT JOIN brands ON products.id_brand = brands.id LEFT JOIN products_categories ON products.id_category = products_categories.id LEFT JOIN colors ON products.color = colors.id WHERE products.id_brand = ${brandId} AND products.id_category = ${categoryId} AND brands.active = 1 GROUP BY products.id ORDER BY products.name ASC`, (err, res) => {
     if (err) {
       result(err, null);
       return;
