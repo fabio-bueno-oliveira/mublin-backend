@@ -127,6 +127,9 @@ module.exports = app => {
   // Add user gear item (by logged userId)
   app.post("/user/addGearItem", checkToken, users.addGearItem);
 
+  // Add user gear sub item (by logged userId)
+  app.post("/user/addGearSubItem", checkToken, users.addGearSubItem);
+
   // Update user gear item
   app.put("/user/updateGearItem", checkToken, users.updateGearItem);
 

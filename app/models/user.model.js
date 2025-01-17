@@ -915,6 +915,24 @@ User.addGearItem = (loggedID, productId, featured, for_sale, price, currently_us
   );
 };
 
+User.addGearSubItem = (loggedID, parentId, productId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`INSERT INTO users_gear (id_user, is_subproduct, parent_product_id, id_product) VALUES (${x.result.id}, 1, ${parentId}, ${productId})`, (err, res) => {
+      if (err) {
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found user with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { userId: x.result.id, productId: productId, message: 'Subproduto adicionado com sucesso ao equipamento'  });
+    }
+  );
+};
+
 User.updateGearItem = (loggedID, itemId, productId, featured, for_sale, price, currently_using, tuning, owner_comments, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   sql.query(`UPDATE users_gear SET featured = ${featured}, for_sale = ${for_sale}, price = ${price}, currently_using = ${currently_using}, tuning = ${tuning}, owner_comments = '${owner_comments}' WHERE id = ${itemId} AND id_product = ${productId} AND id_user = ${x.result.id}`, (err, res) => {

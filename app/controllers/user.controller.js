@@ -942,7 +942,30 @@ exports.addGearItem = (req, res) => {
           });
         } else {
           res.status(500).send({
-            message: "Error updating availability item for user id " + req.body.userId
+            message: "Error adding item for user id " + req.body.userId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
+// Add gear sub item to userId
+exports.addGearSubItem = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.addGearSubItem(req.headers.authorization, req.body.parentId, req.body.productId, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found user id ${req.body.userId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error adding sub item for user id " + req.body.userId
           });
         }
     } else res.send(data);
