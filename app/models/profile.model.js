@@ -70,7 +70,7 @@ Profile.projects = (username, result) => {
     }
     if (res.length) {
       //console.log("projects: ", res);
-      result(null, res);
+      result(null, { total: res.length, success: true, result: res });
       return;
     }
     // not found projects with the id
