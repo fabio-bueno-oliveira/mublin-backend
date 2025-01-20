@@ -57,7 +57,7 @@ module.exports = app => {
   app.delete("/profile/:voteId/unvoteStrength", checkToken, profile.unvoteStrength);
 
   // Retrieve profile gear (by username)
-  app.get("/profile/:username/gear", checkToken, profile.gear);
+  app.get("/profile/:username/gear", profile.gear);
 
   // Retrieve profile gear setups (by username)
   app.get("/profile/:username/gearSetups", checkToken, profile.gearSetups);
