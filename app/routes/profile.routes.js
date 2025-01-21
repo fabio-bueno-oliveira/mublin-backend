@@ -59,6 +59,12 @@ module.exports = app => {
   // Retrieve profile gear (by username)
   app.get("/profile/:username/gear", profile.gear);
 
+  // Retrieve profile gear (by username)
+  app.get("/profile/:username/gearItem/:itemId", checkToken, profile.gearItem);
+
+  // Retrieve profile gear subitems (by username and parent item id)
+  app.get("/profile/:username/gearSubItems/:parentId", checkToken, profile.gearSubItems);
+  
   // Retrieve profile gear setups (by username)
   app.get("/profile/:username/gearSetups", checkToken, profile.gearSetups);
 

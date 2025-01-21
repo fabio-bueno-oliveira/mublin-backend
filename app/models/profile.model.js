@@ -383,6 +383,35 @@ Profile.gear = (username, result) => {
   });
 };
 
+Profile.gearItem = (username, itemId, result) => {
+  sql.query(`SELECT ug.id AS userGearId, ug.is_subproduct, ug.parent_product_id, ug.featured, ug.for_sale, ug.price, ug.currently_using, tunning.name AS tunning, tunning.name_ptbr AS tunningPTBR, tunning.description AS tunningDescription, ug.owner_comments, UNIX_TIMESTAMP(ug.created) AS created, p.id AS productId, p.name AS productName, c.name AS productColor, c.name_ptbr AS productColorPTBR, p.picture, cat.name_ptbr AS category, cat.name_en AS categoryEN, cat.macro_category AS macroCategory, cat.macro_category_en AS macroCategoryEN FROM users_gear AS ug LEFT JOIN products AS p ON ug.id_product = p.id LEFT JOIN products_categories AS cat ON p.id_category = cat.id LEFT JOIN colors AS c ON p.color = c.id LEFT JOIN instrument_tunings AS tunning ON ug.tuning = tunning.id WHERE ug.id_user = (SELECT users.id FROM users WHERE users.username = '${username}') AND ug.id_product = ${itemId} LIMIT 1`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res[0]);
+      return;
+    }
+    result({ kind: "not_found" }, null);
+  });
+};
+
+Profile.gearSubItems = (username, parentId, result) => {
+  sql.query(`SELECT ug.id AS userGearId, ug.is_subproduct, ug.parent_product_id, ug.featured, ug.for_sale, ug.price, ug.currently_using, tunning.name AS tunning, tunning.name_ptbr AS tunningPTBR, tunning.description AS tunningDescription, ug.owner_comments, UNIX_TIMESTAMP(ug.created) AS created, p.id AS productId, p.name AS productName, c.name AS productColor, c.name_ptbr AS productColorPTBR, p.picture, cat.name_ptbr AS category, cat.name_en AS categoryEN, cat.macro_category AS macroCategory, cat.macro_category_en AS macroCategoryEN FROM users_gear AS ug LEFT JOIN products AS p ON ug.id_product = p.id LEFT JOIN products_categories AS cat ON p.id_category = cat.id LEFT JOIN colors AS c ON p.color = c.id LEFT JOIN instrument_tunings AS tunning ON ug.tuning = tunning.id WHERE ug.id_user = (SELECT users.id FROM users WHERE users.username = '${username}') AND ug.is_subproduct = 1 AND ug.parent_product_id = ${parentId} ORDER BY ug.id DESC`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      // result(null, res[0]);
+      result(null, { total: res.length, success: true, result: res });
+      return;
+    }
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Profile.gearSetups = (username, result) => {
   sql.query(`
     SELECT ugs.id, ugs.name FROM users_gear_setup AS ugs WHERE ugs.id_user = (SELECT users.id FROM users WHERE users.username = '${username}') ORDER BY ugs.id ASC;

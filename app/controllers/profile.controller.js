@@ -341,6 +341,40 @@ exports.gear = (req, res) => {
   });
 };
 
+// Find profile gear item info
+exports.gearItem = (req, res) => {
+  Profile.gearItem(req.params.username, req.params.itemId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No item found with id ${req.params.itemId} on gear for username ${req.params.username}.`
+        });
+      } else {
+        res.status(500).send({
+          message: `Error retrieving item ${req.params.itemId} for username ${req.params.username}`
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// Find profile gear subitens of a item
+exports.gearSubItems = (req, res) => {
+  Profile.gearSubItems(req.params.username, req.params.parentId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No sub items found for ${req.params.parentId} of username ${req.params.username}`
+        });
+      } else {
+        res.status(500).send({
+          message: `Error retrieving sub items for ${req.params.parentId} of username ${req.params.username}`
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Find profile gear setups
 exports.gearSetups = (req, res) => {
   Profile.gearSetups(req.params.username, (err, data) => {
