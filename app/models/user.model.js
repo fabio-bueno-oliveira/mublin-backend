@@ -521,10 +521,10 @@ User.updateFirstAccessById = (loggedID, id, step, result) => {
   }
 };
 
-User.updateStep2ById = (loggedID, id, gender, bio, id_country_fk, id_region_fk, id_city_fk, result) => {
+User.updateStep2ById = (loggedID, id, gender, bio, website, instagram, id_country_fk, id_region_fk, id_city_fk, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   if (x.result.id == id) {
-    sql.query(`UPDATE users SET gender = '${gender}', bio = '${bio}', id_country_fk = '${id_country_fk}', id_region_fk = '${id_region_fk}', id_city_fk = '${id_city_fk}' WHERE id = ${id}`, (err, res) => {
+    sql.query(`UPDATE users SET gender = '${gender}', bio = '${bio}', website = '${website}', instagram = '${instagram}', id_country_fk = '${id_country_fk}', id_region_fk = '${id_region_fk}', id_city_fk = '${id_city_fk}' WHERE id = ${id}`, (err, res) => {
         if (err) {
           console.log("error: ", err);
           result(null, err);

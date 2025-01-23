@@ -72,7 +72,7 @@ module.exports = app => {
   // Update user picture with userId
   app.put("/user/:userId/firstAccess", checkToken, users.updateFirstAccess);
 
-  // Update Step 2 fields (gender,bio,id_country_fk,id_region_fk,id_city_fk)
+  // Update Step 2 fields (gender,bio,website,instagram,id_country_fk,id_region_fk,id_city_fk)
   app.put("/user/step2", checkToken, users.updateStep2);
 
   // Add logged user´s artistic music genre (start > step 3)

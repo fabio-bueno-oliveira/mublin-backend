@@ -569,7 +569,7 @@ exports.updateStep2 = (req, res) => {
     });
   }
 
-  User.updateStep2ById(req.headers.authorization, req.body.userId, req.body.gender, req.body.bio, req.body.id_country_fk, req.body.id_region_fk, req.body.id_city_fk, (err, data) => {
+  User.updateStep2ById(req.headers.authorization, req.body.userId, req.body.gender, req.body.bio, req.body.website, req.body.instagram, req.body.id_country_fk, req.body.id_region_fk, req.body.id_city_fk, (err, data) => {
     if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
