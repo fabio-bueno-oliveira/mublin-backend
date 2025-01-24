@@ -23,6 +23,9 @@ module.exports = app => {
   // Retrieve following from profile (by username)
   app.get("/profile/:username/following", profile.following);
 
+  // Retrieve inspired from profile (by username)
+  app.get("/profile/:username/inspired", profile.inspired);
+
   // Follow profile (by profileId)
   app.post("/profile/:profileId/follow", checkToken, profile.follow);
 

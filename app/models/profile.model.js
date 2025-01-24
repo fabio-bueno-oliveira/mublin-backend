@@ -144,6 +144,22 @@ Profile.following = (username, result) => {
   });
 };
 
+Profile.inspired = (username, result) => {
+  sql.query(`SELECT uf.id, uf.id_follower AS followerId, uf.id_followed AS followedId, u.id AS userId, u.name, u.lastname, u.username, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',u.id,'/',u.picture) AS picture, u.verified, u.legend_badge FROM users_followers AS uf LEFT JOIN users AS u ON uf.id_follower = u.id WHERE uf.id_followed = (SELECT users.id FROM users WHERE users.username = '${username}') AND u.status = 1 AND uf.inspiration = 1 ORDER BY uf.id DESC`, 
+  (err, res) => {
+    if (err) {
+      //console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    if (res.length) {
+      result(null, { total: res.length, success: true, result: res });
+      return;
+    }
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Profile.follow = (loggedID, profileId, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   sql.query(`INSERT INTO users_followers (id_follower, id_followed) VALUES (${x.result.id}, ${profileId})`, (err, res) => {

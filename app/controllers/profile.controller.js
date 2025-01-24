@@ -130,6 +130,23 @@ exports.following = (req, res) => {
   });
 };
 
+// Find profile inspired users
+exports.inspired = (req, res) => {
+  Profile.inspired(req.params.username, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `${req.params.username} has no inspired users`
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving inspired users for " + req.params.username
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Follow profile
 exports.follow = (req, res) => {
   Profile.follow(req.headers.authorization, req.params.profileId, (err, data) => {
