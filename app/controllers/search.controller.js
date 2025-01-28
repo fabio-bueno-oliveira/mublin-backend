@@ -81,7 +81,7 @@ exports.findGearByKeyword = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: "No projects found with keyword" + req.params.keyword
+          message: "No gear found with keyword " + req.params.keyword
         });
       } else {
         res.status(500).send({
