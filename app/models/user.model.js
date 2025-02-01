@@ -208,6 +208,30 @@ User.getUserPartners = (loggedID, result) => {
   });
 };
 
+User.deleteUsersPartnership = (loggedID, userId, userPartnershipId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == userId) {
+    sql.query(`DELETE FROM users_partners WHERE id = ${userPartnershipId} AND id_user = ${x.result.id}`, (err, res) => {
+      if (err) {
+        //console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        // not found user partnership with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      //console.log("deleted partnership with id: ", userPartnershipId);
+      // result(null, res);
+      result(null, { message: 'Parceria deletada com sucesso'  });
+    });
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
+};
+
 User.getAll = result => {
   sql.query("SELECT name, lastname, username, email, picture FROM users", (err, res) => {
     if (err) {

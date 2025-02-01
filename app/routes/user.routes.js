@@ -19,7 +19,10 @@ module.exports = app => {
   app.get("/userInfo/:userId/genres", checkToken, users.getInfoGenres);
   app.get("/userInfo/:userId/roles", checkToken, users.getInfoRoles);
   app.get("/userInfo/:userId/availabilityItems", checkToken, users.getInfoAvailabilityItems);
+
+  // User´s partners infos
   app.get("/userInfo/partners", checkToken, users.getPartners);
+  app.delete("/user/delete/partnership", checkToken, users.deleteUsersPartnership);
 
   // Retrieve all User
   // app.get("/users", users.findAll);

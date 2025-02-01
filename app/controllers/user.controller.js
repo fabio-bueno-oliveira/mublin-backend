@@ -290,13 +290,39 @@ exports.getPartners = (req, res) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(200).send(
-          {message: 'Not found partners for logged user'}
+          { 
+            total: 0, success: true, 
+            result: [{keyId: '', id: '', name: '', slug: '', logo: '', cover: '', featured: '', type: '', active: '', created: ''}]
+          }
         );
       } else {
         res.status(500).send({
           message: "Error retrieving partners from logged user"
         });
       }
+    } else res.send(data);
+  });
+};
+
+// Delete user´s partner
+exports.deleteUsersPartnership = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.deleteUsersPartnership(req.headers.authorization, req.body.userId, req.body.userPartnershipId, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found user partnership with id ${req.body.userPartnershipId}`
+          });
+        } else {
+          res.status(500).send({
+            message: `Error deleting user´s partnership id ${req.body.userPartnershipId}`
+          });
+        }
     } else res.send(data);
   });
 };
