@@ -83,6 +83,21 @@ Search.findGearByKeyword = (keyword, result) => {
   });
 };
 
+Search.findBrandsByKeyword = (keyword, result) => {
+  sql.query(`SELECT brands.id, brands.name, brands.slug, brands.logo, brands.cover, brands.website FROM brands WHERE brands.name LIKE '%${keyword}%' OR brands.slug LIKE '%${keyword}%' OR brands.name LIKE '%${keyword}' OR brands.name LIKE '${keyword}%' OR MATCH (brands.name) AGAINST ('%${keyword}%') ORDER BY brands.name ASC LIMIT 50`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, { total: res.length, success: true, result: res });
+      return;
+    }
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Search.getUserLastSearches = (loggedUserId, result) => {
   let x = jwt.verify(loggedUserId.slice(7), process.env.JWT_SECRET)
   sql.query(`SELECT query FROM search_history WHERE id_user = ${x.result.id} GROUP BY query ORDER BY createdAt DESC LIMIT 5`, (err, res) => {

@@ -14,6 +14,9 @@ module.exports = app => {
   // Retrieve gear equipments with search keyword
   app.get("/search/gear/:keyword", checkToken, search.findGearByKeyword);
 
+  // Retrieve brands with search keyword
+  app.get("/search/brands/:keyword", checkToken, search.findBrandsByKeyword);
+
   // Save user search query
   app.post("/search/saveSearch", checkToken, search.saveSearch);
 
