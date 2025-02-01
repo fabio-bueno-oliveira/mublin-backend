@@ -193,7 +193,7 @@ User.getUserInfoAvailabilityItems = (userId, result) => {
 
 User.getUserPartners = (loggedID, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
-  sql.query(`SELECT users_partners.id AS keyId, brands.id, brands.name, brands.slug, brands.logo, brands.cover, users_partners.featured, IF(users_partners.type=1,'Endorser', 'Parceiro') AS type, users_partners.active, DATE_FORMAT(users_partners.created,'%d/%m/%Y às %H:%i:%s') AS created FROM users_partners LEFT JOIN brands ON users_partners.id_brand = brands.id WHERE users_partners.id_user = ${x.result.id} ORDER BY users_partners.featured DESC, users_partners.created DESC`, (err, res) => {
+  sql.query(`SELECT users_partners.id AS keyId, brands.id, brands.name, brands.slug, brands.logo, brands.cover, users_partners.featured, IF(users_partners.type=1,'Endorser', 'Parceiro') AS type, users_partners.since_year AS sinceYear, users_partners.active, DATE_FORMAT(users_partners.created,'%d/%m/%Y às %H:%i:%s') AS created FROM users_partners LEFT JOIN brands ON users_partners.id_brand = brands.id WHERE users_partners.id_user = ${x.result.id} ORDER BY users_partners.featured DESC, users_partners.created DESC`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -208,7 +208,32 @@ User.getUserPartners = (loggedID, result) => {
   });
 };
 
-User.deleteUsersPartnership = (loggedID, userId, userPartnershipId, result) => {
+User.addUserPartnership = (loggedID, userId, brandId, featured, type, since_year, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == userId) {
+    sql.query(`INSERT INTO users_partners (id_user, id_brand, featured, type, since_year) VALUES (${userId}, ${brandId}, ${featured}, ${type}, ${since_year})`, (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+          return;
+        }
+
+        if (res.affectedRows == 0) {
+          // not found user with the id
+          result({ kind: "not_found" }, null);
+          return;
+        }
+
+        result(null, { userId: userId, brandId: brandId, message: 'Marca parceira adicionada com sucesso!' });
+      }
+    );
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
+};
+
+User.deleteUserPartnership = (loggedID, userId, userPartnershipId, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   if (x.result.id == userId) {
     sql.query(`DELETE FROM users_partners WHERE id = ${userPartnershipId} AND id_user = ${x.result.id}`, (err, res) => {

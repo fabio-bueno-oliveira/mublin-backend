@@ -22,7 +22,8 @@ module.exports = app => {
 
   // User´s partners infos
   app.get("/userInfo/partners", checkToken, users.getPartners);
-  app.delete("/user/delete/partnership", checkToken, users.deleteUsersPartnership);
+  app.post("/user/add/partnership", checkToken, users.addUserPartnership);
+  app.delete("/user/delete/partnership", checkToken, users.deleteUserPartnership);
 
   // Retrieve all User
   // app.get("/users", users.findAll);

@@ -292,7 +292,7 @@ exports.getPartners = (req, res) => {
         res.status(200).send(
           { 
             total: 0, success: true, 
-            result: [{keyId: '', id: '', name: '', slug: '', logo: '', cover: '', featured: '', type: '', active: '', created: ''}]
+            result: [{keyId: '', id: '', name: '', slug: '', logo: '', cover: '', featured: '', type: '', sinceYear: '', active: '', created: ''}]
           }
         );
       } else {
@@ -304,15 +304,38 @@ exports.getPartners = (req, res) => {
   });
 };
 
-// Delete user´s partner
-exports.deleteUsersPartnership = (req, res) => {
+// Add user´s new brand partner
+exports.addUserPartnership = (req, res) => {
   if (!req.body) {
     res.status(400).send({
       message: "Content can not be empty!"
     });
   }
 
-  User.deleteUsersPartnership(req.headers.authorization, req.body.userId, req.body.userPartnershipId, (err, data) => {
+  User.addUserPartnership(req.headers.authorization, req.body.userId, req.body.brandId, req.body.featured, req.body.type, req.body.since_year, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found user with id ${req.body.userId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: `Error adding partner to user with id ${req.body.userId}.`
+          });
+        }
+    } else res.send(data);
+  });
+};
+
+// Delete user´s partner
+exports.deleteUserPartnership = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.deleteUserPartnership(req.headers.authorization, req.body.userId, req.body.userPartnershipId, (err, data) => {
     if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
@@ -627,7 +650,7 @@ exports.updateStep2 = (req, res) => {
   });
 };
 
-// Update User´s Music Genre
+// Add user´s Music Genre
 exports.addUsersMusicGenre = (req, res) => {
   // Validate Request
   if (!req.body) {
