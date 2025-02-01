@@ -191,6 +191,23 @@ User.getUserInfoAvailabilityItems = (userId, result) => {
   });
 };
 
+User.getUserPartners = (loggedID, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`SELECT users_partners.id AS keyId, brands.id, brands.name, brands.slug, brands.logo, brands.cover, users_partners.featured, IF(users_partners.type=1,'Endorser', 'Parceiro') AS type, users_partners.active, DATE_FORMAT(users_partners.created,'%d/%m/%Y às %H:%i:%s') AS created FROM users_partners LEFT JOIN brands ON users_partners.id_brand = brands.id WHERE users_partners.id_user = ${x.result.id} ORDER BY users_partners.featured DESC, users_partners.created DESC`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, { total: res.length, success: true, result: res });
+      return;
+    }
+    // not found user with the id in the token
+    result({ kind: "not_found" }, null);
+  });
+};
+
 User.getAll = result => {
   sql.query("SELECT name, lastname, username, email, picture FROM users", (err, res) => {
     if (err) {

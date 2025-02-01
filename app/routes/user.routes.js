@@ -19,6 +19,7 @@ module.exports = app => {
   app.get("/userInfo/:userId/genres", checkToken, users.getInfoGenres);
   app.get("/userInfo/:userId/roles", checkToken, users.getInfoRoles);
   app.get("/userInfo/:userId/availabilityItems", checkToken, users.getInfoAvailabilityItems);
+  app.get("/userInfo/partners", checkToken, users.getPartners);
 
   // Retrieve all User
   // app.get("/users", users.findAll);

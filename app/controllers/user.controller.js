@@ -284,6 +284,23 @@ exports.getInfoAvailabilityItems = (req, res) => {
   });
 };
 
+// Retrieve user´s partners from database
+exports.getPartners = (req, res) => {
+  User.getUserPartners(req.headers.authorization, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(200).send(
+          {message: 'Not found partners for logged user'}
+        );
+      } else {
+        res.status(500).send({
+          message: "Error retrieving partners from logged user"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Retrieve all Users from the database
 exports.findAll = (req, res) => {
   User.getAll((err, data) => {
