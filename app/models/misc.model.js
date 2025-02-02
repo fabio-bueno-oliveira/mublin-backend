@@ -152,6 +152,21 @@ Misc.getBrandInfo = (brandUrlName, result) => {
   });
 };
 
+Misc.getBrandPartners = (brandUrlName, result) => {
+  sql.query(`SELECT users.id, users.name, users.lastname, users.username, users.picture, users.legend_badge AS legend, users.verified FROM users_partners LEFT JOIN users ON users_partners.id_user = users.id WHERE users_partners.id_brand = (SELECT brands.id FROM brands WHERE brands.slug = '${brandUrlName}' LIMIT 1) GROUP BY users.id ORDER BY users.legend_badge DESC, users.verified DESC, users.name ASC`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, { total: res.length, success: true, result: res });
+      return;
+    }
+    // not found any brand partners
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Misc.getBrands = (result) => {
   sql.query(`SELECT brands.id, brands.slug, brands.name, CONCAT('https://ik.imagekit.io/mublin/products/brands/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',brands.logo) AS logo FROM products LEFT JOIN brands ON products.id_brand = brands.id GROUP BY brands.id ORDER BY brands.name ASC`, (err, res) => {
     if (err) {

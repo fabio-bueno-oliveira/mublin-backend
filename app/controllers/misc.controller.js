@@ -174,6 +174,23 @@ exports.brandInfo = (req, res) => {
   });
 };
 
+// Get brand partners
+exports.brandPartners = (req, res) => {
+  Misc.getBrandPartners(req.params.brandUrlName, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No brand partners found"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving brand partners"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Get product Brands with products under it
 exports.brands = (req, res) => {
   Misc.getBrands((err, data) => {
