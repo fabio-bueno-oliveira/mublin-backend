@@ -191,6 +191,23 @@ exports.brandPartners = (req, res) => {
   });
 };
 
+// Get brand owners
+exports.brandOwners = (req, res) => {
+  Misc.getBrandOwners(req.params.brandUrlName, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No brand owners found"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving brand owners"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Get product Brands with products under it
 exports.brands = (req, res) => {
   Misc.getBrands((err, data) => {

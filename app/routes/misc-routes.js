@@ -39,6 +39,9 @@ module.exports = app => {
   // Retrieve Brand partners
   app.get("/gear/brand/:brandUrlName/partners", misc.brandPartners);
 
+  // Retrieve Brand owners
+  app.get("/gear/brand/:brandUrlName/owners", misc.brandOwners);
+
   // Retrieve product Brands with products under it
   app.get("/gear/brands", misc.brands);
 

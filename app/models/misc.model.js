@@ -167,6 +167,21 @@ Misc.getBrandPartners = (brandUrlName, result) => {
   });
 };
 
+Misc.getBrandOwners = (brandUrlName, result) => {
+  sql.query(`SELECT users.id, users.name, users.lastname, users.username, users.picture, users.verified, users.legend_badge AS legend, roles.description_ptbr AS role, users_gear.id_product AS productId, products.name AS productName FROM users_gear LEFT JOIN users ON users_gear.id_user = users.id LEFT JOIN products ON users_gear.id_product = products.id LEFT JOIN users_roles ON users_gear.id_user = users_roles.id_user_fk LEFT JOIN roles ON users_roles.id_role_fk = roles.id WHERE products.id_brand = (SELECT brands.id FROM brands WHERE brands.slug = '${brandUrlName}') AND users.status = 1 GROUP BY users_gear.id_product ORDER BY users.name ASC, users_roles.main_activity DESC`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, { total: res.length, success: true, result: res });
+      return;
+    }
+    // not found any brand partners
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Misc.getBrands = (result) => {
   sql.query(`SELECT brands.id, brands.slug, brands.name, CONCAT('https://ik.imagekit.io/mublin/products/brands/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',brands.logo) AS logo FROM products LEFT JOIN brands ON products.id_brand = brands.id GROUP BY brands.id ORDER BY brands.name ASC`, (err, res) => {
     if (err) {
