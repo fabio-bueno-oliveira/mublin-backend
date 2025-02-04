@@ -45,7 +45,7 @@ Profile.changePassword = (loggedID, userId, newPassword, result) => {
 };
 
 Profile.infos = (username, result) => {
-  sql.query(`SELECT u.id, u.name, u.lastname, u.username, u.bio, u.email, u.phone_mobile AS phone, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',u.id,'/',u.picture) AS picture, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-580,w-580,c-maintain_ratio/',u.id,'/',u.picture) AS pictureLarge, u.first_access AS firstAccess, availability_statuses.id AS availabilityId, availability_statuses.title_ptbr AS availabilityTitle, availability_statuses.color AS availabilityColor, availability_focus AS availabilityFocusId, avf.title_ptbr AS availabilityFocus, c.name AS country, r.name AS region, ci.name AS city, IF(u.payment_plan=1,'Free', 'Pro') AS plan, u.legend_badge AS legend, u.verified, u.instagram, u.website, u.public FROM users AS u LEFT JOIN availability_statuses ON u.availability_status = availability_statuses.id LEFT JOIN availability_focuses AS avf ON u.availability_focus = avf.id LEFT JOIN countries AS c ON u.id_country_fk = c.id LEFT JOIN regions AS r ON u.id_region_fk = r.id LEFT JOIN cities AS ci ON u.id_city_fk = ci.id WHERE u.username = '${username}' AND u.status = 1 LIMIT 1`, (err, res) => {
+  sql.query(`SELECT u.id, u.name, u.lastname, u.username, u.bio, u.email, u.phone_mobile AS phone, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',u.id,'/',u.picture) AS picture, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-580,w-580,c-maintain_ratio/',u.id,'/',u.picture) AS pictureLarge, u.open_to_work AS openToWork, u.open_to_work_text AS openToWorkText, u.first_access AS firstAccess, availability_statuses.id AS availabilityId, availability_statuses.title_ptbr AS availabilityTitle, availability_statuses.color AS availabilityColor, availability_focus AS availabilityFocusId, avf.title_ptbr AS availabilityFocus, c.name AS country, r.name AS region, ci.name AS city, IF(u.payment_plan=1,'Free', 'Pro') AS plan, u.legend_badge AS legend, u.verified, u.instagram, u.website, u.public FROM users AS u LEFT JOIN availability_statuses ON u.availability_status = availability_statuses.id LEFT JOIN availability_focuses AS avf ON u.availability_focus = avf.id LEFT JOIN countries AS c ON u.id_country_fk = c.id LEFT JOIN regions AS r ON u.id_region_fk = r.id LEFT JOIN cities AS ci ON u.id_city_fk = ci.id WHERE u.username = '${username}' AND u.status = 1 LIMIT 1`, (err, res) => {
     if (err) {
       //console.log("error: ", err);
       result(err, null);
@@ -113,7 +113,7 @@ Profile.genres = (username, result) => {
 };
 
 Profile.followers = (username, result) => {
-  sql.query(`SELECT uf.id, uf.id_follower AS followerId, uf.id_followed AS followedId, u.id AS userId, u.name, u.lastname, u.username, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',u.id,'/',u.picture) AS picture, u.verified, u.legend_badge FROM users_followers AS uf LEFT JOIN users AS u ON uf.id_follower = u.id WHERE uf.id_followed = (SELECT users.id FROM users WHERE users.username = '${username}') AND u.status = 1 ORDER BY uf.id DESC`, 
+  sql.query(`SELECT uf.id, uf.id_follower AS followerId, uf.id_followed AS followedId, u.id AS userId, u.name, u.lastname, u.username, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',u.id,'/',u.picture) AS picture, u.verified, u.legend_badge, u.open_to_work AS openToWork, u.open_to_work_text AS openToWorkText FROM users_followers AS uf LEFT JOIN users AS u ON uf.id_follower = u.id WHERE uf.id_followed = (SELECT users.id FROM users WHERE users.username = '${username}') AND u.status = 1 ORDER BY uf.id DESC`, 
   (err, res) => {
     if (err) {
       //console.log("error: ", err);
@@ -129,7 +129,7 @@ Profile.followers = (username, result) => {
 };
 
 Profile.following = (username, result) => {
-  sql.query(`SELECT users_followers.id, users_followers.id_follower AS followerId, users_followers.id_followed AS followedId, u.id AS userId, u.name, u.lastname, u.username, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',u.id,'/',u.picture) AS picture, u.verified, u.legend_badge FROM users_followers LEFT JOIN users AS u ON users_followers.id_followed = u.id WHERE users_followers.id_follower = (SELECT users.id FROM users WHERE users.username = '${username}') AND u.status = 1 ORDER BY users_followers.id DESC`, 
+  sql.query(`SELECT users_followers.id, users_followers.id_follower AS followerId, users_followers.id_followed AS followedId, u.id AS userId, u.name, u.lastname, u.username, CONCAT('https://ik.imagekit.io/mublin/users/avatars/tr:h-200,w-200,c-maintain_ratio/',u.id,'/',u.picture) AS picture, u.verified, u.legend_badge, u.open_to_work AS openToWork, u.open_to_work_text AS openToWorkText FROM users_followers LEFT JOIN users AS u ON users_followers.id_followed = u.id WHERE users_followers.id_follower = (SELECT users.id FROM users WHERE users.username = '${username}') AND u.status = 1 ORDER BY users_followers.id DESC`, 
   (err, res) => {
     if (err) {
       //console.log("error: ", err);
