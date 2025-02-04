@@ -566,7 +566,7 @@ Profile.deleteTestimonial = (loggedID, testimonialId, profileId, result) => {
 };
 
 Profile.partners = (username, result) => {
-  sql.query(`SELECT up.featured, IF(up.type=1,'Endorser', 'Parceiro') AS type, brands.id AS brandId, brands.name AS brandName, CONCAT('https://ik.imagekit.io/mublin/products/brands/tr:h-200,w-200,cm-pad_resize,bg-FFFFFF/',brands.logo) AS brandLogo, CONCAT('https://ik.imagekit.io/mublin/products/brands/tr:h-100,w-200,cm-pad_resize,bg-FFFFFF/',brands.logo) AS brandLogoRectangular FROM users_partners AS up LEFT JOIN brands ON up.id_brand = brands.id WHERE up.id_user = (SELECT users.id FROM users WHERE users.username = '${username}') AND up.active = 1 ORDER BY up.featured DESC, up.created DESC`, (err, res) => {
+  sql.query(`SELECT up.featured, IF(up.type=1,'Endorser', 'Parceiro') AS type, brands.id AS brandId, brands.name AS brandName, brands.slug AS brandSlug, CONCAT('https://ik.imagekit.io/mublin/products/brands/tr:h-200,w-200,cm-pad_resize,bg-FFFFFF/',brands.logo) AS brandLogo, CONCAT('https://ik.imagekit.io/mublin/products/brands/tr:h-100,w-200,cm-pad_resize,bg-FFFFFF/',brands.logo) AS brandLogoRectangular FROM users_partners AS up LEFT JOIN brands ON up.id_brand = brands.id WHERE up.id_user = (SELECT users.id FROM users WHERE users.username = '${username}') AND up.active = 1 ORDER BY up.featured DESC, up.created DESC`, (err, res) => {
     if (err) {
       //console.log("error: ", err);
       result(err, null);
