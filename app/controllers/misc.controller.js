@@ -106,17 +106,17 @@ exports.productInfo = (req, res) => {
   });
 };
 
-// Get product extra colors
-exports.productExtraColors = (req, res) => {
-  Misc.getProductExtraColors(req.params.productId, (err, data) => {
+// Get product colors
+exports.productAvailableColors = (req, res) => {
+  Misc.getProductAvailableColors(req.params.productId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: "No product extra colors with product id " + req.params.productId
+          message: "No product colors with product id " + req.params.productId
         });
       } else {
         res.status(500).send({
-          message: "Error retrieving product extra colors for id " + req.params.productId
+          message: "Error retrieving product colors for id " + req.params.productId
         });
       }
     } else res.send(data);
