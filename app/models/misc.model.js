@@ -93,7 +93,7 @@ Misc.getProductInfo = (productId, result) => {
 };
 
 Misc.getProductAvailableColors = (productId, result) => {
-  sql.query(`SELECT pc.id_product AS productId, pc.image, colors.id AS colorId, colors.name AS colorName, colors.name_ptbr AS colorNamePTBR, colors.rgb AS colorRgb, colors.img_sample AS colorSample, colors.type AS colorType FROM products_colors AS pc LEFT JOIN colors ON pc.id_color = colors.id WHERE pc.id_product = ${productId} ORDER BY pc.main DESC, colors.name ASC`, (err, res) => {
+  sql.query(`SELECT pc.id_product AS productId, pc.image, colors.id AS colorId, colors.name AS colorName, colors.name_ptbr AS colorNamePTBR, colors.rgb AS colorRgb, colors.img_sample AS colorSample, colors.type AS colorType, pc.main AS mainColor FROM products_colors AS pc LEFT JOIN colors ON pc.id_color = colors.id WHERE pc.id_product = ${productId} ORDER BY pc.main DESC, colors.name ASC`, (err, res) => {
     if (err) {
       result(err, null);
       return;
