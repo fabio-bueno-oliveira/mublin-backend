@@ -208,6 +208,23 @@ exports.brandOwners = (req, res) => {
   });
 };
 
+// Get brand colors
+exports.brandColors = (req, res) => {
+  Misc.getBrandColors(req.params.brandUrlName, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No brand colors found"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving brand colors"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Get product Brands with products under it
 exports.brands = (req, res) => {
   Misc.getBrands((err, data) => {
