@@ -78,7 +78,7 @@ Misc.getAvailabilityFocuses = result => {
 };
 
 Misc.getProductInfo = (productId, result) => {
-  sql.query(`SELECT p.id, p.name, CONCAT('https://ik.imagekit.io/mublin/products/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',p.picture) AS picture, CONCAT('https://ik.imagekit.io/mublin/products/',p.picture) AS largePicture, b.id AS brandId, b.name AS brandName, b.slug AS brandSlug, b.logo AS brandLogo, cat.id AS categoryId, cat.name_ptbr AS categoryName, colors.id AS colorId, colors.name AS colorName, colors.name_ptbr AS colorNamePTBR, colors.rgb AS colorRgb, colors.img_sample AS colorSample FROM products AS p LEFT JOIN brands AS b ON p.id_brand = b.id LEFT JOIN products_categories AS cat ON p.id_category = cat.id LEFT JOIN colors ON p.color = colors.id WHERE p.id = ${productId} LIMIT 2`, (err, res) => {
+  sql.query(`SELECT p.id, p.name, CONCAT('https://ik.imagekit.io/mublin/products/tr:h-600,w-600,cm-pad_resize,bg-FFFFFF/',p.picture) AS picture, CONCAT('https://ik.imagekit.io/mublin/products/',p.picture) AS largePicture, b.id AS brandId, b.name AS brandName, b.slug AS brandSlug, b.logo AS brandLogo, cat.id AS categoryId, cat.name_ptbr AS categoryName, colors.id AS colorId, colors.name AS colorName, colors.name_ptbr AS colorNamePTBR, colors.rgb AS colorRgb, colors.img_sample AS colorSample, p.rare FROM products AS p LEFT JOIN brands AS b ON p.id_brand = b.id LEFT JOIN products_categories AS cat ON p.id_category = cat.id LEFT JOIN colors ON p.color = colors.id WHERE p.id = ${productId} LIMIT 2`, (err, res) => {
     if (err) {
       result(err, null);
       return;
