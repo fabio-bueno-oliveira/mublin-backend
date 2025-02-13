@@ -75,6 +75,9 @@ module.exports = app => {
   // Retrieve all product colors
   app.get("/gear/product/colors", misc.productColors);
 
+  // Top 3 gear itens com mais owners
+  // SELECT ug.id_product AS id, products.name, products.picture, brands.name AS brandName, brands.slug AS brandSlug, COUNT(ug.id_product) AS totalOwners FROM users_gear AS ug LEFT JOIN products ON ug.id_product = products.id LEFT JOIN brands ON products.id_brand = brands.id GROUP BY ug.id_product ORDER BY COUNT(ug.id_product) DESC LIMIT 3
+
   // Retrieve all strengths
   app.get("/strengths/getAllStrengths", checkToken, misc.getAllStrengths);
 };
