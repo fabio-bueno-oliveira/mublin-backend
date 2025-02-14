@@ -286,6 +286,46 @@ exports.getInfoAvailabilityItems = (req, res) => {
   });
 };
 
+// Retrieve user´s followers from database
+exports.getFollowers = (req, res) => {
+  User.getUserFollowers(req.headers.authorization, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(200).send(
+          { 
+            total: 0, success: true, 
+            result: [{id: '', followerId: '', followedId: '', name: '', lastname: '', username: '', picture: '', verified: '', legend_badge: ''}]
+          }
+        );
+      } else {
+        res.status(500).send({
+          message: "Error retrieving partners from logged user"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// Retrieve user´s followings from database
+exports.getFollowing = (req, res) => {
+  User.getUserFollowing(req.headers.authorization, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(200).send(
+          { 
+            total: 0, success: true, 
+            result: [{id: '', followerId: '', followedId: '', name: '', lastname: '', username: '', picture: '', verified: '', legend_badge: ''}]
+          }
+        );
+      } else {
+        res.status(500).send({
+          message: "Error retrieving partners from logged user"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Retrieve user´s partners from database
 exports.getPartners = (req, res) => {
   User.getUserPartners(req.headers.authorization, (err, data) => {

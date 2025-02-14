@@ -191,6 +191,40 @@ User.getUserInfoAvailabilityItems = (userId, result) => {
   });
 };
 
+User.getUserFollowers = (loggedID, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`SELECT uf.id, uf.id_follower AS followerId, uf.id_followed AS followedId, u.name, u.lastname, u.username, u.picture, u.verified, u.legend_badge FROM users_followers AS uf LEFT JOIN users AS u ON uf.id_follower = u.id WHERE uf.id_followed = ${x.result.id} AND u.status = 1 ORDER BY uf.id DESC`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, { total: res.length, success: true, result: res });
+      return;
+    }
+    // not found user with the id in the token
+    result({ kind: "not_found" }, null);
+  });
+};
+
+User.getUserFollowing = (loggedID, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`SELECT uf.id, uf.id_follower AS followerId, uf.id_followed AS followedId, u.name, u.lastname, u.username, u.picture, u.verified, u.legend_badge FROM users_followers AS uf LEFT JOIN users AS u ON uf.id_followed = u.id WHERE uf.id_follower = ${x.result.id} AND u.status = 1 ORDER BY uf.id DESC`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, { total: res.length, success: true, result: res });
+      return;
+    }
+    // not found user with the id in the token
+    result({ kind: "not_found" }, null);
+  });
+};
+
 User.getUserPartners = (loggedID, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   sql.query(`SELECT users_partners.id AS keyId, brands.id, brands.name, brands.slug, brands.logo, brands.cover, users_partners.featured, IF(users_partners.type=1,'Endorser', 'Parceiro') AS type, users_partners.since_year AS sinceYear, users_partners.active, DATE_FORMAT(users_partners.created,'%d/%m/%Y às %H:%i:%s') AS created FROM users_partners LEFT JOIN brands ON users_partners.id_brand = brands.id WHERE users_partners.id_user = ${x.result.id} ORDER BY users_partners.featured DESC, users_partners.created DESC`, (err, res) => {
