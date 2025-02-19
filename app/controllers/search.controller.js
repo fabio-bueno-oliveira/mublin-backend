@@ -210,3 +210,20 @@ exports.getHomeFeaturedUsers = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Find home featured products
+exports.getHomeFeaturedProducts = (req, res) => {
+  Search.getHomeFeaturedProducts((err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No home featured users found"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving home featured users"
+        });
+      }
+    } else res.send(data);
+  });
+};

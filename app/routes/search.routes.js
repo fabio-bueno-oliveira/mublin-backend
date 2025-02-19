@@ -37,4 +37,7 @@ module.exports = app => {
 
   // Retrieve home featured users
   app.get("/home/featuredUsers", search.getHomeFeaturedUsers);
+
+  // Retrieve home feed suggested products
+  app.get("/home/featuredProducts", search.getHomeFeaturedProducts);
 };
