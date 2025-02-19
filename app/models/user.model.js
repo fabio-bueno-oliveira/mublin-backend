@@ -56,7 +56,7 @@ User.create = (newUser, result) => {
     result(null, { id: res.insertId, username: newUser.username, name: newUser.name, lastname: newUser.lastname, email: newUser.email, token: jsontoken });
 
     var mailOptions = {
-      from: process.env.SMTP_USER_NAME,
+      from: `Mublin <${process.env.SMTP_USER_NAME}>`,
       to: newUser.email,
       subject: 'Bem-vindo ao Mublin!',
       html: '<h1>Bem-vindo ao Mublin, '+newUser.name+'!</h1><p>Somos uma plataforma de soluções para artistas que trabalham com música. Estamos felizes em ter você conosco!</p><p>Equipe Mublin</p><p>mublin.com</p>'
@@ -1080,7 +1080,7 @@ User.forgotPassword = (email, result) => {
       }
       // start sending email
       var mailOptions = {
-        from: process.env.SMTP_USER_NAME,
+        from: `Mublin <${process.env.SMTP_USER_NAME}>`,
         to: email,
         subject: '[Mublin] Definir nova senha',
         html: '<h1>Mublin</h1><p>Olá! Foi solicitada a recuperação de sua senha através do mublin.com.</p><p><a href="https://mublin.com/login/redefine-password?hash='+md5(dateTime+process.env.FORGOT_EMAIL_KEY+email)+'&email='+email+'" target="_blank">Clique aqui para redefinir sua senha</a></p>'

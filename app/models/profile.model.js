@@ -334,13 +334,14 @@ Profile.voteStrength = (loggedID, strengthId, strengthTitle, profileId, nameTo, 
       }
       result(null, { profileId: profileId, success: true, strengthId: strengthId });
 
+      // start sending email
       var mailOptions = {
-        from: process.env.SMTP_USER_NAME,
+        from: `Mublin <${process.env.SMTP_USER_NAME}>`,
         to: emailTo,
         subject: 'Você recebeu um ponto forte no Mublin!',
-        html: '<h1>Olá, '+nameTo+'!</h1><p>Você recebeu um voto para o ponto forte <strong>'+strengthTitle+'</strong> em seu perfil. Parabéns!</p><p>Equipe Mublin</p><p>mublin.com</p>'
+        html: '<h2>Olá, '+nameTo+'!</h2><p>Você recebeu um voto para o ponto forte <strong>'+strengthTitle+'</strong> em seu perfil. Parabéns!</p><p>Equipe Mublin</p><p>mublin.com</p>'
       };
-  
+
       transporter.sendMail(mailOptions, function(error, info){
         if (error) {
           console.log(error);
@@ -348,7 +349,7 @@ Profile.voteStrength = (loggedID, strengthId, strengthTitle, profileId, nameTo, 
           console.log('Email sent: ' + info.response);
         }
       });
-
+      // end sending email
     }
   );
 };
@@ -513,7 +514,7 @@ Profile.newTestimonial = (loggedID, testimonialTitle, testimonialText, profileId
       result(null, { profileId: profileId, success: true });
 
       var mailOptions = {
-        from: process.env.SMTP_USER_NAME,
+        from: `Mublin <${process.env.SMTP_USER_NAME}>`,
         to: emailTo,
         subject: 'Você recebeu um depoimento no Mublin!',
         html: '<h1>Olá, '+nameTo+'!</h1><p>Você recebeu um voto para o ponto forte <strong>'+strengthTitle+'</strong> em seu perfil. Parabéns!</p><p>Equipe Mublin</p><p>mublin.com</p>'
