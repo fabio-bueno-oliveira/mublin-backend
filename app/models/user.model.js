@@ -472,8 +472,7 @@ User.eventsByUserId = (usuId, result) => {
       return;
     }
     if (res.length) {
-      //console.log("result: ", res);
-      result(null, res);
+      result(null, { total: res.length, success: true, result: res });
       return;
     }
     result(null, res);
