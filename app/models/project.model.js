@@ -481,15 +481,14 @@ Project.getAllEvents = (projectUsername, result) => {
 };
 
 Project.getProjectOpportunities = (projectUsername, result) => {
-  sql.query(`SELECT projects_opportunities.created, roles.description_ptbr AS rolename, projects_opportunities.info, projects_opportunities.experience AS experienceLevel, projects_opportunities_exp.title_ptbr AS experienceName FROM projects_opportunities LEFT JOIN roles ON projects_opportunities.id_role = roles.id LEFT JOIN projects ON projects_opportunities.id_project = projects.id LEFT JOIN projects_opportunities_exp ON projects_opportunities.experience = projects_opportunities_exp.id WHERE projects.username = '${projectUsername}' AND projects_opportunities.visible = 1 ORDER BY projects_opportunities.created DESC`, (err, res) => {
+  sql.query(`SELECT po.id, UNIX_TIMESTAMP(po.created) AS created, roles.description_ptbr AS rolename, po.info, po.experience AS experienceLevel, projects_opportunities_exp.title_ptbr AS experienceName FROM projects_opportunities AS po LEFT JOIN roles ON po.id_role = roles.id LEFT JOIN projects ON po.id_project = projects.id LEFT JOIN projects_opportunities_exp ON po.experience = projects_opportunities_exp.id WHERE projects.username = '${projectUsername}' AND po.visible = 1 ORDER BY po.created DESC`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }
     if (res.length) {
-      //console.log("opportunities: ", res);
-      result(null, res);
+      result(null, { total: res.length, success: true, result: res });
       return;
     }
     // not found opportunities with the project username
