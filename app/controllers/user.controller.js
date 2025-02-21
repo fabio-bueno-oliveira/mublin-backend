@@ -905,7 +905,7 @@ exports.updateBasicInfo = (req, res) => {
     });
   }
 
-  User.updateBasicInfo(req.headers.authorization, req.body.userId, req.body.name, req.body.lastname, req.body.email, req.body.phone_mobile, req.body.phone_mobile_public, req.body.website, req.body.instagram, req.body.gender, req.body.bio, req.body.id_country_fk, req.body.id_region_fk, req.body.id_city_fk, req.body.public, (err, data) => {
+  User.updateBasicInfo(req.headers.authorization, req.body.userId, req.body.name, req.body.lastname, req.body.email, req.body.phone_mobile, req.body.phone_mobile_public, req.body.website, req.body.instagram, req.body.tiktok, req.body.gender, req.body.bio, req.body.id_country_fk, req.body.id_region_fk, req.body.id_city_fk, req.body.public, (err, data) => {
     if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({

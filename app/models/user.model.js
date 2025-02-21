@@ -127,7 +127,7 @@ User.checkUserByToken = (loggedEmail, result) => {
 };
 
 User.getUserInfo = (email, loggedEmail, result) => {
-    sql.query(`SELECT u.id, u.name, u.lastname, u.username, u.bio, u.gender, u.verified, u.id_country_fk AS country, u.id_region_fk AS region, r.name AS regionName, u.id_city_fk AS city, c.name AS cityName, u.email, u.picture, u.picture_cover, IF(u.payment_plan=1,'Free', 'Pro') AS plan, u.first_access, u.public, u.instagram, u.website, u.phone_mobile AS phone, u.phone_mobile_public AS phoneIsPublic, u.status, u.legend_badge, u.availability_status, u.availability_focus, u.level, u.previously_registered, u.open_to_work AS openToWork, u.open_to_work_text AS openToWorkText FROM users AS u LEFT JOIN cities AS c ON u.id_city_fk = c.id LEFT JOIN regions AS r ON u.id_region_fk = r.id WHERE u.email = '${loggedEmail}' LIMIT 1`, (err, res) => {
+    sql.query(`SELECT u.id, u.name, u.lastname, u.username, u.bio, u.gender, u.verified, u.id_country_fk AS country, u.id_region_fk AS region, r.name AS regionName, u.id_city_fk AS city, c.name AS cityName, u.email, u.picture, u.picture_cover, IF(u.payment_plan=1,'Free', 'Pro') AS plan, u.first_access, u.public, u.instagram, u.tiktok, u.website, u.phone_mobile AS phone, u.phone_mobile_public AS phoneIsPublic, u.status, u.legend_badge, u.availability_status, u.availability_focus, u.level, u.previously_registered, u.open_to_work AS openToWork, u.open_to_work_text AS openToWorkText FROM users AS u LEFT JOIN cities AS c ON u.id_city_fk = c.id LEFT JOIN regions AS r ON u.id_region_fk = r.id WHERE u.email = '${loggedEmail}' LIMIT 1`, (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(err, null);
@@ -860,10 +860,10 @@ User.findNoteById = (loggedID, noteID, result) => {
 
 // START SETTINGS MENU UPDATES
 
-User.updateBasicInfo = (loggedID, userId, name, lastname, email, phone_mobile, phone_mobile_public, website, instagram, gender, bio, id_country_fk, id_region_fk, id_city_fk, public, result) => {
+User.updateBasicInfo = (loggedID, userId, name, lastname, email, phone_mobile, phone_mobile_public, website, instagram, tiktok, gender, bio, id_country_fk, id_region_fk, id_city_fk, public, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   if (x.result.id == userId) {
-    sql.query(`UPDATE users SET name = '${name}', lastname = '${lastname}', email = '${email}', phone_mobile = '${phone_mobile}', phone_mobile_public = '${phone_mobile_public}',  website = '${website}', instagram = '${instagram}', gender = '${gender}', bio = '${bio}', id_country_fk = '${id_country_fk}', id_region_fk = '${id_region_fk}', id_city_fk = '${id_city_fk}', public = '${public}' WHERE id = ${userId}`, (err, res) => {
+    sql.query(`UPDATE users SET name = '${name}', lastname = '${lastname}', email = '${email}', phone_mobile = '${phone_mobile}', phone_mobile_public = '${phone_mobile_public}',  website = '${website}', instagram = '${instagram}', tiktok = '${tiktok}', gender = '${gender}', bio = '${bio}', id_country_fk = '${id_country_fk}', id_region_fk = '${id_region_fk}', id_city_fk = '${id_city_fk}', public = '${public}' WHERE id = ${userId}`, (err, res) => {
         if (err) {
           //console.log("error: ", err);
           result(null, err);
