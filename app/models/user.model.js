@@ -863,7 +863,7 @@ User.findNoteById = (loggedID, noteID, result) => {
 User.updateBasicInfo = (loggedID, userId, name, lastname, email, phone_mobile, phone_mobile_public, website, instagram, tiktok, gender, bio, id_country_fk, id_region_fk, id_city_fk, public, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   if (x.result.id == userId) {
-    sql.query(`UPDATE users SET name = '${name}', lastname = '${lastname}', email = '${email}', phone_mobile = '${phone_mobile}', phone_mobile_public = '${phone_mobile_public}',  website = '${website}', instagram = '${instagram}', tiktok = '${tiktok}', gender = '${gender}', bio = '${bio}', id_country_fk = '${id_country_fk}', id_region_fk = '${id_region_fk}', id_city_fk = '${id_city_fk}', public = '${public}' WHERE id = ${userId}`, (err, res) => {
+    sql.query(`UPDATE users SET name = '${name}', lastname = '${lastname}', email = '${email}', phone_mobile = '${phone_mobile}', phone_mobile_public = '${phone_mobile_public}',  website = '${website}', instagram = '${instagram}', tiktok = '${tiktok}', gender = '${gender}', bio = '${bio}', id_country_fk = '${id_country_fk}', id_region_fk = '${id_region_fk}', id_city_fk = '${id_city_fk}', public = '${public}', modified = '${dateTime}' WHERE id = ${userId}`, (err, res) => {
         if (err) {
           //console.log("error: ", err);
           result(null, err);
