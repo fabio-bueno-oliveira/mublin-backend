@@ -475,7 +475,7 @@ User.eventsByUserId = (usuId, result) => {
       result(null, { total: res.length, success: true, result: res });
       return;
     }
-    result(null, res);
+    result({ kind: "not_found" }, null);
   });
 };
 

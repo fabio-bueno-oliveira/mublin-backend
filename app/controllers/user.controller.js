@@ -523,17 +523,17 @@ exports.followers = (req, res) => {
   });
 };
 
-// userId events
+// Get events for the logged user
 exports.events = (req, res) => {
   User.eventsByUserId(req.params.userId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found events for id ${req.params.profileID}.`
+          message: `Not found events for the user.`
         });
       } else {
         res.status(500).send({
-          message: "Error listing events for id " + req.params.profileID
+          message: "Error listing events for id " + req.params.userId
         });
       }
     } else res.send(data);
