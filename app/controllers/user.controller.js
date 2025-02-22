@@ -1057,6 +1057,29 @@ exports.addGearItem = (req, res) => {
   });
 };
 
+// Add gear item to userId with all detail fields
+exports.addGearItemFull = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.addGearItemFull(req.headers.authorization, req.body.productId, req.body.featured, req.body.forSale, req.body.price, req.body.currentlyUsing, req.body.tuning, req.body.ownerComments, req.body.idColor,  (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found user id ${req.body.userId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error adding gear item for user id " + req.body.userId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Add gear sub item to userId
 exports.addGearSubItem = (req, res) => {
   if (!req.body) {
