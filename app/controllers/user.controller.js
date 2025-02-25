@@ -1065,7 +1065,7 @@ exports.addGearItemFull = (req, res) => {
     });
   }
 
-  User.addGearItemFull(req.headers.authorization, req.body.productId, req.body.featured, req.body.forSale, req.body.price, req.body.currentlyUsing, req.body.tuning, req.body.ownerComments, req.body.idColor,  (err, data) => {
+  User.addGearItemFull(req.headers.authorization, req.body.productId, req.body.featured, req.body.forSale, req.body.price, req.body.currentlyUsing, req.body.tuning, req.body.ownerComments, req.body.colorId, (err, data) => {
     if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
