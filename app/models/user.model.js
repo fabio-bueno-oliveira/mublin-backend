@@ -1014,10 +1014,9 @@ User.addGearItem = (loggedID, productId, featured, for_sale, price, currently_us
   );
 };
 
-// req.headers.authorization, req.body.productId, req.body.featured, req.body.forSale, req.body.price, req.body.currentlyUsing, req.body.tuning, req.body.ownerComments, req.body.colorId
 User.addGearItemFull = (loggedID, productId, featured, forSale, price, currentlyUsing, tuning, ownerComments, colorId, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
-  sql.query(`INSERT INTO users_gear (id_user, id_product, featured, for_sale, price, currently_using, tuning, owner_comments, id_color) VALUES (${x.result.id}, ${productId}, ${featured}, ${forSale}, ${price}, ${currentlyUsing}, ${tuning}, ${ownerComments}, ${colorId})`, (err, res) => {
+  sql.query(`INSERT INTO users_gear (id_user, id_product, featured, for_sale, price, currently_using, tuning, owner_comments, id_color) VALUES (${x.result.id}, ${productId}, ${featured}, ${forSale}, ${price}, ${currentlyUsing}, ${tuning}, '${ownerComments}', ${colorId})`, (err, res) => {
       if (err) {
         result(null, err);
         return;
@@ -1028,7 +1027,7 @@ User.addGearItemFull = (loggedID, productId, featured, forSale, price, currently
         result({ kind: "not_found" }, null);
         return;
       }
-      result(null, { userId: x.result.id, productId: productId, featured: featured, for_sale: for_sale, price: price, currently_using: currently_using, message: 'Product added successfully to user gear'  });
+      result(null, { userId: x.result.id, productId: productId, featured: featured, for_sale: forSale, price: price, currently_using: currentlyUsing, message: 'Product added successfully to user gear'  });
     }
   );
 };
