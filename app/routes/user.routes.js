@@ -133,7 +133,7 @@ module.exports = app => {
 
   // Add user gear item (by logged userId)
   app.post("/user/addGearItem", checkToken, users.addGearItem);
-  app.post("/user/addGearItem", checkToken, users.addGearItemFull);
+  app.post("/user/addGearItemV2", checkToken, users.addGearItemFull);
 
   // Add user gear sub item (by logged userId)
   app.post("/user/addGearSubItem", checkToken, users.addGearSubItem);
