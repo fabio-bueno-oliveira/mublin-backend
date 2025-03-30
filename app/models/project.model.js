@@ -504,7 +504,7 @@ Project.getNotes = (loggedID, projectUsername, result) => {
       return;
     }
     if (res.length) {
-      result(null, res);
+      result(null, { total: res.length, success: true, result: res });
       return;
     }
     // not found notes with the project username
