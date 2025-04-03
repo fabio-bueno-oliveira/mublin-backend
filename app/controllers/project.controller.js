@@ -410,6 +410,40 @@ exports.notes = (req, res) => {
   });
 };
 
+// Create project internal note for the team
+exports.createNote = (req, res) => {
+  Project.createNote(req.headers.authorization, req.body.projectId, req.body.projectSlug, req.body.projectName, req.body.note, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found project id ${req.body.projectId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error posting note for project id " + req.body.projectId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
+// Delete project note from dashboard
+exports.deleteNote = (req, res) => {
+  Project.deleteNote(req.headers.authorization, req.params.projectUsername, req.params.noteId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Note ${req.body.noteId} not found or you do not have permission to delete that.`
+        });
+      } else {
+        res.status(500).send({
+          message: `Could not delete note ${req.body.noteId}.`
+        });
+      }
+    } else res.send({ message: 'Note was successfully deleted', success: true });
+  });
+};
+
 // Update project bio
 exports.updateBio = (req, res) => {
   // Validate Request

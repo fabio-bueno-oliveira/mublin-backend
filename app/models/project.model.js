@@ -512,6 +512,59 @@ Project.getNotes = (loggedID, projectUsername, result) => {
   });
 };
 
+Project.createNote = (loggedID, projectId, projectSlug, projectName, note, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`INSERT INTO project_notes (id_author, id_project, note) VALUES (${x.result.id}, ${projectId}, '${note}')`, (err, res) => {
+      // WHERE id_author = (SELECT id_user_fk FROM users_projects WHERE id_user_fk = ${x.result.id} AND id_project_fk = ${projectId} AND confirmed = 1)
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { projectName: projectName, success: true, message: `Nota incluída com sucesso no projeto ${projectSlug}` });
+
+      // start sending email
+      // var mailOptions = {
+      //   from: `Mublin <${process.env.SMTP_USER_NAME}>`,
+      //   to: emailTo,
+      //   subject: `Nova nota de ${projectName}`,
+      //   html: `<h2>Olá, ${nameTo}!</h2><p>Uma nova nota foi postada no painel de controle do projeto <strong>${projectName}</strong>. Acesse o Mublin para conferir!</p><p>Equipe Mublin</p><p><a href='https://mublin.com/dashboard/${projectSlug}' target='_blank'>mublin.com/dashboard/${projectSlug}</a></p>`
+      // };
+
+      // transporter.sendMail(mailOptions, function(error, info){
+      //   if (error) {
+      //     console.log(error);
+      //   } else {
+      //     console.log('Email sent: ' + info.response);
+      //   }
+      // });
+      // end sending email
+    }
+  );
+};
+
+Project.deleteNote = (loggedID, projectUsername, noteId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`DELETE FROM project_notes WHERE id = ${noteId} AND ${x.result.id} = (SELECT id_user_fk FROM users_projects WHERE id_user_fk = ${x.result.id} AND id_project_fk = (SELECT id FROM projects WHERE username = '${projectUsername}'))`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    if (res.affectedRows == 0) {
+      // not found note with the id
+      result({ kind: "not_found" }, null);
+      return;
+    }
+    // console.log("deleted note with id: ", userId);
+    result(null, res);
+  });
+};
+
 Project.updateBio = (loggedID, projectUsername, projectId, bio, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   sql.query(`UPDATE projects SET projects.bio = '${bio}' WHERE projects.username = '${projectUsername}' AND projects.id = (SELECT users_projects.id_project_fk FROM users_projects WHERE users_projects.id_project_fk = ${projectId} AND users_projects.id_user_fk = ${x.result.id} AND users_projects.confirmed = 1 LIMIT 1)`, (err, res) => {

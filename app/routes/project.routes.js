@@ -71,7 +71,13 @@ module.exports = app => {
 
   // Retrieve all project notes by project username
   app.get("/project/:projectUsername/notes", checkToken, projects.notes);
-  
+
+  // Post new note on the project dashboard
+  app.post("/project/:projectUsername/note", checkToken, projects.createNote);
+
+  // Delete a note from the project dashboard
+  app.delete("/project/:projectUsername/notes/:noteId", checkToken, projects.deleteNote);
+
   // Check if project username is available
   app.get("/check/project/username/:projectUsername", projects.checkProjectUsername)
 
