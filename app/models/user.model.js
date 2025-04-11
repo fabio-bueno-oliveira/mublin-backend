@@ -225,6 +225,24 @@ User.getUserFollowing = (loggedID, result) => {
   });
 };
 
+User.getUserPlanInfo = (loggedID, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`SELECT id, name, lastname, username, email, payment_plan, payment_date_start, payment_date_expire, payment_method, payment_id_fk, payment_service FROM users WHERE id = ${x.result.id} LIMIT 1`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      console.log("found user: ", res[0]);
+      result(null, res[0]);
+      return;
+    }
+    // not found User with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+
 User.getUserPartners = (loggedID, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   sql.query(`SELECT users_partners.id AS keyId, brands.id, brands.name, brands.slug, brands.logo, brands.cover, users_partners.featured, IF(users_partners.type=1,'Endorser', 'Parceiro') AS type, users_partners.since_year AS sinceYear, users_partners.active, DATE_FORMAT(users_partners.created,'%d/%m/%Y às %H:%i:%s') AS created FROM users_partners LEFT JOIN brands ON users_partners.id_brand = brands.id WHERE users_partners.id_user = ${x.result.id} ORDER BY users_partners.featured DESC, users_partners.created DESC`, (err, res) => {

@@ -326,6 +326,23 @@ exports.getFollowing = (req, res) => {
   });
 };
 
+// Retrieve account plan info of logged user
+exports.getUserPlanInfo = (req, res) => {
+  User.getUserPlanInfo(req.headers.authorization, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No user found the requested token."
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving user with the given token"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Retrieve user´s partners from database
 exports.getPartners = (req, res) => {
   User.getUserPartners(req.headers.authorization, (err, data) => {

@@ -21,6 +21,7 @@ module.exports = app => {
   app.get("/userInfo/:userId/availabilityItems", checkToken, users.getInfoAvailabilityItems);
   app.get("/userInfo/followers", checkToken, users.getFollowers);
   app.get("/userInfo/following", checkToken, users.getFollowing);
+  app.get("/userInfo/plan", checkToken, users.getUserPlanInfo);
 
   // User´s partners infos
   app.get("/userInfo/partners", checkToken, users.getPartners);
