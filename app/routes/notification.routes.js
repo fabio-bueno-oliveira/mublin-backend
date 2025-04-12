@@ -11,39 +11,6 @@ module.exports = app => {
   // Update notifications to read with userId (authorization and read status needed on headers)
   app.put("/notifications/:userId/read", checkToken, notifications.updateAllReads);
 
-  // Retrieve feed
-  app.get("/feed", checkToken, notifications.feed);
-
-  // Retrieve simple feed (only users posts)
-  app.get("/simpleFeed", checkToken, notifications.simpleFeed);
-
-  // New Post
-  app.post("/feed/newPost", checkToken, notifications.newPost);
-
-  // Delete feed item
-  app.delete("/feed/:feedId/deleteFeedItem", checkToken, notifications.deleteFeedItem);
-
-  // Retrieve feed item likes
-  app.get("/:feedId/feedLikes", checkToken, notifications.getFeedLikes);
-
-  // Post new gear added to feed
-  app.post("/feed/newFeedPostGear", checkToken, notifications.feedPostNewGear);
-
-  // Like feed item
-  app.post("/feed/:feedId/like", checkToken, notifications.feedLike);
-
-  // Unlike feed item
-  app.delete("/feed/:feedId/unlike", checkToken, notifications.feedUnlike);
-
-  // Retrieve feed comments
-  app.get("/feed/:feedId/feedComments", checkToken, notifications.feedComments);
-
-  // Post feed comment
-  app.post("/feed/:feedId/postComment", checkToken, notifications.postComment);
-
-  // Delete feed comment
-  app.delete("/feed/:commentId/deletePostComment", checkToken, notifications.deletePostComment);
-
   // Retrieve user notifications
   app.get("/notifications", checkToken, notifications.notifications);
 
