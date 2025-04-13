@@ -227,14 +227,14 @@ User.getUserFollowing = (loggedID, result) => {
 
 User.getUserPlanInfo = (loggedID, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
-  sql.query(`SELECT id, name, lastname, username, email, payment_plan, payment_date_start, payment_date_expire, payment_method, payment_id_fk, payment_service FROM users WHERE id = ${x.result.id} LIMIT 1`, (err, res) => {
+  sql.query(`SELECT name, lastname, username, email, payment_plan AS planId, DATE_FORMAT(payment_date_start,'%d/%m/%Y às %H:%i:%s') AS planCreatedIn, DATE_FORMAT(payment_date_expire,'%d/%m/%Y') AS planExpiresIn, payment_method AS method, payment_id_fk AS paymentIdentifier, payment_service AS service FROM users WHERE id = ${x.result.id} LIMIT 1`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }
     if (res.length) {
-      console.log("found user: ", res[0]);
+      // console.log("found user: ", res[0]);
       result(null, res[0]);
       return;
     }
