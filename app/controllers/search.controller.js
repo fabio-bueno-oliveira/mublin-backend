@@ -212,8 +212,8 @@ exports.getHomeFeaturedUsers = (req, res) => {
 };
 
 // Find home featured products
-exports.getHomeFeaturedProducts = (req, res) => {
-  Search.getHomeFeaturedProducts((err, data) => {
+exports.getFeaturedProducts = (req, res) => {
+  Search.getFeaturedProducts((err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({

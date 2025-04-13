@@ -39,5 +39,5 @@ module.exports = app => {
   app.get("/home/featuredUsers", search.getHomeFeaturedUsers);
 
   // Retrieve home feed suggested products
-  app.get("/home/featuredProducts", search.getHomeFeaturedProducts);
+  app.get("/search/explore/featuredProducts", search.getFeaturedProducts);
 };

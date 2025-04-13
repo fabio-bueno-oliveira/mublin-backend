@@ -191,15 +191,14 @@ Search.getHomeFeaturedUsers = result => {
   });
 };
 
-Search.getHomeFeaturedProducts = result => {
-  sql.query(`SELECT p.id, p.name, p.short_subtitle, p.picture, p.rare, p.featured, b.name, b.slug, b.logo as brandLogo FROM products AS p LEFT JOIN brands AS b ON p.id_brand = b.id ORDER BY RAND(), p.featured DESC, p.rare DESC LIMIT 3;`, (err, res) => {
+Search.getFeaturedProducts = result => {
+  sql.query(`SELECT p.id, p.name, p.short_subtitle, p.picture, p.rare, p.featured, b.name, b.slug, b.logo as brandLogo FROM products AS p LEFT JOIN brands AS b ON p.id_brand = b.id ORDER BY RAND(), p.featured DESC LIMIT 6;`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
       return;
     }
-    // console.log("Home Featured Users: ", res);
-    result(null, res);
+    result(null, { total: res.length, success: true, result: res });
   });
 };
 
