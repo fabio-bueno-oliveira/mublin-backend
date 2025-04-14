@@ -192,7 +192,7 @@ Search.getHomeFeaturedUsers = result => {
 };
 
 Search.getFeaturedProducts = result => {
-  sql.query(`SELECT p.id, p.name, p.short_subtitle, p.picture, p.rare, p.featured, b.name, b.slug, b.logo as brandLogo FROM products AS p LEFT JOIN brands AS b ON p.id_brand = b.id ORDER BY RAND(), p.featured DESC LIMIT 6;`, (err, res) => {
+  sql.query(`SELECT p.id, p.name, p.short_subtitle, p.picture, p.rare, p.featured, b.name AS brandName, b.slug AS brandSlug, b.logo as brandLogo FROM products AS p LEFT JOIN brands AS b ON p.id_brand = b.id ORDER BY RAND(), p.featured DESC LIMIT 6;`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
