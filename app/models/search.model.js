@@ -202,4 +202,15 @@ Search.getFeaturedProducts = result => {
   });
 };
 
+Search.getFeaturedGenres = result => {
+  sql.query(`SELECT genres.id, genres.name_ptbr AS name FROM genres WHERE genres.id IN (SELECT projects.id_genre_1_fk FROM projects WHERE projects.public = 1 GROUP BY projects.id_genre_1_fk) OR genres.id IN (SELECT projects.id_genre_2_fk FROM projects WHERE projects.public = 1 GROUP BY projects.id_genre_2_fk) OR genres.id IN (SELECT projects.id_genre_3_fk FROM projects WHERE projects.public = 1 GROUP BY projects.id_genre_3_fk);`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    result(null, res);
+  });
+};
+
 module.exports = Search;

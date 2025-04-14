@@ -211,17 +211,34 @@ exports.getHomeFeaturedUsers = (req, res) => {
   });
 };
 
-// Find home featured products
+// Find featured products
 exports.getFeaturedProducts = (req, res) => {
   Search.getFeaturedProducts((err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: "No home featured users found"
+          message: "No featured products found"
         });
       } else {
         res.status(500).send({
-          message: "Error retrieving home featured users"
+          message: "Error retrieving featured products"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
+// Find featured genres with projects underneath them
+exports.getFeaturedGenres = (req, res) => {
+  Search.getFeaturedGenres((err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No featured genres found"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving featured genres"
         });
       }
     } else res.send(data);

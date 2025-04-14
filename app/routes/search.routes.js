@@ -40,4 +40,7 @@ module.exports = app => {
 
   // Retrieve home feed suggested products
   app.get("/search/explore/featuredProducts", search.getFeaturedProducts);
+
+  // Retrieve music genres with projects on them
+  app.get("/search/explore/featuredGenres", search.getFeaturedGenres);
 };
