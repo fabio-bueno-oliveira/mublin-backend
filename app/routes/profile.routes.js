@@ -71,6 +71,9 @@ module.exports = app => {
   // Retrieve profile gear setups (by username)
   app.get("/profile/:username/gearSetups", checkToken, profile.gearSetups);
 
+  // Retrieve profile gear setup info
+  app.get("/profile/:username/gearSetup/:setupId", checkToken, profile.gearSetup);
+
   // Retrieve profile gear setup products (by username)
   app.get("/profile/:username/:setupId/gearSetupProducts", checkToken, profile.gearSetupProducts);
 

@@ -445,6 +445,20 @@ Profile.gearSetups = (username, result) => {
   });
 };
 
+Profile.gearSetup = (username, itemId, result) => {
+  sql.query(`SELECT setup.id, setup.name, setup.image, setup.description, UNIX_TIMESTAMP(setup.created) AS created FROM users_gear_setup AS setup WHERE setup.id_user = (SELECT users.id FROM users WHERE users.username = '${username}') AND setup.id = ${itemId} LIMIT 1`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res[0]);
+      return;
+    }
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Profile.gearSetupProducts = (username, setupId, result) => {
   sql.query(`SELECT products.id, products.name, products.picture AS picture, products_colors.picture AS selectedColorPicture, products.rare, brands.id AS brandId, brands.slug AS brandSlug, brands.logo AS brandLogo, users_gear.for_sale AS forSale, users_gear.price, users_gear.owner_comments AS productComments, colors.name AS colorName, colors.rgb AS colorRgb, colors.img_sample AS colorSample, items.order_show AS orderShow, items.comments AS itemSetupComments FROM users_gear_setup_items AS items LEFT JOIN users_gear_setup AS setup ON items.id_setup = setup.id LEFT JOIN products ON items.id_product = products.id LEFT JOIN brands ON products.id_brand = brands.id LEFT JOIN users_gear ON setup.id_user = users_gear.id_user LEFT JOIN colors ON users_gear.id_color = colors.id LEFT JOIN products_colors ON products.id = products_colors.id_product AND users_gear.id_color = products_colors.id_color WHERE id_setup = ${setupId} AND setup.id_user = (SELECT id FROM users WHERE username = '${username}' LIMIT 1) GROUP BY items.id_product ORDER BY items.order_show ASC, items.id DESC`, (err, res) => {
     if (err) {

@@ -409,6 +409,23 @@ exports.gearSetups = (req, res) => {
   });
 };
 
+// Find profile gear setup info
+exports.gearSetup = (req, res) => {
+  Profile.gearSetup(req.params.username, req.params.setupId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No setup found with id ${req.params.itemId} on gear for username ${req.params.username}.`
+        });
+      } else {
+        res.status(500).send({
+          message: `Error retrieving setup ${req.params.itemId} for username ${req.params.username}`
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Find profile gear setup products
 exports.gearSetupProducts = (req, res) => {
   Profile.gearSetupProducts(req.params.username, req.params.setupId, (err, data) => {
