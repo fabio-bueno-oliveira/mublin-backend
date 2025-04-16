@@ -145,6 +145,9 @@ module.exports = app => {
   // Delete user gear item (by logged userId and gearId)
   app.delete("/user/:userGearId/deleteGearItem", checkToken, users.deleteGearItem);
 
+  // Retrieve user gear setups
+  app.get("/userInfo/gearSetups", checkToken, users.getGearSetups);
+
   // Update/change user password (/settings)
   app.put("/userInfo/changePassword", checkToken, users.changePassword);
 

@@ -1103,6 +1103,23 @@ User.deleteGearItem = (loggedID, userGearId, result) => {
   });
 };
 
+User.getGearSetups = (loggedID, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`SELECT setup.id, setup.name, setup.image, setup.description, (SELECT COUNT(id) FROM users_gear_setup_items WHERE id_setup = setup.id) AS totalItems, UNIX_TIMESTAMP(setup.created) AS created FROM users_gear_setup AS setup WHERE setup.id_user = ${x.result.id} ORDER BY setup.name ASC`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, { total: res.length, success: true, result: res });
+      return;
+    }
+    // not found user with the id in the token
+    result({ kind: "not_found" }, null);
+  });
+};
+
 User.forgotPassword = (email, result) => {
   sql.query(`UPDATE users SET random_key = '${md5(dateTime+process.env.FORGOT_EMAIL_KEY+email)}' WHERE users.email = '${email}'`, (err, res) => {
       if (err) {

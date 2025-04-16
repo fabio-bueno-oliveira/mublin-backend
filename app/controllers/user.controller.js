@@ -1168,6 +1168,28 @@ exports.deleteGearItem = (req, res) => {
   });
 };
 
+// Retrieve logged user´s gear setups
+exports.getGearSetups = (req, res) => {
+  User.getGearSetups(req.headers.authorization, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(200).send(
+          {
+            total: 0, success: true,
+            result: [{
+              id: '', name: '', image: '', description: '', totalItems: '', created: ''
+            }]
+          }
+        );
+      } else {
+        res.status(500).send({
+          message: "Error retrieving partners from logged user"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Change user password
 exports.changePassword = (req, res) => {
   // Validate Request
