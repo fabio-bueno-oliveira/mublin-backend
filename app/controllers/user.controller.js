@@ -1254,6 +1254,30 @@ exports.getGearSetupItems = (req, res) => {
   });
 };
 
+// Update user gear item
+exports.updateSetupGearItem = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.updateSetupGearItem(req.headers.authorization, req.body.itemId, req.body.comments, req.body.orderShow, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found gear setup item with id ${req.body.itemId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating setup gear item with id " + req.body.itemId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Change user password
 exports.changePassword = (req, res) => {
   // Validate Request

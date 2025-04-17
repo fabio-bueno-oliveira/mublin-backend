@@ -1164,7 +1164,7 @@ User.deleteGearSetup = (loggedID, gearSetupId, result) => {
 
 User.getGearSetupItems = (loggedID, setupId, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET);
-  sql.query(`SELECT products.id, products.name, products.picture AS picture, products_colors.picture AS selectedColorPicture, products.rare, brands.id AS brandId, brands.slug AS brandSlug, brands.logo AS brandLogo, brands.name AS brandName, users_gear.for_sale AS forSale, users_gear.price, users_gear.owner_comments AS productComments, colors.name AS colorName, colors.rgb AS colorRgb, colors.img_sample AS colorSample, items.order_show AS orderShow, items.comments AS itemSetupComments, tuning.name_ptbr AS tuning, category.name_ptbr AS category FROM users_gear_setup_items AS items LEFT JOIN users_gear_setup AS setup ON items.id_setup = setup.id LEFT JOIN products ON items.id_product = products.id LEFT JOIN brands ON products.id_brand = brands.id LEFT JOIN users_gear ON items.id_user = users_gear.id_user AND items.id_product = users_gear.id_product LEFT JOIN instrument_tunings AS tuning ON users_gear.tuning = tuning.id LEFT JOIN products_categories AS category ON products.id_category = category.id LEFT JOIN colors ON users_gear.id_color = colors.id LEFT JOIN products_colors ON products.id = products_colors.id_product AND users_gear.id_color = products_colors.id_color WHERE id_setup = ${setupId} AND setup.id_user = ${x.result.id} GROUP BY items.id_product ORDER BY items.order_show ASC, items.id DESC`, (err, res) => {
+  sql.query(`SELECT products.id, products.name, products.picture AS picture, products_colors.picture AS selectedColorPicture, products.rare, brands.id AS brandId, brands.slug AS brandSlug, brands.logo AS brandLogo, brands.name AS brandName, users_gear.for_sale AS forSale, users_gear.price, users_gear.owner_comments AS productComments, colors.name AS colorName, colors.rgb AS colorRgb, colors.img_sample AS colorSample, items.order_show AS orderShow, items.comments AS itemSetupComments, tuning.name_ptbr AS tuning, category.name_ptbr AS category FROM users_gear_setup_items AS items LEFT JOIN users_gear_setup AS setup ON items.id_setup = setup.id LEFT JOIN products ON items.id_product = products.id LEFT JOIN brands ON products.id_brand = brands.id LEFT JOIN users_gear ON items.id_user = users_gear.id_user AND items.id_product = users_gear.id_product LEFT JOIN instrument_tunings AS tuning ON users_gear.tuning = tuning.id LEFT JOIN products_categories AS category ON products.id_category = category.id LEFT JOIN colors ON users_gear.id_color = colors.id LEFT JOIN products_colors ON products.id = products_colors.id_product AND users_gear.id_color = products_colors.id_color WHERE id_setup = ${setupId} AND setup.id_user = ${x.result.id} GROUP BY items.id_product ORDER BY items.order_show ASC`, (err, res) => {
     if (err) {
       result(err, null);
       return;
@@ -1176,6 +1176,22 @@ User.getGearSetupItems = (loggedID, setupId, result) => {
     // not found setup items for the logged user
     result({ kind: "not_found" }, null);
   });
+};
+
+User.updateSetupGearItem = (loggedID, itemId, comments, orderShow, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`UPDATE users_gear_setup_items SET comments = '${comments}', order_show = ${orderShow} WHERE id = ${itemId} AND id_user = ${x.result.id}`, (err, res) => {
+      if (err) {
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { success: true, message: 'Item updated successfully on user´s gear setup' });
+    }
+  );
 };
 
 User.forgotPassword = (email, result) => {
