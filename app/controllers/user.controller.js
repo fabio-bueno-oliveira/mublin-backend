@@ -1190,7 +1190,30 @@ exports.getGearSetups = (req, res) => {
   });
 };
 
-// Delete user gear item
+// Create new gear setup
+exports.createNewGearSetup = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.createNewGearSetup(req.headers.authorization, req.body.name, req.body.description, req.body.image, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found user id ${req.body.userId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error adding gear setup for user id " + req.body.userId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
+// Delete user gear setup
 exports.deleteGearSetup = (req, res) => {
   // Validate Request
   if (!req.body) {

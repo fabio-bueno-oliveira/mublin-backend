@@ -1120,6 +1120,24 @@ User.getGearSetups = (loggedID, result) => {
   });
 };
 
+User.createNewGearSetup = (loggedID, name, description, image, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`INSERT INTO users_gear_setup (id_user, name, description, image) VALUES (${x.result.id}, '${name}', '${description}', '${image}')`, (err, res) => {
+      if (err) {
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        // not found user with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { message: `Setup '${name}' successfully created!` });
+    }
+  );
+};
+
 User.deleteGearSetup = (loggedID, gearSetupId, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   sql.query(`
