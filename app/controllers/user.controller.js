@@ -1237,6 +1237,23 @@ exports.deleteGearSetup = (req, res) => {
   });
 };
 
+// Retrieve logged user´s gear setup items
+exports.getGearSetupItems = (req, res) => {
+  User.getGearSetupItems(req.headers.authorization, req.params.setupId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No items found on this setup of the logged user"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving gear setup items for the logged user"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Change user password
 exports.changePassword = (req, res) => {
   // Validate Request
