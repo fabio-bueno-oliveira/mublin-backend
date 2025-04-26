@@ -1237,6 +1237,29 @@ exports.deleteGearSetup = (req, res) => {
   });
 };
 
+// Update user gear setup
+exports.updateGearSetup = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.updateGearSetup(req.headers.authorization, req.body.setupId, req.body.name, req.body.description, req.body.image, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found gear setup with id ${req.body.setupId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: `Error updating gear setup with id " + ${req.body.setupId}`
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Retrieve logged user´s gear setup items
 exports.getGearSetupItems = (req, res) => {
   User.getGearSetupItems(req.headers.authorization, req.params.setupId, (err, data) => {
