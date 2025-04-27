@@ -154,8 +154,11 @@ module.exports = app => {
   // Delete user gear setup (by logged userId and gearId)
   app.delete("/user/:gearSetupId/deleteGearSetup", checkToken, users.deleteGearSetup);
 
-  // Upadate user gear setup (by logged userId and gearId)
+  // Upadate user gear setup
   app.put("/user/updateGearSetup", checkToken, users.updateGearSetup);
+  
+  // Upadate user gear setup image
+  app.put("/user/updateGearSetupImage", checkToken, users.updateGearSetupImage);
 
   // Retrieve user gear setup item
   app.get("/userInfo/gearSetupItems/:setupId", checkToken, users.getGearSetupItems);
