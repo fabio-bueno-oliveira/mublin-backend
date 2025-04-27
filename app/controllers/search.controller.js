@@ -244,3 +244,20 @@ exports.getFeaturedGenres = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Find all projects with a keyword
+exports.findProjectsByGenre = (req, res) => {
+  Search.findProjectsByGenre(req.headers.authorization, req.params.genreId, req.body.userCity, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No projects found with genre " + req.params.genreId
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving projects with genre " + req.params.genreId
+        });
+      }
+    } else res.send(data);
+  });
+};

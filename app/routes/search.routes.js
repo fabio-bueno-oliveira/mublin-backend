@@ -43,4 +43,7 @@ module.exports = app => {
 
   // Retrieve music genres with projects on them
   app.get("/search/explore/featuredGenres", search.getFeaturedGenres);
+
+  // Retrieve projects with genre keyword
+  app.get("/search/projectsByGenre/:genreId", checkToken, search.findProjectsByGenre);
 };

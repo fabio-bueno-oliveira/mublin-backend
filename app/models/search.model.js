@@ -213,4 +213,20 @@ Search.getFeaturedGenres = result => {
   });
 };
 
+Search.findProjectsByGenre = (loggedUserId, genreId, userCity, result) => {
+  let x = jwt.verify(loggedUserId.slice(7), process.env.JWT_SECRET)
+  sql.query(`SELECT p.id, p.name, p.username, CONCAT('https://ik.imagekit.io/mublin/projects/tr:h-200,w-200,c-maintain_ratio/',p.picture) AS picture, p.public, cities.name AS city, regions.name AS region, countries.name AS country, genre1.name_ptbr AS mainGenre, genre2.name_ptbr AS secondGenre, genre3.name_ptbr AS thirdGenre, projects_types.name_ptbr AS type, p.label_show AS labelShow, p.label_text AS labelText, p.label_color AS labelColor, p.foundation_year AS foundationYear, p.end_year AS endYear, (SELECT users_projects.confirmed FROM users_projects WHERE users_projects.id_project_fk = p.id AND users_projects.id_user_fk = ${x.result.id}) AS participationStatus, (SELECT users_projects.id FROM users_projects WHERE users_projects.id_project_fk = p.id AND users_projects.id_user_fk = ${x.result.id}) AS participationId, users.name AS relatedUserName, users.lastname AS relatedUserLastname, users.username AS relatedUserUsername, users.picture AS relatedUserPicture, users.id AS relatedUserId FROM projects AS p LEFT JOIN projects_types ON projects_types.id = p.type LEFT JOIN genres AS genre1 ON p.id_genre_1_fk = genre1.id LEFT JOIN genres AS genre2 ON p.id_genre_2_fk = genre2.id LEFT JOIN genres AS genre3 ON p.id_genre_3_fk = genre3.id LEFT JOIN cities ON p.id_city_fk = cities.id LEFT JOIN regions ON p.id_region_fk = regions.id LEFT JOIN countries ON p.id_country_fk = countries.id LEFT JOIN users_projects ON p.id = users_projects.id_project_fk LEFT JOIN users ON users_projects.id_user_fk = users.id WHERE p.id_genre_1_fk LIKE ${genreId} OR p.id_genre_2_fk LIKE ${genreId} OR p.id_genre_3_fk LIKE ${genreId} GROUP BY users_projects.id_project_fk HAVING p.public = 1 ORDER BY (cities.name = '%${userCity}%') DESC, ISNULL(p.end_year), p.end_year DESC LIMIT 50`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, { total: res.length, success: true, result: res });
+      return;
+    }
+    result({ kind: "not_found" }, null);
+  });
+};
+
 module.exports = Search;
