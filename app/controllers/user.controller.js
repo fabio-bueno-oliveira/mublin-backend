@@ -1324,6 +1324,29 @@ exports.updateSetupGearItem = (req, res) => {
   });
 };
 
+// Delete item on user´s gear setup
+exports.deleteSetupGearItem = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.deleteSetupGearItem(req.headers.authorization, req.body.setupId, req.body.itemId, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found item id with id ${req.params.itemId} on the setup.`
+          });
+        } else {
+          res.status(500).send({
+            message: `Error deleting item id with id ${req.params.itemId} on the setup.`
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Change user password
 exports.changePassword = (req, res) => {
   // Validate Request

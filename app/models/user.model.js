@@ -1226,6 +1226,25 @@ User.updateSetupGearItem = (loggedID, itemId, comments, orderShow, result) => {
   );
 };
 
+User.deleteSetupGearItem = (loggedID, setupId, itemId, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`
+      DELETE FROM users_gear_setup_items WHERE users_gear_setup_items.id = ${itemId} AND users_gear_setup_items.id_setup = ${setupId} AND users_gear_setup_items.id_user = ${x.result.id}`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    if (res.affectedRows == 0) {
+      result({ kind: "not_found" }, null);
+      return;
+    }
+
+    result(null, { success: true, message: "Item deletado com sucesso do setup" });
+  });
+};
+
 User.forgotPassword = (email, result) => {
   sql.query(`UPDATE users SET random_key = '${md5(dateTime+process.env.FORGOT_EMAIL_KEY+email)}' WHERE users.email = '${email}'`, (err, res) => {
       if (err) {
