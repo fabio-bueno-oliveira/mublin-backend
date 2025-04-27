@@ -1162,9 +1162,9 @@ User.deleteGearSetup = (loggedID, gearSetupId, result) => {
   });
 };
 
-User.updateGearSetup = (loggedID, setupId, name, description, image, result) => {
+User.updateGearSetup = (loggedID, setupId, name, description, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
-  sql.query(`UPDATE users_gear_setup SET name = '${name}', description = '${description}', image = '${image}', updatedAt = '${dateTime}' WHERE id = ${setupId} AND id_user = ${x.result.id}`, (err, res) => {
+  sql.query(`UPDATE users_gear_setup SET name = '${name}', description = '${description}', updatedAt = '${dateTime}' WHERE id = ${setupId} AND id_user = ${x.result.id}`, (err, res) => {
       if (err) {
         result(null, err);
         return;

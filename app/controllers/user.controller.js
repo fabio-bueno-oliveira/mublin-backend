@@ -1245,7 +1245,7 @@ exports.updateGearSetup = (req, res) => {
     });
   }
 
-  User.updateGearSetup(req.headers.authorization, req.body.setupId, req.body.name, req.body.description, req.body.image, (err, data) => {
+  User.updateGearSetup(req.headers.authorization, req.body.setupId, req.body.name, req.body.description, (err, data) => {
     if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
