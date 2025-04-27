@@ -163,6 +163,9 @@ module.exports = app => {
   // Retrieve user gear setup item
   app.get("/userInfo/gearSetupItems/:setupId", checkToken, users.getGearSetupItems);
 
+  // Add new item to gear setup
+  app.post("/user/addItemToSetup", checkToken, users.addItemToSetup);
+
   // Update user gear setup item (comments, order)
   app.put("/userInfo/updateSetupGearItem", checkToken, users.updateSetupGearItem);
 

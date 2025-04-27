@@ -1300,6 +1300,29 @@ exports.getGearSetupItems = (req, res) => {
   });
 };
 
+// Add item to gear setup
+exports.addItemToSetup = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.addItemToSetup(req.headers.authorization, req.body.setupId, req.body.productId, req.body.order, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found setup with id ${req.body.setupId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error item to setup with id " + req.body.setupId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Update user gear item
 exports.updateSetupGearItem = (req, res) => {
   // Validate Request

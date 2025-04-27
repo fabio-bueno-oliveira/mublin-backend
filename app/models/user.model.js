@@ -1210,6 +1210,23 @@ User.getGearSetupItems = (loggedID, setupId, result) => {
   });
 };
 
+User.addItemToSetup = (loggedID, setupId, productId, order, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`INSERT INTO users_gear_setup_items (id_user, id_product, id_setup, order_show) VALUES (${x.result.id}, ${productId}, ${setupId}, ${order})`, (err, res) => {
+      if (err) {
+        result(null, err);
+        return;
+      }
+
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { message: 'Item successfully added to the setup' });
+    }
+  );
+};
+
 User.updateSetupGearItem = (loggedID, itemId, comments, orderShow, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   sql.query(`UPDATE users_gear_setup_items SET comments = '${comments}', order_show = ${orderShow} WHERE id = ${itemId} AND id_user = ${x.result.id}`, (err, res) => {
