@@ -11,6 +11,9 @@ module.exports = app => {
   // Retrieve all music genres categories
   app.get("/music/genresCategories", misc.musicGenresCategories);
 
+  // Retrieve genre name by ID
+  app.get("/music/genre/:genreId", misc.getGenreNameById);
+
   // Retrieve all roles
   app.get("/music/roles", misc.roles);
 

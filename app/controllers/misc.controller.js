@@ -41,6 +41,23 @@ exports.musicGenresCategories = (req, res) => {
   });
 };
 
+// Get genre info by id
+exports.getGenreNameById = (req, res) => {
+  Misc.getGenreNameById(req.params.genreId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No genre found with id " + req.params.genreId
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving genre info for id " + req.params.genreId
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Retrieve all roles from database
 exports.roles = (req, res) => {
   Misc.getRoles((err, data) => {

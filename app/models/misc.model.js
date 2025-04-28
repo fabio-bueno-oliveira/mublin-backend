@@ -35,6 +35,21 @@ Misc.getMusicGenresCategories = result => {
   });
 };
 
+Misc.getGenreNameById = (genreId, result) => {
+  sql.query(`SELECT genres.id, genres.name, genres.name, genres.name_ptbr AS namePTBR FROM genres WHERE genres.id = ${genreId} LIMIT 2`, (err, res) => {
+    if (err) {
+      result(err, null);
+      return;
+    }
+    if (res.length) {
+      result(null, res[0]);
+      return;
+    }
+
+    result({ kind: "not_found" }, null);
+  });
+};
+
 Misc.getRoles = result => {
   sql.query("SELECT r.id, r.name_ptbr AS name, r.description_ptbr AS description, r.instrumentalist, r.icon, r.applies_to_a_project AS appliesToProject FROM roles AS r ORDER BY r.id = 31 DESC, r.id = 29 DESC, r.id = 10 DESC, r.id = 11 DESC, r.id = 30 DESC, r.id = 48 DESC, name ASC", (err, res) => {
     if (err) {
