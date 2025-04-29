@@ -77,6 +77,9 @@ module.exports = app => {
   // Update user picture with userId
   app.put("/user/:userId/picture", checkToken, users.updatePicture);
 
+  // Update user cover picture with userId
+  app.put("/user/:userId/coverPicture", checkToken, users.updateCoverPicture);
+
   // Update user picture with userId
   app.put("/user/:userId/firstAccess", checkToken, users.updateFirstAccess);
 

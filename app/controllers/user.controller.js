@@ -661,6 +661,29 @@ exports.updatePicture = (req, res) => {
   });
 };
 
+// Update logged user cover picture
+exports.updateCoverPicture = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  User.updateCoverPicture(req.headers.authorization, req.params.userId, req.body.coverPicture, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found user with id ${req.params.userId}.`
+          });
+        } else {
+          res.status(500).send({
+            message: "Error updating cover picture to user with id " + req.params.userId
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Update user firstaccess option identified by the userId in the request
 exports.updateFirstAccess = (req, res) => {
   // Validate Request

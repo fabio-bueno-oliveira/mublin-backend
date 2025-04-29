@@ -612,6 +612,32 @@ User.updatePictureById = (loggedID, id, picture, result) => {
   }
 };
 
+User.updateCoverPicture = (loggedID, userId, coverPicture, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  if (x.result.id == id) {
+    sql.query(`UPDATE users SET picture_cover = '${coverPicture}' WHERE id = ${userId}`, (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result(null, err);
+          return;
+        }
+
+        if (res.affectedRows == 0) {
+          // not found user with the id
+          result({ kind: "not_found" }, null);
+          return;
+        }
+
+        // console.log("updated cover picture of user: ", { id: id, picture: picture });
+        result(null, { message: 'Cover picture successfully updated!' });
+      }
+    );
+  } else {
+    result({ kind: "unauthorized" }, null);
+    return;
+  }
+};
+
 User.updateFirstAccessById = (loggedID, id, step, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
   if (x.result.id == id) {
