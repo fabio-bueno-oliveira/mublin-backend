@@ -614,7 +614,7 @@ User.updatePictureById = (loggedID, id, picture, result) => {
 
 User.updateCoverPicture = (loggedID, userId, coverPicture, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
-  if (x.result.id == id) {
+  if (x.result.id == userId) {
     sql.query(`UPDATE users SET picture_cover = '${coverPicture}' WHERE id = ${userId}`, (err, res) => {
         if (err) {
           console.log("error: ", err);
