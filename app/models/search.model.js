@@ -229,4 +229,15 @@ Search.findProjectsByGenre = (loggedUserId, genreId, userCity, result) => {
   });
 };
 
+Search.getOpportunities = result => {
+  sql.query(`SELECT opportunities.id, opportunities.info, opportunities.one_time_job AS oneTimeJob, opportunities.is_in_one_specific_location AS isInOneSpecificLocation, opportunities.venue_name AS venue, opportunities.rehearsal_in_person AS rehearsalInPerson, opportunities.fee_per_rehearsal AS feePerRehearsal, opportunities.fee_per_concert AS feePerConcert, projects.id AS projectId, projects.name AS projectName, projects.username AS projectSlug, projects.picture AS projectPicture, projects.cover_image AS projectCover, roles.id AS roleId, roles.description_ptbr AS roleName, roles.icon AS roleIcon, experience.id AS experienceId, experience.title_en AS experienceEN, experience.title_ptbr AS experiencePTBR, relationship.id AS relationshipId, relationship.title_en AS relationshipEN, relationship.title_ptbr AS relationshipPTBR, author.id AS authorId, author.name AS authorName, author.lastname AS authorLastname, author.username AS authorUsername, cities.name AS city, regions.name AS region, countries.name AS country FROM projects_opportunities AS opportunities LEFT JOIN projects ON opportunities.id_project = projects.id LEFT JOIN roles ON opportunities.id_role = roles.id LEFT JOIN projects_opportunities_exp AS experience ON opportunities.experience = experience.id LEFT JOIN projects_opportunities_rel AS relationship ON opportunities.id_relationship = relationship.id LEFT JOIN users AS author ON opportunities.id_user_created = author.id LEFT JOIN cities ON opportunities.id_city = cities.id LEFT JOIN regions ON opportunities.id_region = regions.id LEFT JOIN countries ON opportunities.id_country = countries.id WHERE opportunities.visible = 1`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    result(null, { total: res.length, success: true, result: res });
+  });
+};
+
 module.exports = Search;

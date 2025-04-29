@@ -46,4 +46,7 @@ module.exports = app => {
 
   // Retrieve projects with genre keyword
   app.get("/search/projectsByGenre/:genreId", checkToken, search.findProjectsByGenre);
+
+  // Retrieve projects job opportunities
+  app.get("/opportunities", search.getOpportunities);
 };

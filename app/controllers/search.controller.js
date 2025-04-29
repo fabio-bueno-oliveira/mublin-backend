@@ -261,3 +261,20 @@ exports.findProjectsByGenre = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Find job opportunities on projects
+exports.getOpportunities = (req, res) => {
+  Search.getOpportunities((err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No opportunities found"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving opportunities"
+        });
+      }
+    } else res.send(data);
+  });
+};
