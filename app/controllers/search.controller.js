@@ -278,3 +278,20 @@ exports.getOpportunities = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Get job details
+exports.getJobInfo = (req, res) => {
+  Search.getJobInfo(req.params.jobId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No job found with id ${req.params.jobId}`
+        });
+      } else {
+        res.status(500).send({
+          message: `Error retrieving job details with id ${req.params.jobId}`
+        });
+      }
+    } else res.send(data);
+  });
+};

@@ -49,4 +49,7 @@ module.exports = app => {
 
   // Retrieve projects job opportunities
   app.get("/opportunities", search.getOpportunities);
+
+  // Retrieve job info
+  app.get("/job/:jobId", search.getJobInfo);
 };
