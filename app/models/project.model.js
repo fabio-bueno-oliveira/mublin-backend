@@ -19,6 +19,16 @@ const Project = function(project) {
   this.id_user_creator_fk = project.id_user_creator_fk;
 };
 
+Project.getProjectsTypes = (result) => {
+  sql.query(`SELECT types.id, types.name_EN as nameEN, types.name_ptbr AS namePTBR, types.slug, types.icon FROM projects_types AS types ORDER BY namePTBR ASC`, (err, res) => {
+    if (err) {
+      result(null, err);
+      return;
+    }
+    result(null, res);
+  });
+};
+
 // find users, projects or events by keyword
 Project.findProjectsByKeyword = (keyword, result) => {
   sql.query(`

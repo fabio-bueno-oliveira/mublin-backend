@@ -1,12 +1,12 @@
 module.exports = app => {
   const projects = require("../controllers/project.controller.js");
   const { checkToken } = require("../auth/token_validation");
-
-  // Delete all Projects
-  //app.delete("/projects", projects.deleteAll);
-
+  
   // Create a new Project
   app.post("/project/create", checkToken, projects.create);
+  
+  // Retrieve projects types list
+  app.get("/projects/types", projects.getProjectsTypes);
 
   // Update project picture with projectId
   app.put("/project/:projectId/picture", checkToken, projects.updatePicture);
@@ -107,4 +107,7 @@ module.exports = app => {
 
   // Delete a Project with projectId
   app.delete("/projects/:projectId/delete", projects.delete);
+
+  // Delete all Projects
+  //app.delete("/projects", projects.deleteAll);
 };

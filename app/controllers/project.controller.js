@@ -43,6 +43,23 @@ exports.create = (req, res) => {
   });
 };
 
+// Get projects types list (band, solo artist, etc)
+exports.getProjectsTypes = (req, res) => {
+  Project.getProjectsTypes((err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No types found for projects"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving projects types"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Check if project username is available
 exports.checkProjectUsername = (req, res) => {
   Project.CheckProjectUsernameAvailability(req.params.projectUsername, (err, data) => {
