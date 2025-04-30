@@ -652,6 +652,30 @@ exports.declineMemberRequest = (req, res) => {
   });
 };
 
+// Remove user penging request to join a project
+exports.removeParticipationRequest = (req, res) => {
+  // Validate Request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  Project.removeParticipationRequest(req.headers.authorization, req.params.projectId, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: "You cannot remove this participation request"
+          });
+        } else {
+          res.status(500).send({
+            message: "Error removing the participation request"
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Remove user from project
 exports.removeMember = (req, res) => {
   Project.removeMember(req.headers.authorization, req.params.projectId, req.body.userId, (err, data) => {
