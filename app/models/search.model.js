@@ -192,7 +192,7 @@ Search.getHomeFeaturedUsers = result => {
 };
 
 Search.getHomeFeaturedBrands = result => {
-  sql.query(`SELECT brands.id, brands.name, brands.slug, CONCAT('https://ik.imagekit.io/mublin/products/brands/tr:h-200,w-200,c-maintain_ratio/',brands.logo) AS logo, brands.website FROM brands ORDER BY RAND() LIMIT 30;`, (err, res) => {
+  sql.query(`SELECT brands.id, brands.name, brands.slug, brands.logo, brands.website FROM brands ORDER BY RAND() LIMIT 30;`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
