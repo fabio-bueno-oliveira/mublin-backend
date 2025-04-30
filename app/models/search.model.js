@@ -191,6 +191,18 @@ Search.getHomeFeaturedUsers = result => {
   });
 };
 
+Search.getHomeFeaturedBrands = result => {
+  sql.query(`SELECT brands.id, brands.name, brands.slug, CONCAT('https://ik.imagekit.io/mublin/products/brands/tr:h-200,w-200,c-maintain_ratio/',brands.logo) AS logo, brands.website FROM brands ORDER BY RAND() LIMIT 30;`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    // console.log("Home Featured Users: ", res);
+    result(null, res);
+  });
+};
+
 Search.getFeaturedProducts = result => {
   sql.query(`SELECT p.id, p.name, p.short_subtitle, p.picture, p.rare, p.featured, b.name AS brandName, b.slug AS brandSlug, b.logo as brandLogo FROM products AS p LEFT JOIN brands AS b ON p.id_brand = b.id ORDER BY RAND(), p.featured DESC LIMIT 12;`, (err, res) => {
     if (err) {

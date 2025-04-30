@@ -665,7 +665,7 @@ exports.removeMember = (req, res) => {
           message: `Could not remove user ${req.body.userId} from project with id ${req.params.projectId}.`
         });
       }
-    } else res.send({ message: `Project was deleted successfully`, success: true });
+    } else res.send({ message: `User was successfully removed from the project`, success: true });
   });
 };
 

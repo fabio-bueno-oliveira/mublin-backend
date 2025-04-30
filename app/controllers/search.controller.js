@@ -211,6 +211,23 @@ exports.getHomeFeaturedUsers = (req, res) => {
   });
 };
 
+// Find home featured brands
+exports.getHomeFeaturedBrands = (req, res) => {
+  Search.getHomeFeaturedBrands((err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: "No home featured brands found"
+        });
+      } else {
+        res.status(500).send({
+          message: "Error retrieving home featured brands"
+        });
+      }
+    } else res.send(data);
+  });
+};
+
 // Find featured products
 exports.getFeaturedProducts = (req, res) => {
   Search.getFeaturedProducts((err, data) => {
