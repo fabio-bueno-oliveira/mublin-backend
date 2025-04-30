@@ -103,7 +103,7 @@ Project.findById = (projectId, result) => {
 
 Project.findByUsername = (projectUsername, result) => {
   sql.query(`
-  SELECT p.id, p.name, p.old_name AS oldName, p.username, p.picture, p.cover_image, p.created, p.foundation_year AS foundationYear, p.end_year AS endDate, p.bio, p.purpose, p.email, p.phone, p.instagram, p.spotify_id AS spotifyId, p.website_url AS website, p.soundcloud, p.type AS typeId, p.kind, p.admin_note AS adminNote, p.currentlyOnTour, projects_types.name_ptbr AS typeName, genre1.name AS genre1, genre2.name AS genre2, genre3.name AS genre3, countries.name AS country, regions.name AS region, cities.name AS city, label_show AS labelShow, label_text AS labelText, label_color AS labelColor, public, ps.description_ptbr AS activityStatus, ps.id AS activityStatusId, ps.color AS activityStatusColor 
+  SELECT p.id, p.name, p.old_name AS oldName, p.username, p.picture, p.cover_image, p.created, p.foundation_year AS foundationYear, p.end_year AS endDate, p.bio, p.purpose, p.email, p.phone, p.instagram, p.spotify_id AS spotifyId, p.website_url AS website, p.soundcloud, p.type AS typeId, p.kind, p.admin_note AS adminNote, p.currentlyOnTour, projects_types.name_ptbr AS typeName, genre1.name AS genre1, genre2.name AS genre2, genre3.name AS genre3, countries.name AS country, countries.id AS countryId, regions.name AS region, regions.id AS regionId, cities.name AS city, cities.id AS cityId, label_show AS labelShow, label_text AS labelText, label_color AS labelColor, public, ps.description_ptbr AS activityStatus, ps.id AS activityStatusId, ps.color AS activityStatusColor 
   FROM projects AS p 
   LEFT JOIN projects_types ON p.type = projects_types.id 
   LEFT JOIN projects_status AS ps ON p.activity_status = ps.id 
