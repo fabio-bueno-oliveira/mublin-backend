@@ -613,7 +613,7 @@ exports.updateMemberRequest = (req, res) => {
     });
   }
 
-  Project.updateMemberRequest(req.headers.authorization, req.params.projectId, req.body.userId, req.body.requestResponse, dateTime, (err, data) => {
+  Project.updateMemberRequest(req.headers.authorization, req.params.projectId, req.body.requestId, req.body.userId, req.body.requestResponse, dateTime, (err, data) => {
     if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({

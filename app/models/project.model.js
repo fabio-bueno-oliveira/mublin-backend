@@ -413,7 +413,7 @@ Project.updateById = (id, project, result) => {
 };
 
 Project.getMembers = (projectUsername, result) => {
-  sql.query(`SELECT users_projects.id_user_fk AS id, users_projects.id_project_fk AS projectId, users_projects.joined_in AS joinedIn, users_projects.left_in AS leftIn, users_projects.confirmed, users.name, users.lastname, users.username, users.gender, users.picture AS picture, users.bio, users.verified, users.legend_badge, role1.description_ptbr AS role1, role2.description_ptbr AS role2, role3.description_ptbr AS role3, projects.name AS projectName, projects.username AS projectUsername, users_projects_relationship.id AS statusId, users_projects_relationship.title_ptbr AS statusName, users_projects_relationship.icon AS statusIcon, users_projects.admin, users_projects.active, users_projects.founder, users_projects.leader, users_projects.touring FROM users_projects LEFT JOIN projects ON users_projects.id_project_fk = projects.id LEFT JOIN users ON users_projects.id_user_fk = users.id LEFT JOIN roles AS role1 ON users_projects.main_role_fk = role1.id LEFT JOIN roles AS role2 ON users_projects.second_role_fk = role2.id LEFT JOIN roles AS role3 ON users_projects.third_role_fk = role3.id LEFT JOIN users_projects_relationship ON users_projects.status = users_projects_relationship.id WHERE projects.username = '${projectUsername}' AND users_projects.status IN(1,2,3,4,5) AND users.name IS NOT NULL ORDER BY users_projects.admin DESC, users_projects.leader DESC, users.name ASC`, (err, res) => {
+  sql.query(`SELECT users_projects.id AS idFk, users_projects.id_user_fk AS id, users_projects.id_project_fk AS projectId, users_projects.joined_in AS joinedIn, users_projects.left_in AS leftIn, users_projects.confirmed, users.name, users.lastname, users.username, users.gender, users.picture AS picture, users.bio, users.verified, users.legend_badge, role1.description_ptbr AS role1, role2.description_ptbr AS role2, role3.description_ptbr AS role3, projects.name AS projectName, projects.username AS projectUsername, users_projects_relationship.id AS statusId, users_projects_relationship.title_ptbr AS statusName, users_projects_relationship.icon AS statusIcon, users_projects.admin, users_projects.active, users_projects.founder, users_projects.leader, users_projects.touring FROM users_projects LEFT JOIN projects ON users_projects.id_project_fk = projects.id LEFT JOIN users ON users_projects.id_user_fk = users.id LEFT JOIN roles AS role1 ON users_projects.main_role_fk = role1.id LEFT JOIN roles AS role2 ON users_projects.second_role_fk = role2.id LEFT JOIN roles AS role3 ON users_projects.third_role_fk = role3.id LEFT JOIN users_projects_relationship ON users_projects.status = users_projects_relationship.id WHERE projects.username = '${projectUsername}' AND users_projects.status IN(1,2,3,4,5) AND users.name IS NOT NULL ORDER BY users_projects.admin DESC, users_projects.leader DESC, users.name ASC`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -678,20 +678,35 @@ Project.updateMemberDetails = (loggedID, userId, projectId, admin, active, leade
   );
 };
 
-Project.updateMemberRequest = (loggedID, projectId, userId, requestResponse, dateTime, result) => {
+Project.updateMemberRequest = (loggedID, projectId, requestId, userId, requestResponse, dateTime, result) => {
   let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
-  sql.query(`UPDATE users_projects SET users_projects.confirmed = ${requestResponse}, users_projects.modified = '${dateTime}' WHERE users_projects.id_user_fk = ${userId} AND users_projects.id_project_fk = ${projectId} AND 1 = (SELECT admin FROM (SELECT DISTINCT admin FROM users_projects WHERE users_projects.id_project_fk = ${projectId} AND users_projects.id_user_fk = ${x.result.id} AND users_projects.admin = 1 LIMIT 1) AS admin)`, (err, res) => {
-      if (err) {
-        result(null, err);
-        return;
+  if (requestResponse === 0) {
+    sql.query(`UPDATE users_projects SET users_projects.confirmed = ${requestResponse}, users_projects.modified = '${dateTime}' WHERE users_projects.id_user_fk = ${userId} AND users_projects.id_project_fk = ${projectId} AND 1 = (SELECT admin FROM (SELECT DISTINCT admin FROM users_projects WHERE users_projects.id_project_fk = ${projectId} AND users_projects.id_user_fk = ${x.result.id} AND users_projects.admin = 1 LIMIT 1) AS admin); DELETE FROM users_projects WHERE users_projects.id = ${requestId}`, (err, res) => {
+        if (err) {
+          result(null, err);
+          return;
+        }
+        if (res.affectedRows == 0) {
+          result({ kind: "not_found" }, null);
+          return;
+        }
+        result(null, { userId: userId, projectId: projectId, requestResponse: requestResponse, dateTime: dateTime, message: 'Request denied successfully', success: true });
       }
-      if (res.affectedRows == 0) {
-        result({ kind: "not_found" }, null);
-        return;
+    );
+  } else {
+      sql.query(`UPDATE users_projects SET users_projects.confirmed = ${requestResponse}, users_projects.modified = '${dateTime}' WHERE users_projects.id_user_fk = ${userId} AND users_projects.id_project_fk = ${projectId} AND 1 = (SELECT admin FROM (SELECT DISTINCT admin FROM users_projects WHERE users_projects.id_project_fk = ${projectId} AND users_projects.id_user_fk = ${x.result.id} AND users_projects.admin = 1 LIMIT 1) AS admin)`, (err, res) => {
+        if (err) {
+          result(null, err);
+          return;
+        }
+        if (res.affectedRows == 0) {
+          result({ kind: "not_found" }, null);
+          return;
+        }
+        result(null, { userId: userId, projectId: projectId, requestResponse: requestResponse, dateTime: dateTime, message: 'Request approved successfully', success: true });
       }
-      result(null, { userId: userId, projectId: projectId, requestResponse: requestResponse, dateTime: dateTime, message: 'Request updated successfully' });
-    }
-  );
+    );
+  }
 };
 
 Project.declineMemberRequest = (loggedID, projectId, userId, result) => {
