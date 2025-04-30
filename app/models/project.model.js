@@ -19,6 +19,11 @@ const Project = function(project) {
   this.id_user_creator_fk = project.id_user_creator_fk;
 };
 
+var today = new Date();
+var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+var dateTime = date+' '+time;
+
 Project.getProjectsTypes = (result) => {
   sql.query(`SELECT types.id, types.name_EN as nameEN, types.name_ptbr AS namePTBR, types.slug, types.icon FROM projects_types AS types ORDER BY namePTBR ASC`, (err, res) => {
     if (err) {
@@ -573,6 +578,22 @@ Project.deleteNote = (loggedID, projectUsername, noteId, result) => {
     // console.log("deleted note with id: ", userId);
     result(null, res);
   });
+};
+
+Project.updateProjectInfos = (loggedID, projectUsername, projectId, activityStatus, kind, type, name, slug, foundationYear, endYear, bio, purpose, website, instagram, email, spotifyId, soundcloud, genre1, genre2, genre3, country, region, city, public, currentlyOnTour, result) => {
+  let x = jwt.verify(loggedID.slice(7), process.env.JWT_SECRET)
+  sql.query(`UPDATE projects SET projects.activity_status = ${activityStatus}, projects.kind = ${kind}, projects.type = ${type}, projects.name = '${name}', projects.username = '${slug}', projects.foundation_year = ${foundationYear || null}, projects.end_year = ${endYear || null}, projects.bio = '${bio}', projects.purpose = '${purpose}', projects.website_url = '${website}', projects.instagram = '${instagram}', projects.email = '${email}', projects.spotify_id = '${spotifyId}', projects.soundcloud = '${soundcloud}', projects.id_genre_1_fk = ${genre1 || null}, projects.id_genre_2_fk = ${genre2 || null}, projects.id_genre_3_fk = ${genre3 || null}, projects.id_country_fk = ${country || null}, projects.id_region_fk = ${region || null}, projects.id_city_fk = ${city || null}, projects.public = ${public}, projects.currentlyOnTour = ${currentlyOnTour || null}, projects.updated = '${dateTime}' WHERE projects.username = '${projectUsername}' AND projects.id = (SELECT users_projects.id_project_fk FROM users_projects WHERE users_projects.id_project_fk = ${projectId} AND users_projects.id_user_fk = ${x.result.id} AND users_projects.confirmed = 1 AND users_projects.admin = 1 LIMIT 1)`, (err, res) => {
+      if (err) {
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { projectUsername: projectUsername, success: true, message: 'Project info successfully updated!' });
+    }
+  );
 };
 
 Project.updateBio = (loggedID, projectUsername, projectId, bio, result) => {

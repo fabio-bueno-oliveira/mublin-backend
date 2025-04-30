@@ -461,6 +461,29 @@ exports.deleteNote = (req, res) => {
   });
 };
 
+// Update project infos
+exports.updateProjectInfos = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  Project.updateProjectInfos(req.headers.authorization, req.params.projectUsername, req.body.projectId, req.body.activityStatus, req.body.kind, req.body.type, req.body.name, req.body.slug, req.body.foundationYear, req.body.endYear, req.body.bio, req.body.purpose, req.body.website, req.body.instagram, req.body.email, req.body.spotifyId, req.body.soundcloud, req.body.genre1, req.body.genre2, req.body.genre3, req.body.country, req.body.region, req.body.city, req.body.public, req.body.currentlyOnTour, (err, data) => {
+    if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `You are not allowed to update infos on project ${req.params.projectUsername}`
+          });
+        } else {
+          res.status(500).send({
+            message: `Error updating infos for project ${req.params.projectUsername}`
+          });
+        }
+    } else res.send(data);
+  });
+};
+
 // Update project bio
 exports.updateBio = (req, res) => {
   // Validate Request

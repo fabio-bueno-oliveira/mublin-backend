@@ -81,6 +81,9 @@ module.exports = app => {
   // Check if project username is available
   app.get("/check/project/username/:projectUsername", projects.checkProjectUsername)
 
+  // Update project infos (from project dashboard page)
+  app.put("/project/:projectUsername/updateProjectInfos", checkToken, projects.updateProjectInfos);
+
   // Update project bio
   app.put("/project/:projectUsername/updateBio", checkToken, projects.updateBio);
 
