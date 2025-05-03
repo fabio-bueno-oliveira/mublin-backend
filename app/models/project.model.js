@@ -772,8 +772,7 @@ Project.delete = (loggedID, projectId, result) => {
       result({ kind: "not_found" }, null);
       return;
     }
-    console.log("deleted project with id: ", projectId);
-    result(null, res);
+    result(null, { success: true, message: 'Projeto deletado com sucesso!' });
   });
 };
 
